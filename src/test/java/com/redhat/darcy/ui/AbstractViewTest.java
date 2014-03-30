@@ -17,7 +17,7 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.redhat.uiautotool.ui;
+package com.redhat.darcy.ui;
 
 public class AbstractViewTest {
     
