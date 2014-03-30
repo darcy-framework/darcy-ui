@@ -22,5 +22,5 @@ package com.redhat.darcy.ui;
 import com.redhat.darcy.ui.elements.Element;
 
 public interface FindsByNested {
-    <T> T findByNested(Class<T> type, Element parent, By child);
+    <T> T findByNested(Class<T> type, Element parent, Locator child);
 }

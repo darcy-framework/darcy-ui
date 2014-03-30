@@ -20,5 +20,5 @@
 package com.redhat.darcy.ui;
 
 public interface FindsByChained {
-    <T> T findByChained(Class<T> type, By... bys);
+    <T> T findByChained(Class<T> type, Locator... locators);
 }

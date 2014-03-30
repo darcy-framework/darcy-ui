@@ -33,7 +33,7 @@ import java.lang.reflect.Method;
  *
  */
 public class LazyViewInvocationHandler implements InvocationHandler {
-    private By by;
+    private Locator locator;
     private View view;
     
     /**
@@ -50,8 +50,8 @@ public class LazyViewInvocationHandler implements InvocationHandler {
      * @param view A real implementation that we will forward method calls to.
      * @param by
      */
-    public LazyViewInvocationHandler(View view, By by) {
-        this.by = by;
+    public LazyViewInvocationHandler(View view, Locator by) {
+        this.locator = locator;
         this.view = view;
     }
     
@@ -59,7 +59,7 @@ public class LazyViewInvocationHandler implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         if ("setView".equals(method.getName())) {
             // Set the "owning" or "parent" View via a NestedViewContext
-            view.setContext(new NestedViewContext((View) args[0], by));
+            view.setContext(new NestedViewContext((View) args[0], locator));
             
             return null;
         }

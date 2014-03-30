@@ -22,5 +22,5 @@ package com.redhat.darcy.ui;
 import com.redhat.darcy.ui.elements.Element;
 
 public interface ViewContext extends ParentContext {
-    <T extends Element> T findElement(Class<T> type, By locator);
+    <T extends Element> T findElement(Class<T> type, Locator locator);
 }

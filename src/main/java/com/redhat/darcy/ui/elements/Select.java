@@ -19,8 +19,8 @@
 
 package com.redhat.darcy.ui.elements;
 
-import com.redhat.darcy.ui.By;
+import com.redhat.darcy.ui.Locator;
 
 public interface Select extends HasValue {
-    public void selectBy(By by);
+    public void select(Locator locator);
 }

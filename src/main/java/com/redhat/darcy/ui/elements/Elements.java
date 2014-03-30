@@ -22,9 +22,9 @@ package com.redhat.darcy.ui.elements;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 
-import com.redhat.darcy.ui.By;
 import com.redhat.darcy.ui.LazyElementInvocationHandler;
 import com.redhat.darcy.ui.LazyViewInvocationHandler;
+import com.redhat.darcy.ui.Locator;
 import com.redhat.darcy.ui.View;
 
 /**
@@ -42,14 +42,14 @@ public abstract class Elements {
      * implementation is registered for that class.
      * <P>
      * If the class is a subclass of View and has a public no arg constructor, then it will be 
-     * instantiated and passed to {@link #element(View, By)}.
+     * instantiated and passed to {@link #element(View, Locator)}.
      * 
      * @param type
      * @param locator
      * @return
      */
     @SuppressWarnings("unchecked")
-    public static <T extends Element> T element(Class<T> type, By locator) {
+    public static <T extends Element> T element(Class<T> type, Locator locator) {
         if (View.class.isAssignableFrom(type) && !type.isInterface()) {
             try {
                 return (T) element((View) type.newInstance(), locator);
@@ -77,7 +77,7 @@ public abstract class Elements {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public static <T extends View> T element(T implementation, By locator) {
+    public static <T extends View> T element(T implementation, Locator locator) {
         InvocationHandler invocationHandler;
         
         invocationHandler = new LazyViewInvocationHandler(implementation, locator);
@@ -87,23 +87,23 @@ public abstract class Elements {
                 invocationHandler);
     }
     
-    public static Element element(By locator) {
+    public static Element element(Locator locator) {
         return element(Element.class, locator);
     }
     
-    public static TextInput textInput(By locator) {
+    public static TextInput textInput(Locator locator) {
         return element(TextInput.class, locator);
     }
     
-    public static Button button(By locator) {
+    public static Button button(Locator locator) {
         return element(Button.class, locator);
     }
     
-    public static Link link(By locator) {
+    public static Link link(Locator locator) {
         return element(Link.class, locator);
     }
     
-    public static Label label(By locator) {
+    public static Label label(Locator locator) {
         return element(Label.class, locator);
     }
 }

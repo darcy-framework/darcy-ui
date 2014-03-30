@@ -26,12 +26,12 @@ import com.redhat.darcy.ui.elements.Element;
 
 public class LazyElementInvocationHandler implements InvocationHandler {
     private Class<? extends Element> type;
-    private By by;
+    private Locator locator;
     private View view;
     
-    public LazyElementInvocationHandler(Class<? extends Element> type, By by) {
+    public LazyElementInvocationHandler(Class<? extends Element> type, Locator locator) {
         this.type = type;
-        this.by = by;
+        this.locator = locator;
     }
     
     @Override
@@ -52,6 +52,6 @@ public class LazyElementInvocationHandler implements InvocationHandler {
             throw new NullContextException();
         }
         
-        return method.invoke(context.findElement(type, by), args);
+        return method.invoke(context.findElement(type, locator), args);
     }
 }

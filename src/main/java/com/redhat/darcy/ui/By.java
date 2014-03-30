@@ -21,37 +21,32 @@ package com.redhat.darcy.ui;
 
 import com.redhat.darcy.ui.elements.Element;
 
-public interface By {
-    public static By id(String id) {
+/**
+ * A helper class with static factories for {@link Locator}s, inspired by Selenium's By class.
+ *
+ */
+public abstract class By {
+    public static Locator id(String id) {
         return new ById(id);
     }
 
-    public static By name(String name) {
+    public static Locator name(String name) {
         return new ByName(name);
     }
     
-    public static By view(View view) {
+    public static Locator view(View view) {
         return new ByView(view);
     }
     
-    public static By nested(Element parent, By child) {
+    public static Locator nested(Element parent, Locator child) {
         return new ByNested(parent, child);
     }
     
-    public static By chained(By... bys) {
+    public static Locator chained(Locator... bys) {
         return new ByChained(bys);
     }
     
-    /*
-     * <T> List<T> findAll(Class<T> type, Context context);
-     * default <T> T findFirst(Class<T> type, Context context) {
-     *     return findAll(type, context).get(0);
-     * }
-     */
-    
-    <T> T find(Class<T> type, Context context);
-    
-    public static class ById implements By {
+    public static class ById implements Locator {
         private String id;
         
         public ById(String id) {
@@ -64,7 +59,7 @@ public interface By {
         }
     }
     
-    public static class ByName implements By {
+    public static class ByName implements Locator {
         private String name;
         
         public ByName(String name) {
@@ -77,7 +72,7 @@ public interface By {
         }
     }
     
-    public static class ByView implements By {
+    public static class ByView implements Locator {
         private View view;
         
         public ByView(View view) {
@@ -90,24 +85,24 @@ public interface By {
         }
     }
     
-    public static class ByChained implements By {
-        private final By[] bys;
+    public static class ByChained implements Locator {
+        private final Locator[] locators;
         
-        public ByChained(By... bys) {
-            this.bys = bys;
+        public ByChained(Locator... locators) {
+            this.locators = locators;
         }
         
         @Override
         public <T> T find(Class<T> type, Context context) {
-            return ((FindsByChained) context).findByChained(type, bys);
+            return ((FindsByChained) context).findByChained(type, locators);
         }
     }
     
-    public static class ByNested implements By {
+    public static class ByNested implements Locator {
         private final Element parent;
-        private final By child;
+        private final Locator child;
         
-        public ByNested(Element parent, By child) {
+        public ByNested(Element parent, Locator child) {
             this.parent = parent;
             this.child = child;
         }

@@ -23,7 +23,7 @@ import com.redhat.darcy.ui.elements.Element;
 
 public class NestedViewContext implements ViewContext {
     private final View view;
-    private final By parentBy;
+    private final Locator parentLocator;
     
     /**
      * 
@@ -38,18 +38,18 @@ public class NestedViewContext implements ViewContext {
      * @param view The parent view.
      * @param parentBy Can be null if this nested View does not have any "root" element.
      */
-    public NestedViewContext(View view, By parentBy) {
+    public NestedViewContext(View view, Locator parentLocator) {
         this.view = view;
-        this.parentBy = parentBy;
+        this.parentLocator = parentLocator;
     }
 
     @Override
-    public <T extends Element> T findElement(Class<T> type, By locator) {
+    public <T extends Element> T findElement(Class<T> type, Locator locator) {
         return view.getContext().findElement(type, nestedLocator(locator));
     }
 
     @Override
-    public ViewContext findContext(By locator) {
+    public ViewContext findContext(Locator locator) {
         return view.getContext().findContext(locator);
     }
     
@@ -58,16 +58,16 @@ public class NestedViewContext implements ViewContext {
         return view;
     }
     
-    // This is implementation specific (ie other impl would be Element as opposed to By
-    public By getParentLocator() {
-        return parentBy;
+    // This is implementation specific (ie other impl would be Element as opposed to Locator
+    public Locator getParentLocator() {
+        return parentLocator;
     }
     
-    private By nestedLocator(By locator) {
-        if (parentBy == null) {
+    private Locator nestedLocator(Locator locator) {
+        if (parentLocator == null) {
             return locator;
         } else {
-            return By.chained(parentBy, locator);
+            return By.chained(parentLocator, locator);
         }
     }
 }

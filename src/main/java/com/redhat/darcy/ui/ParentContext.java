@@ -25,5 +25,5 @@ package com.redhat.darcy.ui;
  *
  */
 public interface ParentContext extends Context {
-    ViewContext findContext(By locator);
+    ViewContext findContext(Locator locator);
 }

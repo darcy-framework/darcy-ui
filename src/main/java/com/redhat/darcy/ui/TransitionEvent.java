@@ -23,6 +23,6 @@ import com.redhat.synq.Event;
 
 public interface TransitionEvent<T extends View> extends Event<T> {
     TransitionEvent<T> inNewContext();
-    TransitionEvent<T> inNewContext(By by);
-    TransitionEvent<T> inNestedContext(By by);
+    TransitionEvent<T> inNewContext(Locator locator);
+    TransitionEvent<T> inNestedContext(Locator locator);
 }
