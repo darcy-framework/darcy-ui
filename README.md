@@ -1,7 +1,7 @@
 **darcy** is...
 =========
 
-* A framework for writing **page objects** in order to automate interaction with graphical user interfaces. Page objects are classes that model what a user can see and do. In Darcy each page, or subset of a page, is called a **View**.
+* A framework for writing **page objects** in order to automate interaction with graphical user interfaces. Page objects are classes that model what a user can see and do. In Darcy each page, or subset of a page, is called a **[View](https://github.com/rh-darcy/darcy/blob/master/src/main/java/com/redhat/darcy/ui/View.java)**.
 * Automation library agnostic -- any library that can find UI elements and interact with them can work with Darcy. [Selenium WebDriver](https://code.google.com/p/selenium/) support is provided by [darcy-webdriver](https://github.com/rh-darcy/darcy-webdriver).
 * Flexible and extendable by virtue of a declarative, **element-based DSL**. Write your page objects in terms of the UI buttons, labels, and widgets that you see. 
 * Dependent on Java 8. [Get your lambda on](http://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html)!
