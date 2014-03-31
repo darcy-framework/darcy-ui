@@ -9,7 +9,7 @@
 **darcy** is not...
 =========
 
-* Web-specific by default. Extend the DSL to add web browser interaction with [darcy-web](https://github.com/rh-darcy/darcy-web). Darcy-webdriver is an implementation of this API with a WebDriver backend. Your web automation projects can simply include darcy-webdriver and get going.
+* Web-specific by default. Extend the DSL to add web browser interaction with [darcy-web](https://github.com/rh-darcy/darcy-web). Darcy-webdriver is an implementation of this API with a WebDriver backend. Your web automation projects can simply include [darcy-webdriver](https://github.com/rh-darcy/darcy-webdriver) and get going.
 * An automatic solution to every problem. It's still on you to architect your automation code maintainably. Darcy will help by solving a whole host of nasty UI-automation related challenges out of the box, so you can concentrate on the deeper and more interesting complexities specific to your automation project.
 
 darcy's best friend: **synq**
