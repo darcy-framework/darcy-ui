@@ -15,7 +15,7 @@
 darcy's best friend: **synq**
 ====
 
-[Synq][1] is a sister project to Darcy. Synq helps Darcy and your automation code sync up with external asynchronous processes (such as dynamic content on a web page). For folks coming from WebDriver, Synq gets you what WebDriverWait and ExpectedConditions get you, but with more flexibility (wait for multiple conditions, throw errors if other conditions are met in the meantime ... stuff like that). Synq is used heavily within Darcy itself, and so a lot of the explicit waits you might normally have to write in Selenium code will happen automatigically, behind the scenes. However, there are still plenty of things your automation code will need to wait for that Darcy has no other way of knowing about, so [read more here][1] to get to know Synq's API.
+[Synq][1] is a sister project to Darcy. Synq helps Darcy and your automation code sync up with external asynchronous processes (such as dynamic content on a web page). For folks coming from WebDriver, Synq gets you what WebDriverWait and ExpectedConditions get you, but with more flexibility (wait for multiple conditions, throw errors if other conditions are met in the meantime ... stuff like that). Synq is used heavily within Darcy itself, and so a lot of the explicit waits you might normally have to write in Selenium code will happen "automagically", behind the scenes. However, there are still plenty of things your automation code will need to wait for that Darcy has no other way of knowing about, so [read more here][1] to get to know Synq's API.
 
 contributing
 ============
