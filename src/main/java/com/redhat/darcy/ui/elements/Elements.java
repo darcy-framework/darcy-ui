@@ -50,9 +50,11 @@ public abstract class Elements {
      */
     @SuppressWarnings("unchecked")
     public static <T extends Element> T element(Class<T> type, Locator locator) {
-        if (View.class.isAssignableFrom(type) && !type.isInterface()) {
+        if (View.class.isAssignableFrom(type) 
+                && Element.class.isAssignableFrom(type)
+                && !type.isInterface()) {
             try {
-                return (T) element((View) type.newInstance(), locator);
+                return (T) element((View & Element) type.newInstance(), locator);
             } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
                 throw new RuntimeException(e);
@@ -77,7 +79,7 @@ public abstract class Elements {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public static <T extends View> T element(T implementation, Locator locator) {
+    public static <T extends View & Element> T element(T implementation, Locator locator) {
         InvocationHandler invocationHandler;
         
         invocationHandler = new LazyViewInvocationHandler(implementation, locator);

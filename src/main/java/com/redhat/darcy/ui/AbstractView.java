@@ -86,7 +86,13 @@ public abstract class AbstractView implements View {
             }
             
             return true;
+        } catch (NullContextException | MissingLoadConditionException e) {
+            // Let this propagate in case of these exceptions
+            throw e;
         } catch (Exception e) {
+            // Otherwise log it and return false -- something went wrong in evaluating the load 
+            // condition so we'll assume it's just not loaded yet. (For instance, not finding an 
+            // element will throw an exception).
             e.printStackTrace();
             return false;
         }

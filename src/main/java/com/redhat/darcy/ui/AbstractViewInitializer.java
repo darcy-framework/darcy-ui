@@ -89,9 +89,10 @@ public abstract class AbstractViewInitializer {
             for (Field field : viewClass.getDeclaredFields()) {
                 Class<?> fieldType = field.getType();
                 
-                // Is the field an element or a view?
-                if (Element.class.isAssignableFrom(fieldType)
-                        || View.class.isAssignableFrom(fieldType)) {
+                // Is the field an element? It can also be a View, in the case of custom elements,
+                // but it must at least implement Element to be considered for annotated load 
+                // conditions.
+                if (Element.class.isAssignableFrom(fieldType)) {
                     initializeElement(field, view, elementLoadConditions);
                     
                 // Is the field a list of load conditions? (annotated with @LoadCondition)
@@ -131,7 +132,7 @@ public abstract class AbstractViewInitializer {
                 ((LazyElement) element).setView(view);
             }
             
-            Callable<Boolean> conditionForElement = getCallableFromAnnotatedField(
+            Callable<Boolean> conditionForElement = getConditionFromAnnotatedField(
                     field, element);
             
             if (conditionForElement != null) {
@@ -152,7 +153,7 @@ public abstract class AbstractViewInitializer {
      * @return Null if field is not annotated with Require and class is not annotated with
      *         RequireAll, is annotated with Ignore, or is not an instance of View or Element.
      */
-    private static Callable<Boolean> getCallableFromAnnotatedField(Field field, 
+    private static Callable<Boolean> getConditionFromAnnotatedField(Field field, 
             final Object element) {
         Callable<Boolean> callable;
         
