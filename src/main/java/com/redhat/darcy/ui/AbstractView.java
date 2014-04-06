@@ -117,4 +117,8 @@ public abstract class AbstractView implements View {
     public final ViewContext getContext() {
         return context;
     }
+    
+    protected Transition transition() {
+        return context.transition();
+    }
 }
