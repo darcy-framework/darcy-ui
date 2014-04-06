@@ -50,7 +50,7 @@ public class LazyViewInvocationHandler implements InvocationHandler {
      * @param view A real implementation that we will forward method calls to.
      * @param by
      */
-    public LazyViewInvocationHandler(View view, Locator by) {
+    public LazyViewInvocationHandler(View view, Locator locator) {
         this.locator = locator;
         this.view = view;
     }
