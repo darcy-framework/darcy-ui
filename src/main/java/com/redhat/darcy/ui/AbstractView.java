@@ -99,7 +99,7 @@ public abstract class AbstractView implements View {
             // if the context changes because elements are tied to a View, not a context directly,
             // and so knowing only about the View is sufficient. It will reference whatever is the
             // current context of that View. This behavior may change.
-            ViewInitializer.initView(this);
+            AbstractViewInitializer.initView(this);
         }
         
         this.context = context;

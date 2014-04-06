@@ -25,7 +25,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Used to tell {@link ViewInitializer} that a field is a {@code List} of {@code Callable<Boolean}
+ * Used to tell {@link AbstractViewInitializer} that a field is a {@code List} of {@code Callable<Boolean}
  * that can be used to add various load conditions. This list can then be checked in that view's
  * {@code View#isLoaded()} to determine if the view is loaded or not.
  * 

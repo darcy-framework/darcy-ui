@@ -34,7 +34,7 @@ import com.redhat.darcy.ui.elements.LazyElement;
  * @author ahenning
  * 
  */
-public abstract class ViewInitializer {
+public abstract class AbstractViewInitializer {
     /**
      * Views may employee annotations or lazily loaded elements to make them more maintainable and
      * portable. In order to use a View like this, it must be initialized with some reflection magic
