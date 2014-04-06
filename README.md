@@ -37,7 +37,7 @@ public class MyHomePage extends AbstractView {
     return after(submit::click)
         .expect(transition().to(new AccountDetails())
         .failIf(errorMsg::isDisplayed)
-          .throwing(new InvalidLoginException(credentials))
+          .throwing(new InvalidLoginException(credentials, errorMsg.readText()))
         .waitUpTo(1, MINUTES);
   }
 }
