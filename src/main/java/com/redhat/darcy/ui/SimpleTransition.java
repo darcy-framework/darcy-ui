@@ -19,10 +19,16 @@
 
 package com.redhat.darcy.ui;
 
-import com.redhat.synq.Event;
-
-public interface TransitionEvent<T extends View> extends Event<T> {
-    Event<T> inNewContext();
-    Event<T> inNewContext(Locator locator);
-    Event<T> inNestedContext(Locator locator);
+public class SimpleTransition implements Transition {
+    private final ViewContext context;
+    
+    public SimpleTransition(ViewContext context) {
+        this.context = context;
+    }
+    
+    @Override
+    public <T extends View> SimpleTransitionEvent<T> to(T view) {
+        return new SimpleTransitionEvent<T>(view, context);
+    }
+    
 }

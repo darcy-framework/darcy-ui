@@ -19,6 +19,6 @@
 
 package com.redhat.darcy.ui;
 
-public interface Transition<T extends View> {
-    TransitionEvent<T> to(T view);
+public interface Transition {
+    <T extends View> TransitionEvent<T> to(T view);
 }
