@@ -52,22 +52,6 @@ public abstract class AbstractView implements View {
         }
     }
     
-    /**
-     * Used by {@link #isLoaded()}. When the Callable.call evaluates to true, the page should be
-     * loaded.
-     * <P>
-     * This condition will be considered in addition to any elements annotated with {@link Require}.
-     * <P>
-     * By default this returns null. Subclasses should override this method if necessary to define a
-     * more specific load condition. If the simple visibility of some elements is all that is
-     * required, then simply use {@link Require} or {@link RequireAll} annotations.
-     * 
-     * @return Null if not explicitly overridden by a subclass.
-     */
-    public Callable<Boolean> loadCondition() {
-        return null;
-    }
-    
     @Override
     public final boolean isLoaded() {
         if (context == null) {
@@ -116,6 +100,22 @@ public abstract class AbstractView implements View {
     @Override
     public final ViewContext getContext() {
         return context;
+    }
+    
+    /**
+     * Used by {@link #isLoaded()}. When the Callable.call evaluates to true, the page should be
+     * loaded.
+     * <P>
+     * This condition will be considered in addition to any elements annotated with {@link Require}.
+     * <P>
+     * By default this returns null. Subclasses should override this method if necessary to define a
+     * more specific load condition. If the simple visibility of some elements is all that is
+     * required, then simply use {@link Require} or {@link RequireAll} annotations.
+     * 
+     * @return Null if not explicitly overridden by a subclass.
+     */
+    protected Callable<Boolean> loadCondition() {
+        return null;
     }
     
     protected Transition transition() {
