@@ -50,17 +50,6 @@ public abstract class Elements {
      */
     @SuppressWarnings("unchecked")
     public static <T extends Element> T element(Class<T> type, Locator locator) {
-        if (View.class.isAssignableFrom(type) 
-                && Element.class.isAssignableFrom(type)
-                && !type.isInterface()) {
-            try {
-                return (T) element((View & Element) type.newInstance(), locator);
-            } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
-                throw new RuntimeException(e);
-            }
-        }
-        
         InvocationHandler invocationHandler = new LazyElementInvocationHandler(type, locator);
         
         return (T) Proxy.newProxyInstance(Elements.class.getClassLoader(), 
@@ -71,18 +60,23 @@ public abstract class Elements {
     /**
      * Wraps the implementation in a proxy so that it may be assigned to a parent View lazily, like
      * elements.
+     * <P>
+     * The provided implementation must, itself, be a View. If you want to override fundamental UI
+     * elements, this is done at the automation-library wrapper level and specific to that 
+     * ViewContext implementation.
      * 
-     * @param implementation
+     * @param type The interface this custom element implements.
      * @param locator
+     * @param implementation Must also implement View
      * @return
      */
     @SuppressWarnings("unchecked")
-    public static <T extends View & Element> T element(T implementation, Locator locator) {
-        InvocationHandler invocationHandler = 
-                new LazyViewInvocationHandler(implementation, locator);
+    public static <T extends Element> T element(Class<T> type, Locator locator, T implementation) {
+        InvocationHandler invocationHandler = new LazyViewInvocationHandler((View) implementation, 
+                locator);
         
         return (T) Proxy.newProxyInstance(Elements.class.getClassLoader(), 
-                new Class[] { implementation.getClass(), LazyElement.class },
+                new Class[] { type, LazyElement.class },
                 invocationHandler);
     }
     
