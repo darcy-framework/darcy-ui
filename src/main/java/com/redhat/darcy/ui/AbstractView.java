@@ -18,14 +18,14 @@
  */
 
 package com.redhat.darcy.ui;
-    
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
  * A partial implementation of View that initializes LazyElements in
- * {@link #setContext(ViewContext)}, simplifies defining load conditions (via {@link Require},
+ * {@link #setContext(ViewContext)}, and simplifies defining load conditions (via {@link Require},
  * {@link RequireAll}, {@link NotRequired}, and {@link #loadCondition()}.
  * 
  * @author ahenning
@@ -38,17 +38,20 @@ public abstract class AbstractView implements View {
     private ViewContext context;
     
     /**
-     * List of Callable<Boolean> "load conditions" -- if all of these return true, then the page is
-     * considered loaded.
+     * All of these need to evaluate to true for the View to be considered loaded.
      */
-    @LoadConditions
     private final List<Callable<Boolean>> loadConditions = new ArrayList<>();
     
-    // Add the custom defined load condition to the list if there is one defined.
-    // @see #loadCondition()
+    // Initialize the load conditions
     {
         if (loadCondition() != null) {
             loadConditions.add(loadCondition());
+        }
+        
+        loadConditions.addAll(LoadConditionAnnotationReader.getLoadConditions(this));
+        
+        if (loadConditions.isEmpty()) {
+            throw new MissingLoadConditionException(this);
         }
     }
     
@@ -74,8 +77,8 @@ public abstract class AbstractView implements View {
             // Let this propagate in case of these exceptions
             throw e;
         } catch (Exception e) {
-            // Otherwise log it and return false -- something went wrong in evaluating the load 
-            // condition so we'll assume it's just not loaded yet. (For instance, not finding an 
+            // Otherwise log it and return false -- something went wrong in evaluating the load
+            // condition so we'll assume it's just not loaded yet. (For instance, not finding an
             // element will throw an exception).
             e.printStackTrace();
             return false;
@@ -89,7 +92,7 @@ public abstract class AbstractView implements View {
             // if the context changes because elements are tied to a View, not a context directly,
             // and so knowing only about the View is sufficient. It will reference whatever is the
             // current context of that View. This behavior may change.
-            AbstractViewInitializer.initView(this);
+            LazyElementInitializer.initLazyElements(this);
         }
         
         this.context = context;
