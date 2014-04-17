@@ -20,6 +20,8 @@
 package com.redhat.darcy.ui;
 
 import java.lang.reflect.Field;
+
+import com.redhat.darcy.ui.elements.Element;
 import com.redhat.darcy.ui.elements.LazyElement;
 
 /**
@@ -53,14 +55,16 @@ public abstract class LazyElementInitializer {
                 // Is the field a LazyElement? It can also be a View, in the case of custom elements,
                 // but it must at least implement LazyElement to indicate it needs to be initialized
                 // in this way.
-                if (LazyElement.class.isAssignableFrom(fieldType)) {
+                if (Element.class.isAssignableFrom(fieldType)) {
                     field.setAccessible(true);
                     
                     // Initialize it
                     try {
-                        LazyElement element = (LazyElement) field.get(view);
+                        Object element = field.get(view);
                         
-                        element.setView(view);
+                        if (element instanceof LazyElement) {
+                            ((LazyElement) field.get(view)).setView(view);
+                        }
                     } catch (IllegalArgumentException | IllegalAccessException e) {
                         e.printStackTrace();
                         throw new RuntimeException(e);

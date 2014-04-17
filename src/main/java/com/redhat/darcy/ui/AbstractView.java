@@ -47,12 +47,6 @@ public abstract class AbstractView implements View {
         if (loadCondition() != null) {
             loadConditions.add(loadCondition());
         }
-        
-        loadConditions.addAll(LoadConditionAnnotationReader.getLoadConditions(this));
-        
-        if (loadConditions.isEmpty()) {
-            throw new MissingLoadConditionException(this);
-        }
     }
     
     @Override
@@ -93,6 +87,13 @@ public abstract class AbstractView implements View {
             // and so knowing only about the View is sufficient. It will reference whatever is the
             // current context of that View. This behavior may change.
             LazyElementInitializer.initLazyElements(this);
+            
+            // Add load conditions read via annotations
+            loadConditions.addAll(LoadConditionAnnotationReader.getLoadConditions(this));
+            
+            if (loadConditions.isEmpty()) {
+                throw new MissingLoadConditionException(this);
+            }
         }
         
         this.context = context;
