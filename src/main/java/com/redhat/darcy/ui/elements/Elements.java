@@ -61,9 +61,7 @@ public abstract class Elements {
             }
         }
         
-        InvocationHandler invocationHandler;
-        
-        invocationHandler = new LazyElementInvocationHandler(type, locator);
+        InvocationHandler invocationHandler = new LazyElementInvocationHandler(type, locator);
         
         return (T) Proxy.newProxyInstance(Elements.class.getClassLoader(), 
                 new Class[] { type, LazyElement.class },
@@ -80,9 +78,8 @@ public abstract class Elements {
      */
     @SuppressWarnings("unchecked")
     public static <T extends View & Element> T element(T implementation, Locator locator) {
-        InvocationHandler invocationHandler;
-        
-        invocationHandler = new LazyViewInvocationHandler(implementation, locator);
+        InvocationHandler invocationHandler = 
+                new LazyViewInvocationHandler(implementation, locator);
         
         return (T) Proxy.newProxyInstance(Elements.class.getClassLoader(), 
                 new Class[] { implementation.getClass(), LazyElement.class },
