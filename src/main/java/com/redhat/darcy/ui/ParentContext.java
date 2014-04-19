@@ -21,9 +21,9 @@ package com.redhat.darcy.ui;
 
 /**
  * A context which can find other contexts.
- * @author ahenning
- *
  */
 public interface ParentContext extends Context {
-    ViewContext findContext(Locator locator);
+    default ViewContext findContext(Locator locator) {
+        return locator.find(ViewContext.class, this);
+    }
 }

@@ -19,6 +19,8 @@
 
 package com.redhat.darcy.ui;
 
+import java.util.List;
+
 import com.redhat.darcy.ui.elements.Element;
 
 /**
@@ -42,8 +44,8 @@ public abstract class By {
         return new ByNested(parent, child);
     }
     
-    public static Locator chained(Locator... bys) {
-        return new ByChained(bys);
+    public static Locator chained(Locator... locators) {
+        return new ByChained(locators);
     }
     
     public static class ById implements Locator {
@@ -54,8 +56,8 @@ public abstract class By {
         }
         
         @Override
-        public <T> T find(Class<T> type, Context context) {
-            return ((FindsById) context).findById(type, id);
+        public <T> List<T> findAll(Class<T> type, Context context) {
+            return ((FindsById) context).findAllById(type, id);
         }
     }
     
@@ -67,8 +69,8 @@ public abstract class By {
         }
         
         @Override
-        public <T> T find(Class<T> type, Context context) {
-            return ((FindsByName) context).findByName(type, name);
+        public <T> List<T> findAll(Class<T> type, Context context) {
+            return ((FindsByName) context).findAllByName(type, name);
         }
     }
     
@@ -80,8 +82,8 @@ public abstract class By {
         }
         
         @Override
-        public <T> T find(Class<T> type, Context context) {
-            return ((FindsByView) context).findByView(type, view);
+        public <T> List<T> findAll(Class<T> type, Context context) {
+            return ((FindsByView) context).findAllByView(type, view);
         }
     }
     
@@ -93,8 +95,8 @@ public abstract class By {
         }
         
         @Override
-        public <T> T find(Class<T> type, Context context) {
-            return ((FindsByChained) context).findByChained(type, locators);
+        public <T> List<T> findAll(Class<T> type, Context context) {
+            return ((FindsByChained) context).findAllByChained(type, locators);
         }
     }
     
@@ -108,8 +110,8 @@ public abstract class By {
         }
         
         @Override
-        public <T> T find(Class<T> type, Context context) {
-            return ((FindsByNested) context).findByNested(type, parent, child);
+        public <T> List<T> findAll(Class<T> type, Context context) {
+            return ((FindsByNested) context).findAllByNested(type, parent, child);
         }
     }
 }

@@ -19,6 +19,18 @@
 
 package com.redhat.darcy.ui;
 
+import java.util.List;
+
 public interface FindsByView {
-    <T> T findByView(Class<T> type, View view);
+    <T> List<T> findAllByView(Class<T> type, View view);
+    default <T> T findByView(Class<T> type, View view) {
+        List<T> found = findAllByView(type, view);
+        
+        if (found.isEmpty()) {
+            // FIXME: Throw some exception here
+            return null;
+        }
+        
+        return findAllByView(type, view).get(0);
+    }
 }

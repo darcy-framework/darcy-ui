@@ -19,8 +19,20 @@
 
 package com.redhat.darcy.ui;
 
+import java.util.List;
+
 import com.redhat.darcy.ui.elements.Element;
 
 public interface FindsByNested {
-    <T> T findByNested(Class<T> type, Element parent, Locator child);
+    <T> List<T> findAllByNested(Class<T> type, Element parent, Locator child);
+    default <T> T findByNested(Class<T> type, Element parent, Locator child) {
+        List<T> found = findAllByNested(type, parent, child);
+        
+        if (found.isEmpty()) {
+            // FIXME: Throw some exception here
+            return null;
+        }
+        
+        return findAllByNested(type, parent, child).get(0);
+    }
 }

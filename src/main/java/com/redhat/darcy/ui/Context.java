@@ -19,6 +19,12 @@
 
 package com.redhat.darcy.ui;
 
+/**
+ * A marker interface for a class that can find "stuff." The contract of implementing this interface
+ * (or one of its subclasses) is that you also implement, or forward to some type that does 
+ * implement, specific means of finding that stuff, that corresponds to {@link Locator}s (for 
+ * instance, {@link FindsById}
+ */
 public interface Context {
     
 }

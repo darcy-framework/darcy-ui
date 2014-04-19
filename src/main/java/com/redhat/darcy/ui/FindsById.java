@@ -19,7 +19,18 @@
 
 package com.redhat.darcy.ui;
 
-// TODO: Can these be implemented with a bounded type parameter?
+import java.util.List;
+
 public interface FindsById {
-    public <T> T findById(Class<T> type, String id);
+    <T> List<T> findAllById(Class<T> type, String id); 
+    default <T> T findById(Class<T> type, String id) {
+        List<T> found = findAllById(type, id);
+        
+        if (found.isEmpty()) {
+            // FIXME: Throw some exception here
+            return null;
+        }
+        
+        return findAllById(type, id).get(0);
+    }
 }

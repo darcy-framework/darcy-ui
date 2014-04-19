@@ -19,6 +19,8 @@
 
 package com.redhat.darcy.ui;
 
+import java.util.List;
+
 import com.redhat.darcy.ui.elements.Element;
 
 public class NestedViewContext implements ViewContext {
@@ -41,6 +43,11 @@ public class NestedViewContext implements ViewContext {
     public NestedViewContext(View view, Locator parentLocator) {
         this.view = view;
         this.parentLocator = parentLocator;
+    }
+
+    @Override
+    public <T extends Element> List<T> findElements(Class<T> type, Locator locator) {
+        return view.getContext().findElements(type, nestedLocator(locator));
     }
 
     @Override

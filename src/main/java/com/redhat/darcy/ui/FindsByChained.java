@@ -19,6 +19,18 @@
 
 package com.redhat.darcy.ui;
 
+import java.util.List;
+
 public interface FindsByChained {
-    <T> T findByChained(Class<T> type, Locator... locators);
+    <T> List<T> findAllByChained(Class<T> type, Locator... locators);
+    default <T> T findByChained(Class<T> type, Locator... locators) {
+        List<T> found = findAllByChained(type, locators);
+        
+        if (found.isEmpty()) {
+            // FIXME: Throw some exception here
+            return null;
+        }
+        
+        return findAllByChained(type, locators).get(0);
+    }
 }

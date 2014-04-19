@@ -19,6 +19,18 @@
 
 package com.redhat.darcy.ui;
 
+import java.util.List;
+
 public interface FindsByName {
-    public <T> T findByName(Class<T> type, String name);
+    <T> List<T> findAllByName(Class<T> type, String name);
+    default <T> T findByName(Class<T> type, String name) {
+        List<T> found = findAllByName(type, name);
+        
+        if (found.isEmpty()) {
+            // FIXME: Throw some exception here
+            return null;
+        }
+        
+        return findAllByName(type, name).get(0);
+    }
 }
