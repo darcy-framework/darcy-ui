@@ -19,8 +19,12 @@
 
 package com.redhat.darcy.ui.elements;
 
-public interface FileSelect extends Element {
-    public void setFilePath(String path);
-    
-    public void clear();
+/**
+ * File select inputs often behave differently than normal select inputs -- usually with some OS
+ * specific dialog. Specifying a FileSelect element tells the underlying automation library to 
+ * anticipate that behavior.
+ */
+public interface FileSelect extends HasValue {
+    void setFilePath(String path);
+    void clear();
 }

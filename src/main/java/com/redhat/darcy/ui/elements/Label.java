@@ -20,5 +20,5 @@
 package com.redhat.darcy.ui.elements;
 
 public interface Label extends Element {
-    public String readText();
+    String readText();
 }

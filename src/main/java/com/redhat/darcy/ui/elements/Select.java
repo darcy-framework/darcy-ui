@@ -22,5 +22,5 @@ package com.redhat.darcy.ui.elements;
 import com.redhat.darcy.ui.Locator;
 
 public interface Select extends HasValue {
-    public void select(Locator locator);
+    void select(Locator locator);
 }

@@ -20,5 +20,9 @@
 package com.redhat.darcy.ui.elements;
 
 public interface Element {
-    public boolean isDisplayed();
+    /**
+     * Returns true if the element is visible to the user. 
+     * @return
+     */
+    boolean isDisplayed();
 }
