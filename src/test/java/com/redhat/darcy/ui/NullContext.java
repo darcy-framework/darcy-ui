@@ -19,6 +19,18 @@
 
 package com.redhat.darcy.ui;
 
-public class AbstractViewTest {
+import com.redhat.darcy.ui.elements.Element;
+
+public class NullContext implements ViewContext {
+    
+    @Override
+    public ViewContext findContext(Locator locator) {
+        return null;
+    }
+    
+    @Override
+    public <T extends Element> T findElement(Class<T> type, Locator locator) {
+        return null;
+    }
     
 }
