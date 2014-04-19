@@ -19,8 +19,19 @@
 
 package com.redhat.darcy.ui;
 
-public interface ViewContext extends ParentContext, ElementContext {
-    default Transition transition() {
-        return new SimpleTransition(this);
+import com.redhat.darcy.ui.elements.Element;
+
+import java.util.List;
+
+/**
+ * A context which can find UI elements.
+ */
+public interface ElementContext extends Context {
+    default <T extends Element> List<T> findElements(Class<T> type, Locator locator) {
+        return locator.findAll(type, this);
+    }
+    
+    default <T extends Element> T findElement(Class<T> type, Locator locator) {
+        return locator.find(type, this);
     }
 }
