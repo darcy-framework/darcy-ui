@@ -19,10 +19,9 @@
 
 package com.redhat.darcy.ui;
 
-public class NullContextException extends IllegalStateException {
-    /**
-     * 
-     */
+import com.redhat.darcy.DarcyException;
+
+public class NullContextException extends DarcyException {
     private static final long serialVersionUID = 5949936622717490179L;
     
     public NullContextException() {
