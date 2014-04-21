@@ -19,8 +19,12 @@
 
 package com.redhat.darcy.ui.elements;
 
+import java.util.List;
+
 import com.redhat.darcy.ui.Locator;
 
-public interface Select extends HasValue {
+public interface Select extends Element {
     void select(Locator locator);
+    List<SelectOption> getOptions();
+    SelectOption getCurrentlySelectedOption();
 }
