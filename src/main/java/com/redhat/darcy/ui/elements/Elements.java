@@ -19,13 +19,15 @@
 
 package com.redhat.darcy.ui.elements;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Proxy;
-
 import com.redhat.darcy.ui.LazyElementInvocationHandler;
+import com.redhat.darcy.ui.LazyElementListInvocationHandler;
 import com.redhat.darcy.ui.LazyViewInvocationHandler;
 import com.redhat.darcy.ui.Locator;
 import com.redhat.darcy.ui.View;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
+import java.util.List;
 
 /**
  * Static factories for the fundamental UI elements. Specifically, these return proxy instances of
@@ -56,6 +58,25 @@ public abstract class Elements {
                 new Class[] { type, LazyElement.class },
                 invocationHandler);
     }
+    /**
+     * Looks up a automation-library-specific implementation for that element type, assuming an
+     * implementation is registered for that class.
+     * <P>
+     * If the class is a subclass of View and has a public no arg constructor, then it will be 
+     * instantiated and passed to {@link #element(View, Locator)}.
+     * 
+     * @param type
+     * @param locator
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends Element> List<T> elements(Class<T> type, Locator locator) {
+        InvocationHandler invocationHandler = new LazyElementListInvocationHandler(type, locator);
+        
+        return (List<T>) Proxy.newProxyInstance(Elements.class.getClassLoader(), 
+                new Class[] { List.class, LazyElement.class },
+                invocationHandler);
+    }
     
     /**
      * Wraps the implementation in a proxy so that it may be assigned to a parent View lazily, like
@@ -84,23 +105,47 @@ public abstract class Elements {
         return element(Element.class, locator);
     }
     
+    public static List<Element> elements(Locator locator) {
+        return elements(Element.class, locator);
+    }
+    
     public static TextInput textInput(Locator locator) {
         return element(TextInput.class, locator);
+    }
+    
+    public static List<TextInput> textInputs(Locator locator) {
+        return elements(TextInput.class, locator);
     }
     
     public static Button button(Locator locator) {
         return element(Button.class, locator);
     }
     
+    public static List<Button> buttons(Locator locator) {
+        return elements(Button.class, locator);
+    }
+    
     public static Link link(Locator locator) {
         return element(Link.class, locator);
+    }
+    
+    public static List<Link> links(Locator locator) {
+        return elements(Link.class, locator);
     }
     
     public static Label label(Locator locator) {
         return element(Label.class, locator);
     }
     
+    public static List<Label> labels(Locator locator) {
+        return elements(Label.class, locator);
+    }
+    
     public static Select select(Locator locator) {
         return element(Select.class, locator);
+    }
+    
+    public static List<Select> selects(Locator locator) {
+        return elements(Select.class, locator);
     }
 }

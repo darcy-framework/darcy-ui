@@ -19,10 +19,11 @@
 
 package com.redhat.darcy.ui;
 
-import java.lang.reflect.Field;
-
 import com.redhat.darcy.ui.elements.Element;
 import com.redhat.darcy.ui.elements.LazyElement;
+
+import java.lang.reflect.Field;
+import java.util.List;
 
 /**
  * Static helper class to take a View from an invalid, default state, to an initialized, ready to
@@ -52,13 +53,13 @@ public abstract class LazyElementInitializer {
             for (Field field : viewClass.getDeclaredFields()) {
                 Class<?> fieldType = field.getType();
                 
-                // Is the field a LazyElement? It can also be a View, in the case of custom elements,
-                // but it must at least implement LazyElement to indicate it needs to be initialized
-                // in this way.
-                if (Element.class.isAssignableFrom(fieldType)) {
+                // Does the field implement Element or List? If so, check if the runtime type 
+                // implements LazyElement, in which case we will tell it about the View it is apart 
+                // of.
+                if (Element.class.isAssignableFrom(fieldType) 
+                        || List.class.isAssignableFrom(fieldType)) {
                     field.setAccessible(true);
                     
-                    // Initialize it
                     try {
                         Object element = field.get(view);
                         
