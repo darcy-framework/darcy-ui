@@ -36,8 +36,8 @@ public abstract class By {
         return new ByName(name);
     }
     
-    public static Locator linkText(String text) {
-        return new ByLinkText(text);
+    public static Locator linkText(String linkText) {
+        return new ByLinkText(linkText);
     }
     
     public static Locator view(View view) {
@@ -92,15 +92,15 @@ public abstract class By {
     }
     
     public static class ByLinkText implements Locator {
-        private String text;
+        private String linkText;
         
-        public ByLinkText(String text) {
-            this.text = text;
+        public ByLinkText(String linkText) {
+            this.linkText = linkText;
         }
         
         @Override
         public <T> List<T> findAll(Class<T> type, Context context) {
-            return ((FindsByLinkText) context).findAllByLinkText(type, text);
+            return ((FindsByLinkText) context).findAllByLinkText(type, linkText);
         }
     }
     

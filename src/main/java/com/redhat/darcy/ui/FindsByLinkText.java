@@ -22,14 +22,14 @@ package com.redhat.darcy.ui;
 import java.util.List;
 
 public interface FindsByLinkText {
-    <T> List<T> findAllByLinkText(Class<T> type, String text);
-    default <T> T findByLinkText(Class<T> type, String text) {
-        List<T> found = findAllByLinkText(type, text);
+    <T> List<T> findAllByLinkText(Class<T> type, String linkText);
+    default <T> T findByLinkText(Class<T> type, String linkText) {
+        List<T> found = findAllByLinkText(type, linkText);
         
         if (found.isEmpty()) {
-            throw new NotFoundException(type, By.linkText(text));
+            throw new NotFoundException(type, By.linkText(linkText));
         }
         
-        return findAllByLinkText(type, text).get(0);
+        return findAllByLinkText(type, linkText).get(0);
     }
 }
