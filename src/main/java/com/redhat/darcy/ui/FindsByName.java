@@ -27,8 +27,7 @@ public interface FindsByName {
         List<T> found = findAllByName(type, name);
         
         if (found.isEmpty()) {
-            // FIXME: Throw some exception here
-            return null;
+            throw new NotFoundException(type, By.name(name));
         }
         
         return findAllByName(type, name).get(0);

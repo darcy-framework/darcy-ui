@@ -26,11 +26,8 @@ import java.lang.reflect.Method;
  * For Views within Views that are created statically and assigned to their "owning" View via
  * reflection and a proxy. The proxy can be cast to LazyElement, and the invocation handler will 
  * intercept the call to setView (defined by LazyElement interface), and without the actual child
- * View implementation knowning about it, set its context to be a NestedViewContext, which will 
+ * View implementation knowing about it, set its context to be a NestedViewContext, which will 
  * handle finding elements for the child View.
- * 
- * @author ahenning
- *
  */
 public class LazyViewInvocationHandler implements InvocationHandler {
     private Locator locator;

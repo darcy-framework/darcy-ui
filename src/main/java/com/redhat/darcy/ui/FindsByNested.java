@@ -29,8 +29,7 @@ public interface FindsByNested {
         List<T> found = findAllByNested(type, parent, child);
         
         if (found.isEmpty()) {
-            // FIXME: Throw some exception here
-            return null;
+            throw new NotFoundException(type, By.nested(parent, child));
         }
         
         return findAllByNested(type, parent, child).get(0);

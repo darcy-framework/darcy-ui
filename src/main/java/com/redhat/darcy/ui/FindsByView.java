@@ -27,8 +27,7 @@ public interface FindsByView {
         List<T> found = findAllByView(type, view);
         
         if (found.isEmpty()) {
-            // FIXME: Throw some exception here
-            return null;
+            throw new NotFoundException(type, By.view(view));
         }
         
         return findAllByView(type, view).get(0);

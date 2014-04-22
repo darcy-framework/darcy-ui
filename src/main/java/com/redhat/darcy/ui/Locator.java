@@ -27,8 +27,7 @@ public interface Locator {
         List<T> found = findAll(type, context);
         
         if (found.isEmpty()) {
-            // FIXME: Throw some exception here
-            return null;
+            throw new NotFoundException(type, this);
         }
         
         return found.get(0);

@@ -27,8 +27,7 @@ public interface FindsByChained {
         List<T> found = findAllByChained(type, locators);
         
         if (found.isEmpty()) {
-            // FIXME: Throw some exception here
-            return null;
+            throw new NotFoundException(type, By.chained(locators));
         }
         
         return findAllByChained(type, locators).get(0);

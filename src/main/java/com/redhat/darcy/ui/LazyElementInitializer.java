@@ -44,8 +44,8 @@ public abstract class LazyElementInitializer {
      * @see com.redhat.darcy.ui.elements.LazyElement
      */
     public static <T extends View> void initLazyElements(T view) {
-        Class<?> viewClass = view.getClass();
         
+        Class<?> viewClass = view.getClass();
         // Loop through the class hierarchy
         while (viewClass != Object.class) {
             // Loop through the fields

@@ -27,8 +27,7 @@ public interface FindsById {
         List<T> found = findAllById(type, id);
         
         if (found.isEmpty()) {
-            // FIXME: Throw some exception here
-            return null;
+            throw new NotFoundException(type, By.id(id));
         }
         
         return findAllById(type, id).get(0);
