@@ -99,4 +99,8 @@ public abstract class Elements {
     public static Label label(Locator locator) {
         return element(Label.class, locator);
     }
+    
+    public static Select select(Locator locator) {
+        return element(Select.class, locator);
+    }
 }
