@@ -23,7 +23,7 @@ import java.util.List;
 
 import com.redhat.darcy.ui.Locator;
 
-public interface Select extends Element {
+public interface Select extends Disableable {
     void select(Locator locator);
     List<SelectOption> getOptions();
     SelectOption getCurrentlySelectedOption();

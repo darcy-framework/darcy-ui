@@ -24,7 +24,7 @@ package com.redhat.darcy.ui.elements;
  * specific dialog. Specifying a FileSelect element tells the underlying automation library to 
  * anticipate that behavior.
  */
-public interface FileSelect extends HasValue {
+public interface FileSelect extends HasValue, Disableable {
     void setFilePath(String path);
     void clear();
 }

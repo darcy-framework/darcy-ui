@@ -19,6 +19,6 @@
 
 package com.redhat.darcy.ui.elements;
 
-public interface Clickable extends Element {
+public interface Clickable extends Disableable {
     void click();
 }
