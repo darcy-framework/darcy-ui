@@ -40,16 +40,20 @@ public abstract class By {
         return new ByLinkText(linkText);
     }
     
+    public static Locator xpath(String xpath) {
+        return new ByXPath(xpath);
+    }
+    
     public static Locator view(View view) {
         return new ByView(view);
     }
     
-    public static Locator nested(Element parent, Locator child) {
-        return new ByNested(parent, child);
-    }
-    
     public static Locator chained(Locator... locators) {
         return new ByChained(locators);
+    }
+    
+    public static Locator nested(Element parent, Locator child) {
+        return new ByNested(parent, child);
     }
     
     public static class ById implements Locator {
@@ -78,19 +82,6 @@ public abstract class By {
         }
     }
     
-    public static class ByView implements Locator {
-        private View view;
-        
-        public ByView(View view) {
-            this.view = view;
-        }
-        
-        @Override
-        public <T> List<T> findAll(Class<T> type, Context context) {
-            return ((FindsByView) context).findAllByView(type, view);
-        }
-    }
-    
     public static class ByLinkText implements Locator {
         private String linkText;
         
@@ -101,6 +92,32 @@ public abstract class By {
         @Override
         public <T> List<T> findAll(Class<T> type, Context context) {
             return ((FindsByLinkText) context).findAllByLinkText(type, linkText);
+        }
+    }
+    
+    public static class ByXPath implements Locator {
+        private String xpath;
+        
+        public ByXPath(String xpath) {
+            this.xpath = xpath;
+        }
+        
+        @Override
+        public <T> List<T> findAll(Class<T> type, Context context) {
+            return ((FindsByXPath) context).findAllByXPath(type, xpath);
+        }
+    }
+    
+    public static class ByView implements Locator {
+        private View view;
+        
+        public ByView(View view) {
+            this.view = view;
+        }
+        
+        @Override
+        public <T> List<T> findAll(Class<T> type, Context context) {
+            return ((FindsByView) context).findAllByView(type, view);
         }
     }
     
