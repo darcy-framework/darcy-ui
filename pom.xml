@@ -2,14 +2,20 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+
     <groupId>com.redhat.darcy</groupId>
     <artifactId>darcy</artifactId>
     <version>0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>darcy</name>
+    <name>${project.groupId}:${project.artifactId}</name>
     <description>Framework for writing page objects to automate interaction with graphical user interfaces.</description>
-    <url>https://github.com/rh-darcy/darcy</url>
+    <url>https://github.com/darcy-framework/darcy</url>
 
     <licenses>
         <license>
@@ -22,7 +28,7 @@
     <scm>
         <connection>scm:git:https://github.com/darcy-framework/darcy.git</connection>
         <developerConnection>scm:git:git@github.com:darcy-framework/darcy.git</developerConnection>
-        <url>https://github.com/rh-darcy/darcy</url>
+        <url>https://github.com/darcy-framework/darcy</url>
     </scm>
 
     <developers>
