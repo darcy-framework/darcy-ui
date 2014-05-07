@@ -40,6 +40,14 @@ public abstract class By {
         return new ByLinkText(linkText);
     }
     
+    public static Locator textContent(String textContent) {
+        return new ByTextContent(textContent);
+    }
+    
+    public static Locator partialTextContent(String partialTextContent) {
+        return new ByPartialTextContent(partialTextContent);
+    }
+    
     public static Locator xpath(String xpath) {
         return new ByXPath(xpath);
     }
@@ -92,6 +100,33 @@ public abstract class By {
         @Override
         public <T> List<T> findAll(Class<T> type, Context context) {
             return ((FindsByLinkText) context).findAllByLinkText(type, linkText);
+        }
+    }
+    
+    public static class ByTextContent implements Locator {
+        private String textContent;
+        
+        public ByTextContent(String textContent) {
+            this.textContent = textContent;
+        }
+        
+        @Override
+        public <T> List<T> findAll(Class<T> type, Context context) {
+            return ((FindsByTextContent) context).findAllByTextContent(type, textContent);
+        }
+    }
+    
+    public static class ByPartialTextContent implements Locator {
+        private String partialTextContent;
+        
+        public ByPartialTextContent(String partialTextContent) {
+            this.partialTextContent = partialTextContent;
+        }
+        
+        @Override
+        public <T> List<T> findAll(Class<T> type, Context context) {
+            return ((FindsByPartialTextContent) context)
+                    .findAllByPartialTextContent(type, partialTextContent);
         }
     }
     
