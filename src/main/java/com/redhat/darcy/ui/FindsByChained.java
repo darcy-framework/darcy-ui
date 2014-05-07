@@ -30,6 +30,6 @@ public interface FindsByChained {
             throw new NotFoundException(type, By.chained(locators));
         }
         
-        return findAllByChained(type, locators).get(0);
+        return found.get(0);
     }
 }

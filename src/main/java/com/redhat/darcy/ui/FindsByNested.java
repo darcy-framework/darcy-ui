@@ -32,6 +32,6 @@ public interface FindsByNested {
             throw new NotFoundException(type, By.nested(parent, child));
         }
         
-        return findAllByNested(type, parent, child).get(0);
+        return found.get(0);
     }
 }

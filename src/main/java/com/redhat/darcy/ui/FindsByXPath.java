@@ -30,6 +30,6 @@ public interface FindsByXPath {
             throw new NotFoundException(type, By.xpath(xpath));
         }
         
-        return findAllByXPath(type, xpath).get(0);
+        return found.get(0);
     }
 }

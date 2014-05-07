@@ -30,6 +30,6 @@ public interface FindsByLinkText {
             throw new NotFoundException(type, By.linkText(linkText));
         }
         
-        return findAllByLinkText(type, linkText).get(0);
+        return found.get(0);
     }
 }

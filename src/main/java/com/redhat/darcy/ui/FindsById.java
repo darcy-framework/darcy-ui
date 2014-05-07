@@ -30,6 +30,6 @@ public interface FindsById {
             throw new NotFoundException(type, By.id(id));
         }
         
-        return findAllById(type, id).get(0);
+        return found.get(0);
     }
 }

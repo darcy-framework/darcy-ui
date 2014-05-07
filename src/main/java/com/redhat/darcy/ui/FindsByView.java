@@ -30,6 +30,6 @@ public interface FindsByView {
             throw new NotFoundException(type, By.view(view));
         }
         
-        return findAllByView(type, view).get(0);
+        return found.get(0);
     }
 }
