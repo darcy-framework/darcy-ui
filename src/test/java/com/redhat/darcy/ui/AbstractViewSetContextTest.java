@@ -21,10 +21,13 @@ package com.redhat.darcy.ui;
 
 import static org.junit.Assert.assertEquals;
 
+import com.redhat.darcy.ui.annotations.Require;
 import com.redhat.darcy.ui.elements.Elements;
 import com.redhat.darcy.ui.elements.Label;
 
 import org.junit.Test;
+
+import java.util.concurrent.Callable;
 
 public class AbstractViewSetContextTest {
     @Test(expected = MissingLoadConditionException.class)
@@ -51,5 +54,48 @@ public class AbstractViewSetContextTest {
         
         assertEquals("Expected LazyElement to be initialized with dummy implementation.", 
                 new AlwaysDisplayedLabel().readText(), testView.getLabelText());
+    }
+    
+    @Test
+    public void shouldAssignAndCastViewContextToFieldsAnnotatedWithContext() {
+        class SpecificContext extends DummyContext {
+            
+        }
+        
+        class TestView extends AbstractView {
+            @com.redhat.darcy.ui.annotations.Context
+            private SpecificContext castedContext;
+            
+            protected Callable<Boolean> loadCondition() {
+                return () -> true;
+            }
+        }
+        
+        TestView testView = new TestView();
+        SpecificContext specificContext = new SpecificContext();
+        
+        testView.setContext(specificContext);
+        
+        assertEquals(testView.getContext(), testView.castedContext);
+    }
+
+    @Test(expected = ClassCastException.class)
+    public void shouldThrowExceptionIfAttemptToAssignContextToAnUnimplementedType() {
+        class SpecificContext extends DummyContext {
+            
+        }
+        
+        class TestView extends AbstractView {
+            @com.redhat.darcy.ui.annotations.Context
+            private SpecificContext castedContext;
+            
+            protected Callable<Boolean> loadCondition() {
+                return () -> true;
+            }
+        }
+        
+        TestView testView = new TestView();
+        
+        testView.setContext(new DummyContext());
     }
 }

@@ -17,7 +17,7 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.redhat.darcy.ui;
+package com.redhat.darcy.ui.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -25,14 +25,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * If a class is annotated with {@link RequireAll}, use this to exclude elements from being 
- * required (useful if the element is only present under certain conditions).
+ * A class-level equivalent to {@link Require}. Effectively distributes the annotation to all of 
+ * the elements defined within the View.
  * 
  * @author ahenning
- * 
+ * @see NotRequired
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface NotRequired {
-    
+@Target(ElementType.TYPE)
+public @interface RequireAll {
 }

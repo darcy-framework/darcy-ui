@@ -19,9 +19,20 @@
 
 package com.redhat.darcy.ui;
 
+import com.redhat.darcy.DarcyException;
+import com.redhat.darcy.ui.annotations.Context;
+import com.redhat.darcy.ui.annotations.NotRequired;
+import com.redhat.darcy.ui.annotations.Require;
+import com.redhat.darcy.ui.annotations.RequireAll;
+import com.redhat.darcy.ui.elements.Element;
+import com.redhat.darcy.ui.elements.LazyElement;
+import com.redhat.darcy.util.ReflectionUtil;
+
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.stream.Collectors;
 
 /**
  * A partial implementation of View that initializes LazyElements in
@@ -81,15 +92,12 @@ public abstract class AbstractView implements View {
     
     @Override
     public final View setContext(ViewContext context) {
+        List<Field> fields = ReflectionUtil.getAllDeclaredFields(this);
+        
         if (this.context == null) {
-            // First call. Initialize elements. At the moment it is unnecessary to repeat this step
-            // if the context changes because elements are tied to a View, not a context directly,
-            // and so knowing only about the View is sufficient. It will reference whatever is the
-            // current context of that View. This behavior may change.
-            LazyElementInitializer.initLazyElements(this);
             
-            // Add load conditions read via annotations
-            loadConditions.addAll(LoadConditionAnnotationReader.getLoadConditions(this));
+            initializeLazyElements(fields);
+            readLoadConditionAnnotations(fields);
             
             if (loadConditions.isEmpty()) {
                 throw new MissingLoadConditionException(this);
@@ -97,6 +105,8 @@ public abstract class AbstractView implements View {
         }
         
         this.context = context;
+        
+        injectContexts(fields);
         
         return this;
     }
@@ -124,5 +134,71 @@ public abstract class AbstractView implements View {
     
     protected Transition transition() {
         return context.transition();
+    }
+    
+    private void injectContexts(List<Field> fields) {
+        fields.stream()
+            .filter(f -> f.getAnnotation(Context.class) != null)
+            .forEach(f -> {
+                try {
+                    f.set(this, f.getType().cast(context));
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+    }
+    
+    private void initializeLazyElements(List<Field> fields) {
+        fields.stream()
+            .filter(f -> Element.class.isAssignableFrom(f.getType()) 
+                    || List.class.isAssignableFrom(f.getType()))
+            .forEach(f -> {
+                try {
+                    Object element = f.get(this);
+                    
+                    if (element instanceof LazyElement) {
+                        ((LazyElement) element).setView(this);
+                    }
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+    }
+    
+    private void readLoadConditionAnnotations(List<Field> fields) {
+        loadConditions.addAll(fields.stream()
+            .filter(f -> Element.class.isAssignableFrom(f.getType()))
+            .map(this::getLoadConditionForElementField)
+            .filter(c -> c != null)
+            .collect(Collectors.toList()));
+    }
+    
+    private Callable<Boolean> getLoadConditionForElementField(Field field) {
+        // Initialize it, and add a load condition for it if applicable.
+        try {
+            Object element = field.get(this);
+            
+            Callable<Boolean> callable;
+            
+            // Determine the applicable Callable for this type; prefer View over Element
+            if (element instanceof View) {
+                callable = ((View) element)::isLoaded;
+            } else if (element instanceof Element) {
+                callable = ((Element) element)::isDisplayed;
+            } else {
+                return null;
+            }
+            
+            // Annotation logic
+            if (field.getAnnotation(Require.class) != null
+                    || (field.getDeclaringClass().getAnnotation(RequireAll.class) != null 
+                    && field.getAnnotation(NotRequired.class) == null)) {
+                return callable;
+            }
+            
+            return null;
+        } catch (IllegalArgumentException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

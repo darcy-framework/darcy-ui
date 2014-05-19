@@ -79,8 +79,8 @@ public abstract class Elements {
     }
     
     /**
-     * Wraps the implementation in a proxy so that it may be assigned to a parent View lazily, like
-     * elements.
+     * Wraps an element implementation in a proxy so that it may be assigned to a parent View 
+     * lazily, like elements.
      * <P>
      * The provided implementation must, itself, be a View. If you want to override fundamental UI
      * elements, this is done at the automation-library wrapper level and specific to that 
@@ -93,6 +93,10 @@ public abstract class Elements {
      */
     @SuppressWarnings("unchecked")
     public static <T extends Element> T element(Class<T> type, Locator locator, T implementation) {
+        if (!(implementation instanceof View)) {
+            throw new IllegalArgumentException("Element implementation must also be a View.");
+        }
+        
         InvocationHandler invocationHandler = new LazyViewInvocationHandler((View) implementation, 
                 locator);
         

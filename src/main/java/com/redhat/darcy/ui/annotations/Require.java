@@ -17,7 +17,9 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.redhat.darcy.ui;
+package com.redhat.darcy.ui.annotations;
+
+import com.redhat.darcy.ui.AbstractView;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
