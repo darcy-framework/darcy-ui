@@ -92,21 +92,17 @@ public abstract class AbstractView implements View {
     
     @Override
     public final View setContext(ViewContext context) {
-        List<Field> fields = ReflectionUtil.getAllDeclaredFields(this);
-        
-        if (this.context == null) {
-            
-            initializeLazyElements(fields);
-            readLoadConditionAnnotations(fields);
-            
-            if (loadConditions.isEmpty()) {
-                throw new MissingLoadConditionException(this);
-            }
-        }
-        
         this.context = context;
         
+        List<Field> fields = ReflectionUtil.getAllDeclaredFields(this);
+
         injectContexts(fields);
+        initializeLazyElements(fields);
+        readLoadConditionAnnotations(fields);
+        
+        if (loadConditions.isEmpty()) {
+            throw new MissingLoadConditionException(this);
+        }
         
         return this;
     }

@@ -21,4 +21,19 @@ public class ReflectionUtil {
         
         return allFields;
     }
+    
+    public static List<Class<?>> getAllInterfaces(Object object) {
+        List<Class<?>> allInterfaces = new LinkedList<>();
+        
+        Class<?> objClass = object.getClass();
+        
+        // Loop through the class hierarchy
+        while (objClass != Object.class) {
+            allInterfaces.addAll(Arrays.asList(objClass.getInterfaces()));
+            
+            objClass = objClass.getSuperclass();
+        }
+        
+        return allInterfaces;
+    }
 }

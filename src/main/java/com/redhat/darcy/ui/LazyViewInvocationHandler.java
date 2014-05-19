@@ -19,15 +19,19 @@
 
 package com.redhat.darcy.ui;
 
+import com.redhat.darcy.util.ReflectionUtil;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 
 /**
  * For Views within Views that are created statically and assigned to their "owning" View via
  * reflection and a proxy. The proxy can be cast to LazyElement, and the invocation handler will 
  * intercept the call to setView (defined by LazyElement interface), and without the actual child
- * View implementation knowing about it, set its context to be a NestedViewContext, which will 
- * handle finding elements for the child View.
+ * View implementation knowing about it, set its context to be a ViewContext proxy itself: 
+ * one that defers finding elements to a NestedViewContext, but otherwise forwards calls to the 
+ * parent context.
  */
 public class LazyViewInvocationHandler implements InvocationHandler {
     private Locator locator;
@@ -51,12 +55,21 @@ public class LazyViewInvocationHandler implements InvocationHandler {
         this.locator = locator;
         this.view = view;
     }
-    
+
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         if ("setView".equals(method.getName())) {
-            // Set the "owning" or "parent" View via a NestedViewContext
-            view.setContext(new NestedViewContext((View) args[0], locator));
+            View parentView = (View) args[0];
+            
+            // Create a proxy that implements everything that the parent view's context implements,
+            // but intercepts calls to find elements to the NestedViewContext.
+            ViewContext nestedViewContext = (ViewContext) Proxy.newProxyInstance(
+                    LazyViewInvocationHandler.class.getClassLoader(), 
+                    ReflectionUtil.getAllInterfaces(parentView.getContext()).toArray(new Class[]{}), 
+                    new NestedViewContextInvocationHandler(
+                            new NestedViewContext(parentView, locator)));
+            
+            view.setContext(nestedViewContext);
             
             return null;
         }
