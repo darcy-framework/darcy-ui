@@ -66,6 +66,7 @@ public class AbstractViewSetContextTest {
             @com.redhat.darcy.ui.annotations.Context
             private SpecificContext castedContext;
             
+            // We need a load condition for this view to be valid
             protected Callable<Boolean> loadCondition() {
                 return () -> true;
             }
@@ -89,6 +90,7 @@ public class AbstractViewSetContextTest {
             @com.redhat.darcy.ui.annotations.Context
             private SpecificContext castedContext;
             
+            // We need a load condition for this view to be valid
             protected Callable<Boolean> loadCondition() {
                 return () -> true;
             }

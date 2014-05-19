@@ -21,6 +21,9 @@ package com.redhat.darcy.ui;
 
 import com.redhat.darcy.ui.elements.Element;
 
+/**
+ * Context that returns null when finding any element.
+ */
 public class NullContext implements ViewContext {
     
     @Override
