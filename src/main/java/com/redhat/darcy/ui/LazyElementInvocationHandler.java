@@ -29,6 +29,8 @@ public class LazyElementInvocationHandler implements InvocationHandler {
     private Locator locator;
     private View view;
     
+    private Element cachedElement;
+    
     public LazyElementInvocationHandler(Class<? extends Element> type, Locator locator) {
         this.type = type;
         this.locator = locator;
@@ -51,23 +53,23 @@ public class LazyElementInvocationHandler implements InvocationHandler {
         if (context == null) {
             throw new NullContextException();
         }
-
-        Element element = null;
         
-        try {
-            element = context.findElement(type, locator);
-        } catch (Exception e) {
-            // We couldn't find the element. If all we want to know is if the element is displayed
-            // or not, well we can answer that question: no.
-            if ("isDisplayed".equals(method.getName())) {
-                e.printStackTrace();
-                return false;
-            } else {
-                // Otherwise, we were trying to act on an element we can't find.
-                throw new NotFoundException(type, locator, e);
+        if (cachedElement == null) {
+            try {
+                cachedElement = context.findElement(type, locator);
+            } catch (Exception e) {
+                // We couldn't find the element. If all we want to know is if the element is
+                // displayed or not, well we can answer that question: no.
+                if ("isDisplayed".equals(method.getName())) {
+                    e.printStackTrace();
+                    return false;
+                } else {
+                    // Otherwise, we were trying to act on an element we can't find.
+                    throw new NotFoundException(type, locator, e);
+                }
             }
         }
         
-        return method.invoke(element, args);
+        return method.invoke(cachedElement, args);
     }
 }
