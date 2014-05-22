@@ -27,7 +27,7 @@ import com.redhat.darcy.ui.elements.Element;
 public class NullContext implements ViewContext {
     
     @Override
-    public ViewContext findContext(Locator locator) {
+    public <T extends Context> T findContext(Class<T> type, Locator locator) {
         return null;
     }
     

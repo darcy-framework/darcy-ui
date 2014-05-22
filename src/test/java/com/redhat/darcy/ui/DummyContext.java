@@ -29,7 +29,7 @@ import com.redhat.darcy.ui.elements.Label;
 public class DummyContext implements ViewContext {
     
     @Override
-    public ViewContext findContext(Locator locator) {
+    public <T extends Context> T findContext(Class<T> type, Locator locator) {
         return null;
     }
     

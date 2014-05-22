@@ -56,8 +56,8 @@ public class NestedViewContext implements ViewContext {
     }
 
     @Override
-    public ViewContext findContext(Locator locator) {
-        return view.getContext().findContext(locator);
+    public <T extends Context> T findContext(Class<T> type, Locator locator) {
+        return view.getContext().findContext(type, locator);
     }
     
     // This could be pulled into parent class or interface
