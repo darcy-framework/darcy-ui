@@ -19,7 +19,6 @@
 
 package com.redhat.darcy.ui;
 
-import com.redhat.darcy.DarcyException;
 import com.redhat.darcy.ui.annotations.Context;
 import com.redhat.darcy.ui.annotations.NotRequired;
 import com.redhat.darcy.ui.annotations.Require;
@@ -38,8 +37,6 @@ import java.util.stream.Collectors;
  * A partial implementation of View that initializes LazyElements in
  * {@link #setContext(ViewContext)}, and simplifies defining load conditions (via {@link Require},
  * {@link RequireAll}, {@link NotRequired}, and {@link #loadCondition()}.
- * 
- * @author ahenning
  * 
  */
 public abstract class AbstractView implements View {
@@ -104,6 +101,8 @@ public abstract class AbstractView implements View {
             throw new MissingLoadConditionException(this);
         }
         
+        onSetContext();
+        
         return this;
     }
     
@@ -126,6 +125,14 @@ public abstract class AbstractView implements View {
      */
     protected Callable<Boolean> loadCondition() {
         return null;
+    }
+    
+    /**
+     * Called after any call to {@link #setContext(ViewContext)}. Useful if you need to set up some
+     * fields that depend on this view having context.
+     */
+    protected void onSetContext() {
+        
     }
     
     protected Transition transition() {
@@ -170,7 +177,6 @@ public abstract class AbstractView implements View {
     }
     
     private Callable<Boolean> getLoadConditionForElementField(Field field) {
-        // Initialize it, and add a load condition for it if applicable.
         try {
             Object element = field.get(this);
             
