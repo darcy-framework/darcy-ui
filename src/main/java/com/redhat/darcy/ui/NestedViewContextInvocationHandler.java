@@ -12,7 +12,7 @@ public class NestedViewContextInvocationHandler implements InvocationHandler {
     
     @Override
     public Object invoke(Object obj, Method method, Object[] args) throws Throwable {
-        if (method.getDeclaringClass().equals(ViewContext.class)) {
+        if (method.getDeclaringClass().equals(ElementContext.class)) {
             return method.invoke(nestedViewContext, args);
         } else {
             return method.invoke(nestedViewContext.getParentView().getContext(), args);
