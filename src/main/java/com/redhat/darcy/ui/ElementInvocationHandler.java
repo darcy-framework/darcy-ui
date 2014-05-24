@@ -27,7 +27,7 @@ import com.redhat.darcy.ui.elements.Element;
 public class ElementInvocationHandler implements InvocationHandler {
     private Class<? extends Element> type;
     private Locator locator;
-    private View view;
+    private ElementContext context;
     
     private Element cachedElement;
     
@@ -36,25 +36,21 @@ public class ElementInvocationHandler implements InvocationHandler {
         this.locator = locator;
     }
     
-    public ElementInvocationHandler(Class<? extends Element> type, Locator locator, View view) {
+    public ElementInvocationHandler(Class<? extends Element> type, Locator locator, 
+            ElementContext view) {
         this.type = type;
         this.locator = locator;
-        this.view = view;
+        this.context = view;
     }
     
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        if ("setView".equals(method.getName())) {
-            view = (View) args[0];
+        if ("setContext".equals(method.getName())) {
+            context = (ElementContext) args[0];
+            cachedElement = null;
             
             return null;
         }
-        
-        if (view == null) {
-            throw new NullViewException();
-        }
-        
-        ViewContext context = view.getContext();
         
         if (context == null) {
             throw new NullContextException();
@@ -62,12 +58,11 @@ public class ElementInvocationHandler implements InvocationHandler {
         
         if (cachedElement == null) {
             try {
-                cachedElement = context.findElement(type, locator);
+                cachedElement = locator.find(type, context);
             } catch (Exception e) {
                 // We couldn't find the element. If all we want to know is if the element is
                 // displayed or not, well we can answer that question: no.
                 if ("isDisplayed".equals(method.getName())) {
-                    e.printStackTrace();
                     return false;
                 } else {
                     // Otherwise, we were trying to act on an element we can't find.

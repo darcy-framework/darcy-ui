@@ -7,12 +7,13 @@ import com.redhat.synq.DefaultPollEvent;
 import com.redhat.synq.ForwardingPollEvent;
 
 public class NestedContextTransitionEvent<T extends View> extends ForwardingPollEvent<T> {
-
-    public NestedContextTransitionEvent(T destination, ViewContext context, 
+    
+    public NestedContextTransitionEvent(T destination, ElementContext context,
             Locator nestedContextLocator) {
         super(new DefaultPollEvent<>(match(
-                destination, 
-                isLoadedInContext(new NestedViewContext(destination, nestedContextLocator)))));
+                destination,
+                isLoadedInContext(ChainedElementContext.makeChainedElementContext(context,
+                        nestedContextLocator)))));
     }
     
 }

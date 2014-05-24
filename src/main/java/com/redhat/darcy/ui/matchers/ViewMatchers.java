@@ -19,13 +19,13 @@
 
 package com.redhat.darcy.ui.matchers;
 
+import com.redhat.darcy.ui.ElementContext;
+import com.redhat.darcy.ui.View;
+
 import org.hamcrest.Matcher;
 
-import com.redhat.darcy.ui.View;
-import com.redhat.darcy.ui.ViewContext;
-
 public class ViewMatchers {
-    public static <T extends View> Matcher<T> isLoadedInContext(ViewContext context) {
+    public static <T extends View> Matcher<T> isLoadedInContext(ElementContext context) {
         return new ViewIsLoadedInContext<T>(context);
     }
 }

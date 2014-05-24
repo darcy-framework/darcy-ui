@@ -19,7 +19,7 @@
 
 package com.redhat.darcy.ui.elements;
 
-import com.redhat.darcy.ui.View;
+import com.redhat.darcy.ui.ElementContext;
 
 /**
  * Used by proxy instances so that elements may be assigned to Views lazily via reflection.
@@ -29,5 +29,5 @@ import com.redhat.darcy.ui.View;
  * 
  */
 public interface LazyElement {
-    void setView(View view);
+    void setContext(ElementContext elementContext);
 }

@@ -28,9 +28,9 @@ import com.redhat.synq.ForwardingPollEvent;
 
 public class SimpleTransitionEvent<T extends View> extends ForwardingPollEvent<T> implements TransitionEvent<T> {
     private final T destination;
-    private final ViewContext context;
+    private final ElementContext context;
     
-    public SimpleTransitionEvent(T destination, ViewContext context) {
+    public SimpleTransitionEvent(T destination, ElementContext context) {
         super(new DefaultPollEvent<>(match(destination, isLoadedInContext(context))));
         
         this.destination = destination;
@@ -44,7 +44,12 @@ public class SimpleTransitionEvent<T extends View> extends ForwardingPollEvent<T
 
     @Override
     public Event<T> inNewContext(Locator locator) {
-        return new NewContextTransitionEvent<>(destination, context, locator);
+        if (!(context instanceof ParentContext)) {
+            throw new UnsupportedOperationException("Context not capable of finding another context"
+                    + " for View: " + context);
+        }
+        
+        return new NewContextTransitionEvent<>(destination, (ParentContext) context, locator);
     }
 
     @Override

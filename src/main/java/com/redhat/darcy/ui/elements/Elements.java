@@ -21,7 +21,7 @@ package com.redhat.darcy.ui.elements;
 
 import com.redhat.darcy.ui.ElementInvocationHandler;
 import com.redhat.darcy.ui.ElementListInvocationHandler;
-import com.redhat.darcy.ui.LazyViewInvocationHandler;
+import com.redhat.darcy.ui.ElementViewInvocationHandler;
 import com.redhat.darcy.ui.Locator;
 import com.redhat.darcy.ui.View;
 
@@ -97,7 +97,7 @@ public abstract class Elements {
             throw new IllegalArgumentException("Element implementation must also be a View.");
         }
         
-        InvocationHandler invocationHandler = new LazyViewInvocationHandler((View) implementation, 
+        InvocationHandler invocationHandler = new ElementViewInvocationHandler((View) implementation, 
                 locator);
         
         return (T) Proxy.newProxyInstance(Elements.class.getClassLoader(), 

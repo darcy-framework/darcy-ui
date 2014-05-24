@@ -30,7 +30,9 @@ import javax.annotation.Nullable;
 public class ElementListInvocationHandler implements InvocationHandler {
     private Class<? extends Element> type;
     private Locator locator;
-    private View view;
+    private ElementContext context;
+    
+    private List<? extends Element> cachedList;
     
     public ElementListInvocationHandler(Class<? extends Element> type, Locator locator) {
         this.type = type;
@@ -38,32 +40,29 @@ public class ElementListInvocationHandler implements InvocationHandler {
     }
     
     public ElementListInvocationHandler(Class<? extends Element> type, Locator locator, 
-            @Nullable View view) {
+            @Nullable ElementContext view) {
         this.type = type;
         this.locator = locator;
-        this.view = view;
+        this.context = view;
     }
     
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        if ("setView".equals(method.getName())) {
-            view = (View) args[0];
+        if ("setContext".equals(method.getName())) {
+            context = (ElementContext) args[0];
+            cachedList = null;
             
             return null;
         }
-        
-        if (view == null) {
-            throw new NullViewException();
-        }
-        
-        ViewContext context = view.getContext();
         
         if (context == null) {
             throw new NullContextException();
         }
 
-        List<? extends Element> elements = context.findElements(type, locator);
+        if (cachedList == null) {
+            cachedList = locator.findAll(type, context);
+        }
         
-        return method.invoke(elements, args);
+        return method.invoke(cachedList, args);
     }
 }

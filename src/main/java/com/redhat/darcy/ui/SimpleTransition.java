@@ -20,9 +20,9 @@
 package com.redhat.darcy.ui;
 
 public class SimpleTransition implements Transition {
-    private final ViewContext context;
+    private final ElementContext context;
     
-    public SimpleTransition(ViewContext context) {
+    public SimpleTransition(ElementContext context) {
         this.context = context;
     }
     

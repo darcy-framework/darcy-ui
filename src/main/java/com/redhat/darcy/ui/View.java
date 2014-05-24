@@ -41,9 +41,9 @@ public interface View {
      * @return "this" and as such should always be safe to cast to the specific subtype it was
      *         called on.
      */
-    View setContext(ViewContext context);
+    View setContext(ElementContext context);
     
-    ViewContext getContext();
+    ElementContext getContext();
     
     /**
      * 

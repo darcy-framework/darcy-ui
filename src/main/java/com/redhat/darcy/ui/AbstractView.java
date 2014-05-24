@@ -41,9 +41,9 @@ import java.util.stream.Collectors;
  */
 public abstract class AbstractView implements View {
     /**
-     * The ViewContext for this View, managed by AbstractView.
+     * The ElementContext for this View, managed by AbstractView.
      */
-    private ViewContext context;
+    private ElementContext context;
     
     /**
      * All of these need to evaluate to true for the View to be considered loaded.
@@ -88,7 +88,7 @@ public abstract class AbstractView implements View {
     }
     
     @Override
-    public final View setContext(ViewContext context) {
+    public final View setContext(ElementContext context) {
         this.context = context;
         
         List<Field> fields = ReflectionUtil.getAllDeclaredFields(this);
@@ -107,7 +107,7 @@ public abstract class AbstractView implements View {
     }
     
     @Override
-    public final ViewContext getContext() {
+    public final ElementContext getContext() {
         return context;
     }
     
@@ -160,7 +160,7 @@ public abstract class AbstractView implements View {
                     Object element = f.get(this);
                     
                     if (element instanceof LazyElement) {
-                        ((LazyElement) element).setView(this);
+                        ((LazyElement) element).setContext(getContext());
                     }
                 } catch (IllegalAccessException e) {
                     throw new RuntimeException(e);

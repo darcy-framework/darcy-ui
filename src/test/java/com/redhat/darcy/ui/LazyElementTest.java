@@ -40,7 +40,7 @@ public class LazyElementTest {
     public void shouldThrowNullContextExceptionIfAssociatedViewHasNoContext() {
         Element element = Elements.element(By.id("test"));
         
-        ((LazyElement) element).setView(new DummyView());
+        ((LazyElement) element).setContext(new DummyView());
         
         element.isDisplayed();
     }
@@ -49,7 +49,7 @@ public class LazyElementTest {
     public void shouldAssociateWithAViewContext() {
         Label label = Elements.label(By.id("test"));
         
-        ((LazyElement) label).setView(new DummyView().setContext(new DummyContext()));
+        ((LazyElement) label).setContext(new DummyView().setContext(new DummyContext()));
         
         // DummyContext always returns the same label implementation for every element
         assertEquals("Expected lazy element to be forwarding methods to implementation defined by "

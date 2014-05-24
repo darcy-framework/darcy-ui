@@ -19,16 +19,16 @@
 
 package com.redhat.darcy.ui.matchers;
 
+import com.redhat.darcy.ui.ElementContext;
+import com.redhat.darcy.ui.View;
+
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
-import com.redhat.darcy.ui.View;
-import com.redhat.darcy.ui.ViewContext;
-
 public class ViewIsLoadedInContext<T extends View> extends TypeSafeMatcher<T> {
-    private ViewContext context;
+    private ElementContext context;
     
-    public ViewIsLoadedInContext(ViewContext context) {
+    public ViewIsLoadedInContext(ElementContext context) {
         this.context = context;
     }
     
