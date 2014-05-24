@@ -19,20 +19,29 @@
 
 package com.redhat.darcy.ui;
 
+import com.redhat.darcy.ui.elements.Element;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import com.redhat.darcy.ui.elements.Element;
+import javax.annotation.Nullable;
 
-public class LazyElementListInvocationHandler implements InvocationHandler {
+public class ElementListInvocationHandler implements InvocationHandler {
     private Class<? extends Element> type;
     private Locator locator;
     private View view;
     
-    public LazyElementListInvocationHandler(Class<? extends Element> type, Locator locator) {
+    public ElementListInvocationHandler(Class<? extends Element> type, Locator locator) {
         this.type = type;
         this.locator = locator;
+    }
+    
+    public ElementListInvocationHandler(Class<? extends Element> type, Locator locator, 
+            @Nullable View view) {
+        this.type = type;
+        this.locator = locator;
+        this.view = view;
     }
     
     @Override

@@ -2,6 +2,10 @@ package com.redhat.darcy.ui;
 
 import java.util.List;
 
+/**
+ * A locator is a strategy for finding an instance (or List of instances) that implement some class,
+ * given some {@link Context}.
+ */
 public interface Locator {
     /**
      * Returns a list of all the elements found by this locator, of the given type, in the given
@@ -16,8 +20,8 @@ public interface Locator {
     /**
      * Returns one element found by this locator, of the given type, in the given context.
      * <P>
-     * By default, if there are multiple elements with the same conditions, then this method picks
-     * the first in the list. The order is dependent on the implementation.
+     * By default, if there are multiple instances that would satisfy this locator, then this method 
+     * picks one of them. The instance picked is up to implementation.
      * 
      * @param type
      * @param context

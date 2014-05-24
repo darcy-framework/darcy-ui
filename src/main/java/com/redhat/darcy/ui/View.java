@@ -30,8 +30,7 @@ package com.redhat.darcy.ui;
  * among several pages. Views can then include other Views and expose them via public getters or
  * forward their methods.
  * 
- * @author ahenning
- * 
+ * @see AbstractView
  */
 public interface View {
     /**
@@ -48,8 +47,7 @@ public interface View {
     
     /**
      * 
-     * @throws NullContextException
-     *             if the context has not yet been set on this View.
+     * @throws NullContextException if the context has not yet been set on this View.
      * @return
      */
     boolean isLoaded();

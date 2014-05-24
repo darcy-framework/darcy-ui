@@ -19,6 +19,15 @@
 
 package com.redhat.darcy.ui;
 
+/**
+ * Fluently creates {@link TransitionEvent}s for a given destination {@link View}.
+ */
 public interface Transition {
+    /**
+     * Create a {@link TransitionEvent} that will wait for a transition to the destination 
+     * {@link View} to complete.
+     * @param view
+     * @return
+     */
     <T extends View> TransitionEvent<T> to(T view);
 }

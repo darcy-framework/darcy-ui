@@ -19,8 +19,8 @@
 
 package com.redhat.darcy.ui.elements;
 
-import com.redhat.darcy.ui.LazyElementInvocationHandler;
-import com.redhat.darcy.ui.LazyElementListInvocationHandler;
+import com.redhat.darcy.ui.ElementInvocationHandler;
+import com.redhat.darcy.ui.ElementListInvocationHandler;
 import com.redhat.darcy.ui.LazyViewInvocationHandler;
 import com.redhat.darcy.ui.Locator;
 import com.redhat.darcy.ui.View;
@@ -35,7 +35,7 @@ import java.util.List;
  * 
  * @author ahenning
  * @see {@link LazyElement}
- * @see {@link com.redhat.darcy.ui.LazyElementInvocationHandler LazyElementInvocationHandler}
+ * @see {@link com.redhat.darcy.ui.ElementInvocationHandler LazyElementInvocationHandler}
  *
  */
 public abstract class Elements {
@@ -52,7 +52,7 @@ public abstract class Elements {
      */
     @SuppressWarnings("unchecked")
     public static <T extends Element> T element(Class<T> type, Locator locator) {
-        InvocationHandler invocationHandler = new LazyElementInvocationHandler(type, locator);
+        InvocationHandler invocationHandler = new ElementInvocationHandler(type, locator);
         
         return (T) Proxy.newProxyInstance(Elements.class.getClassLoader(), 
                 new Class[] { type, LazyElement.class },
@@ -71,7 +71,7 @@ public abstract class Elements {
      */
     @SuppressWarnings("unchecked")
     public static <T extends Element> List<T> elements(Class<T> type, Locator locator) {
-        InvocationHandler invocationHandler = new LazyElementListInvocationHandler(type, locator);
+        InvocationHandler invocationHandler = new ElementListInvocationHandler(type, locator);
         
         return (List<T>) Proxy.newProxyInstance(Elements.class.getClassLoader(), 
                 new Class[] { List.class, LazyElement.class },

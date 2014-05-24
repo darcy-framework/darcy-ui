@@ -19,7 +19,20 @@
 
 package com.redhat.darcy.ui;
 
+/**
+ * A {@link Context} for {@link Views}. Must also be able to find 
+ * {@link com.redhat.darcy.ui.elements.Element}s and other {@link ViewContext}s.
+ * <P>
+ * Implementations may also choose to override {@link #transition()} which provides a means for 
+ * implementation-specific {@link TransitionEvent}s. By default these simply wait for the specified
+ * View to be loaded.
+ */
 public interface ViewContext extends ParentContext, ElementContext {
+    /**
+     * Creates a {@link Transition}, which will create a {@link TransitionEvent} based on some View,
+     * that you can wait for.
+     * @return
+     */
     default Transition transition() {
         return new SimpleTransition(this);
     }

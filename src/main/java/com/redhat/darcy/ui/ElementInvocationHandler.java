@@ -24,16 +24,22 @@ import java.lang.reflect.Method;
 
 import com.redhat.darcy.ui.elements.Element;
 
-public class LazyElementInvocationHandler implements InvocationHandler {
+public class ElementInvocationHandler implements InvocationHandler {
     private Class<? extends Element> type;
     private Locator locator;
     private View view;
     
     private Element cachedElement;
     
-    public LazyElementInvocationHandler(Class<? extends Element> type, Locator locator) {
+    public ElementInvocationHandler(Class<? extends Element> type, Locator locator) {
         this.type = type;
         this.locator = locator;
+    }
+    
+    public ElementInvocationHandler(Class<? extends Element> type, Locator locator, View view) {
+        this.type = type;
+        this.locator = locator;
+        this.view = view;
     }
     
     @Override
