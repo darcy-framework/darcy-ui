@@ -155,17 +155,16 @@ public abstract class AbstractView implements View {
         fields.stream()
             .filter(f -> Element.class.isAssignableFrom(f.getType()) 
                     || List.class.isAssignableFrom(f.getType()))
-            .forEach(f -> {
+            .map((f) -> {
                 try {
-                    Object element = f.get(this);
-                    
-                    if (element instanceof LazyElement) {
-                        ((LazyElement) element).setContext(getContext());
-                    }
+                    return f.get(this);
                 } catch (IllegalAccessException e) {
                     throw new RuntimeException(e);
                 }
-            });
+            })
+            .filter((o) -> o instanceof LazyElement)
+            .map((e) -> (LazyElement) e)
+            .forEach((e) -> e.setContext(getContext()));
     }
     
     private void readLoadConditionAnnotations(List<Field> fields) {
