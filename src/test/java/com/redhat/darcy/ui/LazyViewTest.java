@@ -50,7 +50,7 @@ public class LazyViewTest {
         ParentContext parentContext = new ParentContext();
         CustomElement customElement = element(CustomElement.class, By.id("test"), 
                 new TestCustomElement());
-        ((LazyElement) customElement).setContext(new DummyView().setContext(parentContext));
+        ((LazyElement) customElement).setContext(parentContext);
         
         
         assertEquals("Custom element's @Context field should have been assigned a proxy to parent "

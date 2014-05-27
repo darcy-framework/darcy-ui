@@ -29,27 +29,19 @@ import com.redhat.darcy.ui.elements.LazyElement;
 import org.junit.Test;
 
 public class LazyElementTest {
-    @Test(expected = NullViewException.class)
-    public void shouldThrowNullViewExceptionIfNotInitialized() {
-        Element element = Elements.element(By.id("test"));
-        
-        element.isDisplayed();
-    }
     
     @Test(expected = NullContextException.class)
-    public void shouldThrowNullContextExceptionIfAssociatedViewHasNoContext() {
+    public void shouldThrowNullContextExceptionIfNoContextIsSet() {
         Element element = Elements.element(By.id("test"));
-        
-        ((LazyElement) element).setContext(new DummyView());
         
         element.isDisplayed();
     }
     
     @Test
-    public void shouldAssociateWithAViewContext() {
+    public void shouldAssociateWithAContext() {
         Label label = Elements.label(By.id("test"));
         
-        ((LazyElement) label).setContext(new DummyView().setContext(new DummyContext()));
+        ((LazyElement) label).setContext(new DummyContext());
         
         // DummyContext always returns the same label implementation for every element
         assertEquals("Expected lazy element to be forwarding methods to implementation defined by "

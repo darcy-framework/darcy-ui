@@ -19,28 +19,27 @@
 
 package com.redhat.darcy.ui;
 
-import com.redhat.darcy.ui.elements.Element;
 import com.redhat.darcy.ui.elements.Label;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A test context that can only find Label elements, and always returns
  * {@link AlwaysDisplayedLabel} as the implementation.
  */
-public class DummyContext implements ViewContext {
-    
-    @Override
-    public <T extends Context> T findContext(Class<T> type, Locator locator) {
-        return null;
-    }
-    
+public class DummyContext implements ViewContext, FindsById {
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends Element> T findElement(Class<T> type, Locator locator) {
+    public <T> List<T> findAllById(Class<T> type, String id) {
         if (!type.isAssignableFrom(Label.class)) {
             throw new RuntimeException("This DummyContext can only find Label element types.");
         }
         
-        return (T) new AlwaysDisplayedLabel();
+        List<Label> found = new ArrayList<>(1);
+        found.add(new AlwaysDisplayedLabel());
+        
+        return (List<T>) found;
     }
     
 }

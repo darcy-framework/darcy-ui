@@ -23,17 +23,17 @@ package com.redhat.darcy.ui;
  * Simple view implementation that always returns true for isLoaded.
  */
 public class DummyView implements View {
-    private ViewContext context;
+    private ElementContext context;
 
     @Override
-    public View setContext(ViewContext context) {
+    public View setContext(ElementContext context) {
         this.context = context;
         
         return this;
     }
 
     @Override
-    public ViewContext getContext() {
+    public ElementContext getContext() {
         return context;
     }
 
