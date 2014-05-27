@@ -23,7 +23,12 @@ package com.redhat.darcy.ui;
  * A context which can find other contexts.
  */
 public interface ParentContext extends Context {
+    default ContextSelection context() {
+        return new DefaultContextSelection(this);
+    }
+    
+    @Deprecated
     default <T extends Context> T findContext(Class<T> type, Locator locator) {
-        return locator.find(type, this);
+        return context().ofType(type, locator);
     }
 }

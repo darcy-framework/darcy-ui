@@ -12,6 +12,7 @@ import java.util.function.Supplier;
 
 /**
  * Fluently retrieve an element reference or a element list reference of a specified type.
+ * @see ElementContext
  */
 public interface ElementSelection {
     /**
