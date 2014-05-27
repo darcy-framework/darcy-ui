@@ -39,15 +39,15 @@ public class ProxyElementSelection implements ElementSelection {
     @Override
     public <T extends Element> List<T> listOfType(Class<T> elementType, Locator locator,
             Supplier<? extends T> implementation) {
-        Supplier<View> viewSupplier;
-        
-        try {
-            // TODO: Not sure if this cast will work
-            viewSupplier = (Supplier<View>) implementation;
-        } catch (ClassCastException e) {
-            throw new IllegalArgumentException("Custom element types must also implement View. "
-                    + "To override or add a fundamental element type is implementation specific.");
-        }
+        Supplier<View> viewSupplier = () -> {
+            try {
+                return (View) implementation.get();
+            } catch (ClassCastException e) {
+                throw new IllegalArgumentException("Custom element types must also implement View. "
+                        + "To override or add a fundamental element type is implementation "
+                        + "specific.");
+            }
+        };
         
         return (List<T>) Proxy.newProxyInstance(cl, new Class[] { elementType },
                 new ElementViewListInvocationHandler(viewSupplier, locator, context));
