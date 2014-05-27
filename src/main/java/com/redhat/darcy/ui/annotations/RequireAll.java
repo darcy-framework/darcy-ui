@@ -28,7 +28,6 @@ import java.lang.annotation.Target;
  * A class-level equivalent to {@link Require}. Effectively distributes the annotation to all of 
  * the elements defined within the View.
  * 
- * @author ahenning
  * @see NotRequired
  */
 @Retention(RetentionPolicy.RUNTIME)

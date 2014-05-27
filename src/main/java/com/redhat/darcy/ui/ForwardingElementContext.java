@@ -19,6 +19,9 @@
 
 package com.redhat.darcy.ui;
 
+/**
+ * An ElementContext that wraps another ElementContext.
+ */
 public interface ForwardingElementContext extends ElementContext, WrapsElementContext {
     
 }

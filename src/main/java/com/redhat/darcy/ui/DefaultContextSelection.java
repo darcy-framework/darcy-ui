@@ -21,6 +21,10 @@ package com.redhat.darcy.ui;
 
 import java.util.List;
 
+/**
+ * A simple default {@link ContextSelection} that forwards to {@link Locator#find(Class, Context)}
+ * and {@link Locator#findAll(Class, Context)} respectively.
+ */
 public class DefaultContextSelection implements ContextSelection {
     private final ParentContext parentContext;
     

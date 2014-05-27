@@ -28,10 +28,15 @@ import java.util.Objects;
 /**
  * For Views within Views that are created statically and assigned to their "owning" View via
  * reflection and a proxy. The proxy can be cast to LazyElement, and the invocation handler will
- * intercept the call to setView (defined by LazyElement interface), and without the actual child
- * View implementation knowing about it, set its context to be a ViewContext proxy itself: one that
- * defers finding elements to a NestedViewContext, but otherwise forwards calls to the parent
- * context.
+ * intercept the call to setContext (defined by LazyElement interface), and without the actual child
+ * View implementation knowing about it, set its context to be an ElementContext proxy itself: one
+ * that defers finding elements to a ChainedElementContext, but otherwise forwards calls to the
+ * parent context.
+ * <P>
+ * Often, a View within a View is a <em>custom</em> element, which abstracts some organization of
+ * lower-level elements that form a higher level "widget" of some kind.
+ * 
+ * @see ChainedElementContext
  */
 public class ElementViewInvocationHandler implements InvocationHandler {
     private final Locator parentLocator;
@@ -59,7 +64,7 @@ public class ElementViewInvocationHandler implements InvocationHandler {
         this(view, locator, null);
     }
     
-    public ElementViewInvocationHandler(View view, @Nullable Locator locator, 
+    public ElementViewInvocationHandler(View view, @Nullable Locator locator,
             @Nullable ElementContext context) {
         Objects.requireNonNull(view);
         
@@ -83,7 +88,6 @@ public class ElementViewInvocationHandler implements InvocationHandler {
     }
     
     private void setContext(ElementContext context) {
-        view.setContext(ChainedElementContext.makeChainedElementContext(context,
-                parentLocator));
+        view.setContext(ChainedElementContext.makeChainedElementContext(context, parentLocator));
     }
 }

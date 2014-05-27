@@ -30,6 +30,19 @@ import java.util.Objects;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+/**
+ * Like {@link ElementViewInvocationHandler}, but for Lists of Views.
+ * <P>
+ * One notable difference is the use of {@link NestedElementContext} instead of
+ * {@link ChainedElementContext}. This is because each resulting View must be associated with one of
+ * the many possible elements found by the given locator. We can't simply use the locator as the
+ * parent for each View (as in {@link ChainedElementContext}), because each View could, and probably
+ * would, end up wrapping the exact same element. We must first find all of the elements for the
+ * given locator, and then create a View for each that is nested underneath its respective element.
+ * 
+ * @see ElementViewInvocationHandler
+ * @see NestedElementContext
+ */
 public class ElementViewListInvocationHandler implements InvocationHandler {
     private final Locator parentLocator;
     private final Supplier<View> viewSupplier;
@@ -55,12 +68,11 @@ public class ElementViewListInvocationHandler implements InvocationHandler {
      *            A supplier of real implementations that we will forward method calls to.
      * @param by
      */
-    public ElementViewListInvocationHandler(Supplier<View> viewSupplier, 
-            @Nullable Locator locator) {
+    public ElementViewListInvocationHandler(Supplier<View> viewSupplier, @Nullable Locator locator) {
         this(viewSupplier, locator, null);
     }
     
-    public ElementViewListInvocationHandler(Supplier<View> viewSupplier, @Nullable Locator locator, 
+    public ElementViewListInvocationHandler(Supplier<View> viewSupplier, @Nullable Locator locator,
             @Nullable ElementContext context) {
         Objects.requireNonNull(viewSupplier);
         
@@ -82,15 +94,15 @@ public class ElementViewListInvocationHandler implements InvocationHandler {
             List<Element> parentElements = parentLocator.findAll(Element.class, context);
             
             cachedList = parentElements.stream()
-                .map(this::getViewForParentElement)
-                .collect(Collectors.toList());
+                    .map(this::getViewForParentElement)
+                    .collect(Collectors.toList());
         }
         
         return method.invoke(cachedList, args);
     }
     
     private View getViewForParentElement(Element parentElement) {
-        return viewSupplier.get()
-                .setContext(NestedElementContext.makeNestedElementContext(context, parentElement));
+        return viewSupplier.get().setContext(
+                NestedElementContext.makeNestedElementContext(context, parentElement));
     }
 }

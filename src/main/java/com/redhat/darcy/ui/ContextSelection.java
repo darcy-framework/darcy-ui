@@ -22,6 +22,7 @@ package com.redhat.darcy.ui;
 import java.util.List;
 
 /**
+ * Fluently retrieve a context reference or a context list reference of a specified type.
  * @see ParentContext
  */
 public interface ContextSelection {

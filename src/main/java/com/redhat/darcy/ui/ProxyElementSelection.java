@@ -25,6 +25,13 @@ import java.lang.reflect.Proxy;
 import java.util.List;
 import java.util.function.Supplier;
 
+/**
+ * An {@link ElementSelection} implementation that creates proxies of the given element interface.
+ * These proxies lazily find the element, and protect calls to {@link Element#isDisplayed()} from
+ * throwing an exception should the element not be found.
+ * 
+ * @see ElementInvocationHandler
+ */
 public class ProxyElementSelection implements ElementSelection {
     private final ElementContext context;
     private static final ClassLoader cl = ProxyElementSelection.class.getClassLoader();

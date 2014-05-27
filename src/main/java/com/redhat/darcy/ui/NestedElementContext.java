@@ -26,6 +26,17 @@ import java.lang.reflect.Proxy;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * A NestedElementContext wraps another ElementContext, but nests all element locations under some
+ * other element, effectively turning all locators passed to this context to {@link By.ByNested}
+ * {@link Locator} types.
+ * <P>
+ * The static factory method to create a NestedElementContext returns a proxy. In this way, the
+ * resulting NestedElementContext still implements all of the other interfaces of the wrapped 
+ * ElementContext, and will only intervene when trying to find elements. NestedElementContexts can
+ * be safely casted to the other interfaces of the particular ElementContext implementation it is 
+ * forwarding.
+ */
 public class NestedElementContext implements ForwardingElementContext {
     private final ElementContext context;
     private final Element parentElement;
@@ -35,15 +46,17 @@ public class NestedElementContext implements ForwardingElementContext {
      * same interfaces, but nests all element locators under the parent locator.
      * <P>
      * In other words, given some View that has an element found By.id("example"), setting that
-     * View's context to a NestedViewContext underneath the locator By.id("parent") will make that 
-     * element found instead By.chained(By.id("parent"), By.id("example)).
+     * View's context to a NestedViewContext underneath some parent element will make that 
+     * element found instead via By.nested(parentElement, By.id("example)).
+     * 
      * @param context
      * @param parentLocator
      * @return
+     * @see ForwardingElementContextInvocationHandler
      */
-    public static ElementContext makeNestedElementContext(ElementContext context,
+    public static NestedElementContext makeNestedElementContext(ElementContext context,
             Element parentElement) {
-        return (ViewContext) Proxy.newProxyInstance(
+        return (NestedElementContext) Proxy.newProxyInstance(
                 ElementViewInvocationHandler.class.getClassLoader(), 
                 ReflectionUtil.getAllInterfaces(context).toArray(new Class[]{}), 
                 new ForwardingElementContextInvocationHandler(
@@ -53,10 +66,11 @@ public class NestedElementContext implements ForwardingElementContext {
     /**
      * 
      * @param context The context to forward to.
-     * @param parentBy Can be null if this nested View does not have any "root" element.
+     * @param parentElement The root element with which to find under.
      */
     private NestedElementContext(ElementContext context, Element parentElement) {
         Objects.requireNonNull(context);
+        Objects.requireNonNull(parentElement);
         
         this.context = context;
         this.parentElement = parentElement;

@@ -28,6 +28,17 @@ import java.lang.reflect.Proxy;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * A ChainedElementContext wraps another ElementContext, but nests all element locations under some
+ * other locator, effectively turning all locators passed to this context to {@link By.ByChained}
+ * {@link Locator} types.
+ * <P>
+ * The static factory method to create a ChainedElementContext returns a proxy. In this way, the
+ * resulting ChainedElementContext still implements all of the other interfaces of the wrapped 
+ * ElementContext, and will only intervene when trying to find elements. ChainedElementContexts can
+ * be safely casted to the other interfaces of the particular ElementContext implementation it is 
+ * forwarding.
+ */
 public class ChainedElementContext implements ForwardingElementContext {
     private final ElementContext context;
     private final Locator parentLocator;
@@ -39,13 +50,15 @@ public class ChainedElementContext implements ForwardingElementContext {
      * In other words, given some View that has an element found By.id("example"), setting that
      * View's context to a NestedViewContext underneath the locator By.id("parent") will make that 
      * element found instead By.chained(By.id("parent"), By.id("example)).
+     * 
      * @param context
      * @param parentLocator
      * @return
+     * @see ForwardingElementContextInvocationHandler
      */
-    public static ElementContext makeChainedElementContext(ElementContext context, 
+    public static ChainedElementContext makeChainedElementContext(ElementContext context, 
             @Nullable Locator parentLocator) {
-        return (ViewContext) Proxy.newProxyInstance(
+        return (ChainedElementContext) Proxy.newProxyInstance(
                 ElementViewInvocationHandler.class.getClassLoader(), 
                 ReflectionUtil.getAllInterfaces(context).toArray(new Class[]{}), 
                 new ForwardingElementContextInvocationHandler(
@@ -91,11 +104,16 @@ public class ChainedElementContext implements ForwardingElementContext {
         return context;
     }
     
-    // This is implementation specific (ie other impl would be Element as opposed to Locator
+    
     public Locator getParentLocator() {
         return parentLocator;
     }
     
+    /**
+     * Transforms a locator to a {@link By.ByChained} Locator.
+     * @param locator
+     * @return
+     */
     private Locator getChainedLocator(Locator locator) {
         if (parentLocator == null) {
             return locator;

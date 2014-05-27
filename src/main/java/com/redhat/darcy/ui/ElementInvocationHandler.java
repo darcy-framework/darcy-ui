@@ -23,7 +23,25 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
 import com.redhat.darcy.ui.elements.Element;
+import com.redhat.darcy.ui.elements.LazyElement;
 
+/**
+ * The InvocationHandler for proxied {@link Element}s. Provides some of the convenience-related 
+ * functionality that is expected of Darcy elements.
+ * <ul>
+ * <li>Lazily finds elements and caches them once they are found.</li>
+ * <li>Because the proxy is the thing actually tracking down the real element implementation, the 
+ * proxy effectively implements {@link LazyElement} and accepts the context with which to use to 
+ * find the element. (Though not always necessary -- the context may be passed in the constructor.)
+ * </li>
+ * <li>Prevents a call to {@link Element#isDisplayed()} from throwing an exception if there is no
+ * element found with which to call isDisplayed on. Instead of throwing the exception it will simply
+ * return false.</li>
+ * </ul>
+ * 
+ * @see LazyElement
+ * @see ProxyElementSelection
+ */
 public class ElementInvocationHandler implements InvocationHandler {
     private Class<? extends Element> type;
     private Locator locator;

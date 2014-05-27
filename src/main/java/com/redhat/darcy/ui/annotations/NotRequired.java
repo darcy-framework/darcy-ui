@@ -27,9 +27,6 @@ import java.lang.annotation.Target;
 /**
  * If a class is annotated with {@link RequireAll}, use this to exclude elements from being 
  * required (useful if the element is only present under certain conditions).
- * 
- * @author ahenning
- * 
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)

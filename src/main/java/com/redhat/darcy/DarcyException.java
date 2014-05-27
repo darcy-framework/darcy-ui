@@ -19,6 +19,9 @@
 
 package com.redhat.darcy;
 
+/**
+ * Top-level parent exception class for all Darcy-related exceptions.
+ */
 public class DarcyException extends RuntimeException {
     private static final long serialVersionUID = 2402576231289911388L;
     

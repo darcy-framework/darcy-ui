@@ -37,7 +37,9 @@ import java.util.stream.Collectors;
  * A partial implementation of View that initializes LazyElements in
  * {@link #setContext(ViewContext)}, and simplifies defining load conditions (via {@link Require},
  * {@link RequireAll}, {@link NotRequired}, and {@link #loadCondition()}.
- * 
+ * @see #setContext(ElementContext)
+ * @see #loadCondition()
+ * @see #onSetContext()
  */
 public abstract class AbstractView implements View {
     /**
@@ -87,6 +89,21 @@ public abstract class AbstractView implements View {
         }
     }
     
+    /**
+     * In AbstractView, setContext triggers some helpful initializations:
+     * <ul>
+     * <li>If a field is annotated with {@link Context}, then the context parameter will be casted
+     * and assigned to that field. If the context does not implement that fields type, a 
+     * {@link ClassCastException} will be thrown.</li>
+     * <li>If there are fields that implement {@link LazyElement}, then they were created in such
+     * a way that they do not know about their owning View and, therefore, ElementContext. When 
+     * setContext is called, LazyElements will get the context assigned to them.</li>
+     * <li>If there are {@link Require}, {@link RequireAll}, or {@link NotRequired} annotations, 
+     * appropriate load conditions will be constructed and placed in {@link #loadConditions}.</li>
+     * <li>Calls {@link #onSetContext()} so that implementations of AbstractView may provide their 
+     * own initializations that depend on the context, as necessary.</li>
+     * </ul>
+     */
     @Override
     public final View setContext(ElementContext context) {
         this.context = context;
@@ -135,6 +152,11 @@ public abstract class AbstractView implements View {
         
     }
     
+    /**
+     * Shortcut for getContext().transition().
+     * @see ElementContext#transition()
+     * @return
+     */
     protected Transition transition() {
         return context.transition();
     }

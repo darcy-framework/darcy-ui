@@ -19,11 +19,21 @@
 
 package com.redhat.darcy.ui.annotations;
 
+import com.redhat.darcy.ui.ElementContext;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Used to inject and cast a View's context to a member variable. Useful when a View needs to 
+ * interact with its {@link ElementContext} and require it is of a specific type.
+ * <P>
+ * Essentially the injection is a shortcut for calling
+ * <code>SomeInterface someInterface = (SomeInterface) getContext();</code> wherever you would need
+ * to reference a specific interface of some context implementation.
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Context {

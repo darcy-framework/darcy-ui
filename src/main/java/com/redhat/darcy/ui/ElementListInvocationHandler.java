@@ -27,6 +27,10 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+/**
+ * Like {@link ElementInvocationHandler}, except proxies a List of elements.
+ * @see ElementInvocationHandler
+ */
 public class ElementListInvocationHandler implements InvocationHandler {
     private Class<? extends Element> type;
     private Locator locator;

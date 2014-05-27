@@ -33,9 +33,6 @@ import java.lang.annotation.Target;
  * It is best to annotate as many elements as possible or write a specific load condition via
  * overriding {@link AbstractView#loadCondition()} to ensure that every View's load condition is
  * unique.
- * 
- * @author ahenning
- * 
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
