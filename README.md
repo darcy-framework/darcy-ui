@@ -15,12 +15,12 @@ import static com.redhat.synq.Synq.after;
 
 @RequireAll
 public class MyHomePage extends AbstractView {
-  TextInput login = textInput(By.id("login"));
-  TextInput password = textInput(By.id("password"));
-  Button submit = button(By.id("submit"));
+  private TextInput login = textInput(By.id("login"));
+  private TextInput password = textInput(By.id("password"));
+  private Button submit = button(By.id("submit"));
 
   @NotRequired
-  Label errorMsg = label(By.class("error"));
+  private Label errorMsg = label(By.class("error"));
 
   public AccountDetails login(Credentials credentials) {
     login.clearAndType(credentials.login());
