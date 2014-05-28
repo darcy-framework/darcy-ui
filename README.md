@@ -11,6 +11,7 @@ example page object
 ```java
 import static com.redhat.darcy.ui.elements.Elements.textInput;
 import static com.redhat.darcy.ui.elements.Elements.button;
+import static com.redhat.synq.Synq.after;
 
 @RequireAll
 public class MyHomePage extends AbstractView {
