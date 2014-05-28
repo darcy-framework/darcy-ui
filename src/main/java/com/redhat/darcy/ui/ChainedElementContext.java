@@ -23,7 +23,6 @@ import com.redhat.darcy.ui.elements.Element;
 import com.redhat.darcy.util.ReflectionUtil;
 
 import javax.annotation.Nullable;
-
 import java.lang.reflect.Proxy;
 import java.util.List;
 import java.util.Objects;
@@ -56,11 +55,11 @@ public class ChainedElementContext implements ForwardingElementContext {
      * @return
      * @see ForwardingElementContextInvocationHandler
      */
-    public static ChainedElementContext makeChainedElementContext(ElementContext context, 
+    public static ElementContext makeChainedElementContext(ElementContext context,
             @Nullable Locator parentLocator) {
-        return (ChainedElementContext) Proxy.newProxyInstance(
-                ElementViewInvocationHandler.class.getClassLoader(), 
-                ReflectionUtil.getAllInterfaces(context).toArray(new Class[]{}), 
+        return (ElementContext) Proxy.newProxyInstance(
+                ElementViewInvocationHandler.class.getClassLoader(),
+                ReflectionUtil.getAllInterfaces(context).toArray(new Class[]{}),
                 new ForwardingElementContextInvocationHandler(
                         new ChainedElementContext(context, parentLocator)));
     }
@@ -75,7 +74,7 @@ public class ChainedElementContext implements ForwardingElementContext {
     /**
      * 
      * @param context The context to forward to.
-     * @param parentBy Can be null if this nested View does not have any "root" element.
+     * @param parentLocator Can be null if this nested View does not have any "root" element.
      */
     private ChainedElementContext(ElementContext context, @Nullable Locator parentLocator) {
         Objects.requireNonNull(context);
