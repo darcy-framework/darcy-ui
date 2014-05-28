@@ -56,4 +56,4 @@ license
   [2]: https://www.gnu.org/copyleft/gpl.html
   [3]: https://github.com/darcy-framework/darcy-webdriver
   [4]: https://github.com/darcy-framework/darcy-web
-  [5]: https://github.com/darcy-framework/darcy/wiki/Getting-Started-%231:-Darcy-Fundamentals
+  [5]: https://github.com/darcy-framework/darcy/wiki/Getting-Started-%231:-Project-setup-and-darcy-fundamentals
