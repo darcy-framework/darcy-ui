@@ -9,6 +9,9 @@
 example page object
 ===================
 ```java
+import static com.redhat.darcy.ui.elements.Elements.textInput;
+import static com.redhat.darcy.ui.elements.Elements.button;
+
 @RequireAll
 public class MyHomePage extends AbstractView {
   TextInput login = textInput(By.id("login"));
