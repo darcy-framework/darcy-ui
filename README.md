@@ -44,7 +44,13 @@ Check out the [getting started][5] tutorials to learn more about darcy.
 contributing
 ============
 
-The darcy framework is very young, and there is a whole lot to do... Like write this section about contributing!
+Pull requests welcome and encouraged! Please read the documentation to get started.
+
+I have homework towards encouraging contribution:
+- [ ] Create issues for missing features
+- [ ] Document architecture
+- [ ] Establish unit testing framework (if necessary)
+- [ ] Add more unit tests
 
 license
 =======
