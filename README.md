@@ -6,18 +6,6 @@
 * Flexible and extendable by virtue of a declarative, **element-based DSL**. Write your page objects in terms of the UI buttons, labels, and widgets that you see. 
 * Dependent on Java 8. [Get your lambda on](http://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html)!
 
-**darcy** is not...
-=========
-
-* Web-specific by default. Extend the DSL to add web browser interaction with [darcy-web][4]. Darcy-webdriver is an implementation of this API with a WebDriver backend. Your web automation projects can simply include [darcy-webdriver][3] and get going.
-* An automatic solution to every problem. It's still on you to architect your automation code maintainably. Darcy will help by solving a whole host of nasty UI-automation related challenges out of the box, so you can concentrate on the deeper and more interesting complexities specific to your automation project.
-
-
-darcy's best friend: **synq**
-=============================
-
-[Synq][1] is a sister project to Darcy. Synq helps Darcy and your automation code sync up with external asynchronous processes (such as dynamic content on a web page). For folks coming from WebDriver, Synq gets you what WebDriverWait and ExpectedConditions get you, but with more flexibility (wait for multiple conditions, throw errors if other conditions are met in the meantime ... stuff like that), as well as compatibility with Java 8's lambda expressions and Hamcrest matchers. Synq is used heavily within Darcy itself, and so a lot of the explicit waits you might normally have to write in Selenium code will happen "automagically", behind the scenes. However, there are still plenty of things your automation code will need to wait for that Darcy has no other way of knowing about, so [read more here][1] to get to know Synq's API.
-
 example page object
 ===================
 ```java
