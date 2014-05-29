@@ -35,8 +35,9 @@ import java.util.stream.Collectors;
 
 /**
  * A partial implementation of View that initializes LazyElements in
- * {@link #setContext(ViewContext)}, and simplifies defining load conditions (via {@link Require},
- * {@link RequireAll}, {@link NotRequired}, and {@link #loadCondition()}.
+ * {@link #setContext(ElementContext)}, and simplifies defining load conditions (via
+ * {@link Require}, {@link RequireAll}, {@link NotRequired}, and {@link #loadCondition()}.
+ *
  * @see #setContext(ElementContext)
  * @see #loadCondition()
  * @see #onSetContext()
@@ -46,36 +47,36 @@ public abstract class AbstractView implements View {
      * The ElementContext for this View, managed by AbstractView.
      */
     private ElementContext context;
-    
+
     /**
      * All of these need to evaluate to true for the View to be considered loaded.
      */
     private final List<Callable<Boolean>> loadConditions = new ArrayList<>();
-    
+
     // Initialize the load conditions
     {
         if (loadCondition() != null) {
             loadConditions.add(loadCondition());
         }
     }
-    
+
     @Override
     public final boolean isLoaded() {
         if (context == null) {
             throw new NullContextException();
         }
-        
+
         if (loadConditions.isEmpty()) {
             throw new MissingLoadConditionException(this);
         }
-        
+
         try {
             for (Callable<Boolean> condition : loadConditions) {
                 if (!condition.call()) {
                     return false;
                 }
             }
-            
+
             return true;
         } catch (NullContextException | MissingLoadConditionException e) {
             // Let this propagate in case of these exceptions
@@ -88,46 +89,46 @@ public abstract class AbstractView implements View {
             return false;
         }
     }
-    
+
     /**
      * In AbstractView, setContext triggers some helpful initializations:
      * <ul>
      * <li>If a field is annotated with {@link Context}, then the context parameter will be casted
-     * and assigned to that field. If the context does not implement that fields type, a 
+     * and assigned to that field. If the context does not implement that fields type, a
      * {@link ClassCastException} will be thrown.</li>
      * <li>If there are fields that implement {@link LazyElement}, then they were created in such
-     * a way that they do not know about their owning View and, therefore, ElementContext. When 
+     * a way that they do not know about their owning View and, therefore, ElementContext. When
      * setContext is called, LazyElements will get the context assigned to them.</li>
-     * <li>If there are {@link Require}, {@link RequireAll}, or {@link NotRequired} annotations, 
+     * <li>If there are {@link Require}, {@link RequireAll}, or {@link NotRequired} annotations,
      * appropriate load conditions will be constructed and placed in {@link #loadConditions}.</li>
-     * <li>Calls {@link #onSetContext()} so that implementations of AbstractView may provide their 
+     * <li>Calls {@link #onSetContext()} so that implementations of AbstractView may provide their
      * own initializations that depend on the context, as necessary.</li>
      * </ul>
      */
     @Override
     public final View setContext(ElementContext context) {
         this.context = context;
-        
+
         List<Field> fields = ReflectionUtil.getAllDeclaredFields(this);
 
         injectContexts(fields);
         initializeLazyElements(fields);
         readLoadConditionAnnotations(fields);
-        
+
         if (loadConditions.isEmpty()) {
             throw new MissingLoadConditionException(this);
         }
-        
+
         onSetContext();
-        
+
         return this;
     }
-    
+
     @Override
     public final ElementContext getContext() {
         return context;
     }
-    
+
     /**
      * Used by {@link #isLoaded()}. When the Callable.call evaluates to true, the page should be
      * loaded.
@@ -137,21 +138,21 @@ public abstract class AbstractView implements View {
      * By default this returns null. Subclasses should override this method if necessary to define a
      * more specific load condition. If the simple visibility of some elements is all that is
      * required, then simply use {@link Require} or {@link RequireAll} annotations.
-     * 
+     *
      * @return Null if not explicitly overridden by a subclass.
      */
     protected Callable<Boolean> loadCondition() {
         return null;
     }
-    
+
     /**
-     * Called after any call to {@link #setContext(ViewContext)}. Useful if you need to set up some
-     * fields that depend on this view having context.
+     * Called after any call to {@link #setContext(ElementContext)}. Useful if you need to set up
+     * some fields that depend on this view having context.
      */
     protected void onSetContext() {
-        
+
     }
-    
+
     /**
      * Shortcut for getContext().transition().
      * @see ElementContext#transition()
@@ -160,7 +161,7 @@ public abstract class AbstractView implements View {
     protected Transition transition() {
         return context.transition();
     }
-    
+
     private void injectContexts(List<Field> fields) {
         fields.stream()
             .filter(f -> f.getAnnotation(Context.class) != null)
@@ -172,10 +173,10 @@ public abstract class AbstractView implements View {
                 }
             });
     }
-    
+
     private void initializeLazyElements(List<Field> fields) {
         fields.stream()
-            .filter(f -> Element.class.isAssignableFrom(f.getType()) 
+            .filter(f -> Element.class.isAssignableFrom(f.getType())
                     || List.class.isAssignableFrom(f.getType()))
             .map((f) -> {
                 try {
@@ -188,7 +189,7 @@ public abstract class AbstractView implements View {
             .map((e) -> (LazyElement) e)
             .forEach((e) -> e.setContext(getContext()));
     }
-    
+
     private void readLoadConditionAnnotations(List<Field> fields) {
         loadConditions.addAll(fields.stream()
             .filter(f -> Element.class.isAssignableFrom(f.getType()))
@@ -196,13 +197,13 @@ public abstract class AbstractView implements View {
             .filter(c -> c != null)
             .collect(Collectors.toList()));
     }
-    
+
     private Callable<Boolean> getLoadConditionForElementField(Field field) {
         try {
             Object element = field.get(this);
-            
+
             Callable<Boolean> callable;
-            
+
             // Determine the applicable Callable for this type; prefer View over Element
             if (element instanceof View) {
                 callable = ((View) element)::isLoaded;
@@ -211,14 +212,14 @@ public abstract class AbstractView implements View {
             } else {
                 return null;
             }
-            
+
             // Annotation logic
             if (field.getAnnotation(Require.class) != null
-                    || (field.getDeclaringClass().getAnnotation(RequireAll.class) != null 
+                    || (field.getDeclaringClass().getAnnotation(RequireAll.class) != null
                     && field.getAnnotation(NotRequired.class) == null)) {
                 return callable;
             }
-            
+
             return null;
         } catch (IllegalArgumentException | IllegalAccessException e) {
             throw new RuntimeException(e);
