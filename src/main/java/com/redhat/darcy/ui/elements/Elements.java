@@ -42,9 +42,6 @@ public abstract class Elements {
     /**
      * Looks up a automation-library-specific implementation for that element type, assuming an
      * implementation is registered for that class.
-     * <P>
-     * If the class is a subclass of View and has a public no arg constructor, then it will be 
-     * instantiated and passed to {@link #element(View, Locator)}.
      * 
      * @param type
      * @param locator
@@ -52,6 +49,10 @@ public abstract class Elements {
      */
     @SuppressWarnings("unchecked")
     public static <T extends Element> T element(Class<T> type, Locator locator) {
+        if (!type.isInterface()) {
+            throw new IllegalArgumentException("Element type must be an interface, was: " + type);
+        }
+
         InvocationHandler invocationHandler = new ElementInvocationHandler(type, locator);
         
         return (T) Proxy.newProxyInstance(Elements.class.getClassLoader(), 
@@ -61,9 +62,6 @@ public abstract class Elements {
     /**
      * Looks up a automation-library-specific implementation for that element type, assuming an
      * implementation is registered for that class.
-     * <P>
-     * If the class is a subclass of View and has a public no arg constructor, then it will be 
-     * instantiated and passed to {@link #element(View, Locator)}.
      * 
      * @param type
      * @param locator
@@ -71,6 +69,10 @@ public abstract class Elements {
      */
     @SuppressWarnings("unchecked")
     public static <T extends Element> List<T> elements(Class<T> type, Locator locator) {
+        if (!type.isInterface()) {
+            throw new IllegalArgumentException("Element type must be an interface, was: " + type);
+        }
+
         InvocationHandler invocationHandler = new ElementListInvocationHandler(type, locator);
         
         return (List<T>) Proxy.newProxyInstance(Elements.class.getClassLoader(), 
@@ -94,9 +96,14 @@ public abstract class Elements {
     @SuppressWarnings("unchecked")
     public static <T extends Element> T element(Class<T> type, Locator locator, T implementation) {
         if (!(implementation instanceof View)) {
-            throw new IllegalArgumentException("Element implementation must also be a View.");
+            throw new IllegalArgumentException("Element implementation must also be a View. " +
+                    "(" + implementation + ")");
         }
-        
+
+        if (!type.isInterface()) {
+            throw new IllegalArgumentException("Element type must be an interface, was: " + type);
+        }
+
         InvocationHandler invocationHandler = new ElementViewInvocationHandler((View) implementation, 
                 locator);
         
