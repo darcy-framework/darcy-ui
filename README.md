@@ -2,7 +2,7 @@
 =========
 [![Build Status](https://drone.io/github.com/darcy-framework/darcy/status.png)](https://drone.io/github.com/darcy-framework/darcy/latest)
 
-* A framework for writing **page objects** in order to automate interaction with graphical user interfaces. Page objects are classes that model what a user can see and do. In darcy each page, or subset of a page, is called a [View](https://github.com/darcy-framework/darcy/blob/master/src/main/java/com/redhat/darcy/ui/View.java).
+* A framework for writing [**page objects**][6] in order to automate interaction with graphical user interfaces. Page objects are classes that model what a user can see and do. In darcy each page, or subset of a page, is called a [View](https://github.com/darcy-framework/darcy/blob/master/src/main/java/com/redhat/darcy/ui/View.java).
 * Automation library agnostic -- any library that can find UI elements and interact with them can work with darcy. [Selenium WebDriver](https://code.google.com/p/selenium/) support is provided by [darcy-webdriver][3].
 * Flexible and extendable by virtue of a declarative, **element-based DSL**. Write your page objects in terms of the UI buttons, labels, and widgets that you see. 
 * Dependent on Java 8. [Get your lambda on](http://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html)!
@@ -64,3 +64,4 @@ license
   [3]: https://github.com/darcy-framework/darcy-webdriver
   [4]: https://github.com/darcy-framework/darcy-web
   [5]: https://github.com/darcy-framework/darcy/wiki/Getting-Started-%231:-Project-setup-and-darcy-fundamentals
+  [6]: http://martinfowler.com/bliki/PageObject.html
