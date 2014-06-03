@@ -1,10 +1,13 @@
-**darcy** is...
+**darcy**
 =========
 [![Build Status](https://drone.io/github.com/darcy-framework/darcy/status.png)](https://drone.io/github.com/darcy-framework/darcy/latest)
 
-* A framework for writing [**page objects**][6] in order to automate interaction with graphical user interfaces. Page objects are classes that model what a user can see and do. In darcy each page, or subset of a page, is called a [View](https://github.com/darcy-framework/darcy/blob/master/src/main/java/com/redhat/darcy/ui/View.java).
+A framework for writing [**page objects**][6] in order to automate interaction with graphical user interfaces. Page objects are classes that model what a user can see and do with a specific page. In darcy each page, or subset of a page, is called a [View](https://github.com/darcy-framework/darcy/blob/master/src/main/java/com/redhat/darcy/ui/View.java).
+
+darcy is:
+
 * Automation library agnostic -- any library that can find UI elements and interact with them can work with darcy. [Selenium WebDriver](https://code.google.com/p/selenium/) support is provided by [darcy-webdriver][3].
-* Flexible and extendable by virtue of a declarative, **element-based DSL**. Write your page objects in terms of the UI buttons, labels, and widgets that you see. 
+* Flexible and extendable by virtue of a declarative, **element-based DSL**. Write your page objects in terms of the UI buttons, labels, and widgets that you see. Wrap complex behavior in reusable, custom element types.
 * Dependent on Java 8. [Get your lambda on](http://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html)!
 
 example page object
@@ -50,8 +53,8 @@ Pull requests welcome and encouraged! Please read the documentation to get start
 I have homework towards encouraging contribution:
 - [ ] Create issues for missing features
 - [ ] Document architecture
-- [ ] Establish unit testing framework (if necessary)
-- [ ] Add more unit tests
+- [x] Establish unit testing framework (if necessary) (it wasn't necessary)
+- [ ] Add more unit tests (in progress)
 
 license
 =======
