@@ -24,6 +24,7 @@ import com.redhat.darcy.ui.elements.Element;
 import javax.annotation.Nullable;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Objects;
@@ -97,8 +98,12 @@ public class ElementViewListInvocationHandler implements InvocationHandler {
                     .map(this::getViewForParentElement)
                     .collect(Collectors.toList());
         }
-        
-        return method.invoke(cachedList, args);
+
+        try {
+            return method.invoke(cachedList, args);
+        } catch (InvocationTargetException e) {
+            throw e.getCause();
+        }
     }
     
     private View getViewForParentElement(Element parentElement) {

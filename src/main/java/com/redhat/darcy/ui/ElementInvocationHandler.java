@@ -20,8 +20,10 @@
 package com.redhat.darcy.ui;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import com.redhat.darcy.DarcyException;
 import com.redhat.darcy.ui.elements.Element;
 import com.redhat.darcy.ui.elements.LazyElement;
 
@@ -88,7 +90,11 @@ public class ElementInvocationHandler implements InvocationHandler {
                 }
             }
         }
-        
-        return method.invoke(cachedElement, args);
+
+        try {
+            return method.invoke(cachedElement, args);
+        } catch (InvocationTargetException e) {
+            throw e.getCause();
+        }
     }
 }

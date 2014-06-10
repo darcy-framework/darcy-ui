@@ -22,6 +22,7 @@ package com.redhat.darcy.ui;
 import com.redhat.darcy.ui.elements.Element;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -66,7 +67,11 @@ public class ElementListInvocationHandler implements InvocationHandler {
         if (cachedList == null) {
             cachedList = locator.findAll(type, context);
         }
-        
-        return method.invoke(cachedList, args);
+
+        try {
+            return method.invoke(cachedList, args);
+        } catch (InvocationTargetException e) {
+            throw e.getCause();
+        }
     }
 }
