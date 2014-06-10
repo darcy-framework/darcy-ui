@@ -22,7 +22,7 @@ package com.redhat.darcy.ui;
 /**
  * Simple view implementation that always returns true for isLoaded.
  */
-public class DummyView implements View {
+public class AlwaysLoadedView implements View {
     private ElementContext context;
 
     @Override
