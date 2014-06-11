@@ -21,15 +21,12 @@ package com.redhat.darcy.ui;
 
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-import com.redhat.darcy.DarcyException;
 import com.redhat.darcy.ui.elements.Button;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mockito.Mockito;
 
 import java.util.Collections;
 import java.util.List;
