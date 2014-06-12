@@ -75,6 +75,11 @@ public abstract class By {
         public <T> List<T> findAll(Class<T> type, Context context) {
             return ((FindsById) context).findAllById(type, id);
         }
+        
+        @Override
+        public <T> T find(Class<T> type, Context context) {
+            return ((FindsById) context).findById(type, id);
+        }
     }
     
     public static class ByName implements Locator {
