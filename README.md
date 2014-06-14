@@ -42,7 +42,7 @@ public class MyHomePage extends AbstractView {
 getting started
 ===============
 
-Check out the [getting started][5] tutorials to learn more about darcy.
+Check out the [Automating Applications with Darcy][5] GitBook to learn more about darcy.
 
 
 contributing
@@ -66,5 +66,5 @@ license
   [2]: https://www.gnu.org/copyleft/gpl.html
   [3]: https://github.com/darcy-framework/darcy-webdriver
   [4]: https://github.com/darcy-framework/darcy-web
-  [5]: https://github.com/darcy-framework/darcy/wiki/Getting-Started-%231:-Project-setup-and-darcy-fundamentals
+  [5]: https://www.gitbook.io/book/alechenninger/automating-applications-with-darcy
   [6]: http://martinfowler.com/bliki/PageObject.html
