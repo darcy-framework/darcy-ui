@@ -27,6 +27,7 @@ package com.redhat.darcy.ui;
  * implementation-specific {@link TransitionEvent}s. By default these simply wait for the specified
  * View to be loaded.
  */
+@Deprecated
 public interface ViewContext extends ParentContext, ElementContext {
     /**
      * Creates a {@link Transition}, which will create a {@link TransitionEvent} based on some View,
