@@ -60,7 +60,7 @@ public class ProxyElementSelection implements ElementSelection {
                     + elementType);
         }
 
-        return (List<T>) Proxy.newProxyInstance(cl, new Class[] { elementType },
+        return (List<T>) Proxy.newProxyInstance(cl, new Class[] { List.class },
                 new ElementListInvocationHandler(elementType, locator, context));
     }
     
@@ -100,7 +100,7 @@ public class ProxyElementSelection implements ElementSelection {
             }
         };
         
-        return (List<T>) Proxy.newProxyInstance(cl, new Class[] { elementType },
+        return (List<T>) Proxy.newProxyInstance(cl, new Class[] { List.class },
                 new ElementViewListInvocationHandler(viewSupplier, locator, context));
     }
     
