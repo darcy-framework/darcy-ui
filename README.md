@@ -1,4 +1,4 @@
-**darcy**
+darcy-ui
 =========
 [![Build Status](https://drone.io/github.com/darcy-framework/darcy/status.png)](https://drone.io/github.com/darcy-framework/darcy/latest)
 
