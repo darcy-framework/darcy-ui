@@ -38,22 +38,10 @@ public interface Locator {
     
     /**
      * Returns one element found by this locator, of the given type, in the given context.
-     * <P>
-     * By default, if there are multiple instances that would satisfy this locator, then this method 
-     * picks one of them. The instance picked is up to implementation.
      * 
      * @param type
      * @param context
-     * @throws com.redhat.darcy.ui.NotFoundException if the element cannot be found.
      * @return
      */
-    default <T> T find(Class<T> type, Context context) {
-        List<T> found = findAll(type, context);
-        
-        if (found.isEmpty()) {
-            throw new NotFoundException(type, this);
-        }
-        
-        return found.get(0);
-    }
+    <T> T find(Class<T> type, Context context);
 }

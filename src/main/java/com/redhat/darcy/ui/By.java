@@ -93,6 +93,11 @@ public abstract class By {
         public <T> List<T> findAll(Class<T> type, Context context) {
             return ((FindsByName) context).findAllByName(type, name);
         }
+
+        @Override
+        public <T> T find(Class<T> type, Context context) {
+            return ((FindsByName) context).findByName(type, name);
+        }
     }
     
     public static class ByLinkText implements Locator {
@@ -106,6 +111,11 @@ public abstract class By {
         public <T> List<T> findAll(Class<T> type, Context context) {
             return ((FindsByLinkText) context).findAllByLinkText(type, linkText);
         }
+
+        @Override
+        public <T> T find(Class<T> type, Context context) {
+            return ((FindsByLinkText) context).findByLinkText(type, linkText);
+        }
     }
     
     public static class ByTextContent implements Locator {
@@ -118,6 +128,11 @@ public abstract class By {
         @Override
         public <T> List<T> findAll(Class<T> type, Context context) {
             return ((FindsByTextContent) context).findAllByTextContent(type, textContent);
+        }
+
+        @Override
+        public <T> T find(Class<T> type, Context context) {
+            return ((FindsByTextContent) context).findByTextContent(type, textContent);
         }
     }
     
@@ -133,6 +148,12 @@ public abstract class By {
             return ((FindsByPartialTextContent) context)
                     .findAllByPartialTextContent(type, partialTextContent);
         }
+
+        @Override
+        public <T> T find(Class<T> type, Context context) {
+            return ((FindsByPartialTextContent) context)
+                    .findByPartialTextContent(type, partialTextContent);
+        }
     }
     
     public static class ByXPath implements Locator {
@@ -145,6 +166,11 @@ public abstract class By {
         @Override
         public <T> List<T> findAll(Class<T> type, Context context) {
             return ((FindsByXPath) context).findAllByXPath(type, xpath);
+        }
+
+        @Override
+        public <T> T find(Class<T> type, Context context) {
+            return ((FindsByXPath) context).findByXPath(type, xpath);
         }
     }
     
@@ -159,6 +185,11 @@ public abstract class By {
         public <T> List<T> findAll(Class<T> type, Context context) {
             return ((FindsByView) context).findAllByView(type, view);
         }
+
+        @Override
+        public <T> T find(Class<T> type, Context context) {
+            return ((FindsByView) context).findByView(type, view);
+        }
     }
     
     public static class ByChained implements Locator {
@@ -171,6 +202,11 @@ public abstract class By {
         @Override
         public <T> List<T> findAll(Class<T> type, Context context) {
             return ((FindsByChained) context).findAllByChained(type, locators);
+        }
+
+        @Override
+        public <T> T find(Class<T> type, Context context) {
+            return ((FindsByChained) context).findByChained(type, locators);
         }
     }
     
@@ -186,6 +222,11 @@ public abstract class By {
         @Override
         public <T> List<T> findAll(Class<T> type, Context context) {
             return ((FindsByNested) context).findAllByNested(type, parent, child);
+        }
+
+        @Override
+        public <T> T find(Class<T> type, Context context) {
+            return ((FindsByNested) context).findByNested(type, parent, child);
         }
     }
 }
