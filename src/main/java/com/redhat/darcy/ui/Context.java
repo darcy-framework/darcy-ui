@@ -21,10 +21,23 @@ package com.redhat.darcy.ui;
 
 /**
  * A marker interface for a class that can find "stuff." The contract of implementing this interface
- * (or one of its subclasses) is that you also implement, or forward to some type that does 
- * implement, specific means of finding that stuff, that corresponds to {@link Locator}s (for 
- * instance, {@link FindsById}).
+ * (or one of its subclasses) is that you also implement specific means of finding that stuff, that
+ * corresponds to {@link Locator}s (for instance, {@link FindsById} which is used by {@link
+ * com.redhat.darcy.ui.By.ById}).
  */
 public interface Context {
-    
+    /**
+     * Begin to fluently retrieve a reference to a UI object of some type (as determined by the type
+     * of Context), with some {@link com.redhat.darcy.ui.Locator} in order to find that object.
+     * <p>
+     * It is important to note that retrieving an object from this method will not throw an
+     * exception or return null if no such object can be found with the given locator. If you wish
+     * to determine if an object is actually found with the {@link com.redhat.darcy.ui.Locator}
+     * used, it is up to the object's API to, as it should, define some kind of
+     * <code>isPresent</code> method to determine this. Otherwise, attempting to do something with
+     * that object that requires its presence and/or visibility <em>will</em> throw an exception.
+     *
+     * @return
+     */
+    Selection find();
 }

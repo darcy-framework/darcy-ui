@@ -84,18 +84,8 @@ public class ChainedElementContext implements ForwardingElementContext {
     }
 
     @Override
-    public ElementSelection element() {
-        return new LocatorTransformingElementSelection(context.element(), this::getChainedLocator);
-    }
-
-    @Override
-    public <T extends Element> List<T> findElements(Class<T> type, Locator locator) {
-        return context.findElements(type, getChainedLocator(locator));
-    }
-
-    @Override
-    public <T extends Element> T findElement(Class<T> type, Locator locator) {
-        return context.findElement(type, getChainedLocator(locator));
+    public ElementSelection find() {
+        return new LocatorTransformingElementSelection(context.find(), this::getChainedLocator);
     }
     
     @Override

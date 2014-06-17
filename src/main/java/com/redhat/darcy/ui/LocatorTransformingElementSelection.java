@@ -40,25 +40,26 @@ public class LocatorTransformingElementSelection implements ElementSelection {
     }
     
     @Override
-    public <T extends Element> T ofType(Class<T> elementType, Locator locator) {
-        return elementSelection.ofType(elementType, locatorFunction.apply(locator));
+    public <T extends Element> T elementOfType(Class<T> elementType, Locator locator) {
+        return elementSelection.elementOfType(elementType, locatorFunction.apply(locator));
     }
     
     @Override
-    public <T extends Element> List<T> listOfType(Class<T> elementType, Locator locator) {
-        return elementSelection.listOfType(elementType, locatorFunction.apply(locator));
+    public <T extends Element> List<T> elementsOfType(Class<T> elementType, Locator locator) {
+        return elementSelection.elementsOfType(elementType, locatorFunction.apply(locator));
     }
     
     @Override
-    public <T extends Element> T ofType(Class<T> elementType, Locator locator, T implementation) {
-        return elementSelection.ofType(elementType, locatorFunction.apply(locator),
+    public <T extends Element> T elementOfType(Class<T> elementType, Locator locator,
+                                               T implementation) {
+        return elementSelection.elementOfType(elementType, locatorFunction.apply(locator),
                 implementation);
     }
     
     @Override
-    public <T extends Element> List<T> listOfType(Class<T> elementType, Locator locator,
-            Supplier<? extends T> implementation) {
-        return elementSelection.listOfType(elementType, locatorFunction.apply(locator),
+    public <T extends Element> List<T> elementsOfType(Class<T> elementType, Locator locator,
+                                                      Supplier<? extends T> implementation) {
+        return elementSelection.elementsOfType(elementType, locatorFunction.apply(locator),
                 implementation);
     }
     

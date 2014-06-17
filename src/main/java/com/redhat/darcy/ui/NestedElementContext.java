@@ -77,18 +77,8 @@ public class NestedElementContext implements ForwardingElementContext {
     }
 
     @Override
-    public ElementSelection element() {
-        return new LocatorTransformingElementSelection(context.element(), this::getNestedLocator);
-    }
-
-    @Override
-    public <T extends Element> List<T> findElements(Class<T> type, Locator locator) {
-        return context.findElements(type, getNestedLocator(locator));
-    }
-
-    @Override
-    public <T extends Element> T findElement(Class<T> type, Locator locator) {
-        return context.findElement(type, getNestedLocator(locator));
+    public ElementSelection find() {
+        return new LocatorTransformingElementSelection(context.find(), this::getNestedLocator);
     }
     
     @Override

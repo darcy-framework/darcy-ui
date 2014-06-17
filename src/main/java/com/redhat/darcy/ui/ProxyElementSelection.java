@@ -42,7 +42,7 @@ public class ProxyElementSelection implements ElementSelection {
     
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends Element> T ofType(Class<T> elementType, Locator locator) {
+    public <T extends Element> T elementOfType(Class<T> elementType, Locator locator) {
         if (!elementType.isInterface()) {
             throw new IllegalArgumentException("Element type must be an interface, was: "
                     + elementType);
@@ -54,7 +54,7 @@ public class ProxyElementSelection implements ElementSelection {
     
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends Element> List<T> listOfType(Class<T> elementType, Locator locator) {
+    public <T extends Element> List<T> elementsOfType(Class<T> elementType, Locator locator) {
         if (!elementType.isInterface()) {
             throw new IllegalArgumentException("Element type must be an interface, was: "
                     + elementType);
@@ -66,7 +66,8 @@ public class ProxyElementSelection implements ElementSelection {
     
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends Element> T ofType(Class<T> elementType, Locator locator, T implementation) {
+    public <T extends Element> T elementOfType(Class<T> elementType, Locator locator,
+                                               T implementation) {
         if (!(implementation instanceof View)) {
             throw new IllegalArgumentException("Element implementation must also be a View. " +
                     "(" + implementation + ")");
@@ -83,8 +84,8 @@ public class ProxyElementSelection implements ElementSelection {
     
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends Element> List<T> listOfType(Class<T> elementType, Locator locator,
-            Supplier<? extends T> implementation) {
+    public <T extends Element> List<T> elementsOfType(Class<T> elementType, Locator locator,
+                                                      Supplier<? extends T> implementation) {
         if (!elementType.isInterface()) {
             throw new IllegalArgumentException("Element type must be an interface, was: "
                     + elementType);

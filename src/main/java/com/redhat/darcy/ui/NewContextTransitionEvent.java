@@ -31,7 +31,7 @@ public class NewContextTransitionEvent<T extends View> extends ForwardingPollEve
     public NewContextTransitionEvent(T destination, ParentContext parentContext, 
             Locator contextLocator) {
         super(new DefaultPollEvent<>(match(destination, isLoadedInContext(
-                parentContext.findContext(ViewContext.class, contextLocator)))));
+                parentContext.find().contextOfType(ElementContext.class, contextLocator)))));
     }
     
 }

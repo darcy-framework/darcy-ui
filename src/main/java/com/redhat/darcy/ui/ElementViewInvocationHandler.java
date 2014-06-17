@@ -32,61 +32,58 @@ import java.util.Objects;
  * View implementation knowing about it, set its context to be an ElementContext proxy itself: one
  * that defers finding elements to a ChainedElementContext, but otherwise forwards calls to the
  * parent context.
- * <P>
+ * <p>
  * Often, a View within a View is a <em>custom</em> element, which abstracts some organization of
  * lower-level elements that form a higher level "widget" of some kind.
- * 
+ *
  * @see ChainedElementContext
  */
 public class ElementViewInvocationHandler implements InvocationHandler {
     private final Locator parentLocator;
     private final View view;
-    
+
     /**
      * The proxy needs to also implement LazyElement (so you can call setContext(elementContext))
-     * 
-     * @param view
-     *            A real implementation that we will forward method calls to.
-     * @param by
+     *
+     * @param view A real implementation that we will forward method calls to.
      */
     public ElementViewInvocationHandler(View view) {
-        this(view, null);
+        this(view, null, null);
     }
-    
+
     /**
      * The proxy needs to also implement LazyElement (so you can call setContext(elementContext))
-     * 
-     * @param view
-     *            A real implementation that we will forward method calls to.
-     * @param by
+     *
+     * @param view A real implementation that we will forward method calls to.
+     * @param locator
      */
     public ElementViewInvocationHandler(View view, @Nullable Locator locator) {
         this(view, locator, null);
     }
-    
+
     public ElementViewInvocationHandler(View view, @Nullable Locator locator,
-            @Nullable ElementContext context) {
+                                        @Nullable ElementContext context) {
         Objects.requireNonNull(view);
-        
+
         this.parentLocator = locator;
         this.view = view;
-        
+
         if (context != null) {
             setContext(context);
         }
     }
-    
+
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         if ("setContext".equals(method.getName())) {
-            setContext((ViewContext) args[0]);
-            
+            setContext((ElementContext) args[0]);
+
             return null;
         }
-        
+
         return method.invoke(view, args);
     }
-    
+
     private void setContext(ElementContext context) {
         view.setContext(ChainedElementContext.makeChainedElementContext(context, parentLocator));
     }

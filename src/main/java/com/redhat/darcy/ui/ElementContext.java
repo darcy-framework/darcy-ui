@@ -27,19 +27,11 @@ import java.util.List;
  * A context which can find UI elements.
  */
 public interface ElementContext extends Context {
-    default ElementSelection element() {
+    @Override
+    default ElementSelection find() {
         return new ProxyElementSelection(this);
     }
-    
-    @Deprecated
-    default <T extends Element> List<T> findElements(Class<T> type, Locator locator) {
-        return element().listOfType(type, locator);
-    }
-    
-    @Deprecated
-    default <T extends Element> T findElement(Class<T> type, Locator locator) {
-        return element().ofType(type, locator);
-    }
+
     /**
      * Creates a {@link Transition}, which will create a {@link TransitionEvent} based on some View,
      * that you can wait for.

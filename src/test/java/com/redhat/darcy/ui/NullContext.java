@@ -24,16 +24,7 @@ import com.redhat.darcy.ui.elements.Element;
 /**
  * Context that returns null when finding any element.
  */
-public class NullContext implements ViewContext {
-    
-    @Override
-    public <T extends Context> T findContext(Class<T> type, Locator locator) {
-        return null;
-    }
-    
-    @Override
-    public <T extends Element> T findElement(Class<T> type, Locator locator) {
-        return null;
-    }
+public class NullContext implements ElementContext {
+    // TODO: NullElementSelection find();
     
 }

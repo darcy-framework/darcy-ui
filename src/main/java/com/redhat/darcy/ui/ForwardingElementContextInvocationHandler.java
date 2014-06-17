@@ -23,21 +23,23 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
 /**
- * For ElementContexts that wrap another ElementContext, this InvocationHandler allows proxies to 
- * be created that implement all of the interfaces of the wrapped ElementContext. All calls will be
+ * For ElementContexts that wrap another ElementContext, this InvocationHandler allows proxies to be
+ * created that implement all of the interfaces of the wrapped ElementContext. All calls will be
  * forwarded to the wrapped context, <em>except</em> for calls related to finding elements, which
  * will be intercepted by the {@link ForwardingElementContext} implementation.
+ *
  * @see ChainedElementContext#makeChainedElementContext(ElementContext, Locator)
- * @see NestedElementContext#makeNestedElementContext(ElementContext, com.redhat.darcy.ui.elements.Element)
+ * @see NestedElementContext#makeNestedElementContext(ElementContext,
+ * com.redhat.darcy.ui.elements.Element)
  */
 public class ForwardingElementContextInvocationHandler implements InvocationHandler {
     private final ForwardingElementContext context;
-    
+
     public ForwardingElementContextInvocationHandler(
             ForwardingElementContext forwardingElementContext) {
         this.context = forwardingElementContext;
     }
-    
+
     @Override
     public Object invoke(Object obj, Method method, Object[] args) throws Throwable {
         if (method.getDeclaringClass().equals(ElementContext.class)) {
@@ -46,5 +48,5 @@ public class ForwardingElementContextInvocationHandler implements InvocationHand
             return method.invoke(context.getWrappedElementContext(), args);
         }
     }
-    
+
 }

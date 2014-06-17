@@ -50,7 +50,7 @@ public class ElementProxyTest {
             }
         };
 
-        testContext.element().button(By.id("test")).click();
+        testContext.find().button(By.id("test")).click();
     }
 
     private interface TestContext extends ElementContext, FindsById {}

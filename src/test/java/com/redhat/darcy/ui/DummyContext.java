@@ -28,7 +28,7 @@ import java.util.List;
  * A test context that can only find Label elements, and always returns
  * {@link AlwaysDisplayedLabel} as the implementation.
  */
-public class DummyContext implements ViewContext, FindsById {
+public class DummyContext implements ElementContext, FindsById {
     @SuppressWarnings("unchecked")
     @Override
     public <T> List<T> findAllById(Class<T> type, String id) {

@@ -24,9 +24,6 @@ import com.redhat.darcy.ui.ElementContext;
 /**
  * Used by proxy instances so that elements may be assigned to Views lazily via reflection.
  * Implementing this manually does not have any effect.
- * 
- * @author ahenning
- * 
  */
 public interface LazyElement {
     void setContext(ElementContext elementContext);

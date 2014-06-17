@@ -25,7 +25,7 @@ import java.util.List;
  * Fluently retrieve a context reference or a context list reference of a specified type.
  * @see ParentContext
  */
-public interface ContextSelection {
+public interface ContextSelection extends Selection {
     /**
      * Retrieve a reference to another context found by the current. This context may be a "child"
      * or a "sibling," this is up to the implementation.
@@ -33,7 +33,7 @@ public interface ContextSelection {
      * @param locator
      * @return
      */
-    <T extends Context> T ofType(Class<T> contextType, Locator locator);
+    <T extends Context> T contextOfType(Class<T> contextType, Locator locator);
     
     /**
      * Retrieve a reference to a list of other context found by the current. These contexts may be 
@@ -42,5 +42,5 @@ public interface ContextSelection {
      * @param locator
      * @return
      */
-    <T extends Context> List<T> listOfType(Class<T> contextType, Locator locator);
+    <T extends Context> List<T> contextsOfType(Class<T> contextType, Locator locator);
 }

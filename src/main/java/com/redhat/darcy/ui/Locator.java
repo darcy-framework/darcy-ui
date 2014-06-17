@@ -44,6 +44,7 @@ public interface Locator {
      * 
      * @param type
      * @param context
+     * @throws com.redhat.darcy.ui.NotFoundException if the element cannot be found.
      * @return
      */
     default <T> T find(Class<T> type, Context context) {
