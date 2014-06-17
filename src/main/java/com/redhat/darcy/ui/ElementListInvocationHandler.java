@@ -26,8 +26,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 /**
  * Like {@link ElementInvocationHandler}, except proxies a List of elements.
  * @see ElementInvocationHandler
@@ -43,14 +41,7 @@ public class ElementListInvocationHandler implements InvocationHandler {
         this.type = type;
         this.locator = locator;
     }
-    
-    public ElementListInvocationHandler(Class<? extends Element> type, Locator locator, 
-            @Nullable ElementContext view) {
-        this.type = type;
-        this.locator = locator;
-        this.context = view;
-    }
-    
+
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         if ("setContext".equals(method.getName())) {

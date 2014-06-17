@@ -24,11 +24,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
-import com.redhat.darcy.DarcyException;
 import com.redhat.darcy.ui.elements.Element;
 import com.redhat.darcy.ui.elements.LazyElement;
-
-import javax.annotation.Nullable;
 
 /**
  * The InvocationHandler for proxied {@link Element}s. Provides some of the convenience-related 
@@ -41,8 +38,9 @@ import javax.annotation.Nullable;
  * </li>
  * </ul>
  * 
- * @see LazyElement
- * @see ProxyElementSelection
+ * @see com.redhat.darcy.ui.elements.LazyElement
+ * @see com.redhat.darcy.ui.elements.Elements
+ * @see com.redhat.darcy.ui.AbstractView
  */
 public class ElementInvocationHandler implements InvocationHandler {
     private Class<? extends Element> type;
@@ -52,16 +50,10 @@ public class ElementInvocationHandler implements InvocationHandler {
     private Element cachedElement;
     
     public ElementInvocationHandler(Class<? extends Element> type, Locator locator) {
-        this(type, locator, null);
-    }
-    
-    public ElementInvocationHandler(Class<? extends Element> type, Locator locator, 
-            @Nullable ElementContext context) {
         this.type = Objects.requireNonNull(type);
         this.locator = Objects.requireNonNull(locator);
-        this.context = context;
     }
-    
+
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         if ("setContext".equals(method.getName())) {
