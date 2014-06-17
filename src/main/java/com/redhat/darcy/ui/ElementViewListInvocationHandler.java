@@ -33,68 +33,65 @@ import java.util.stream.Collectors;
 
 /**
  * Like {@link ElementViewInvocationHandler}, but for Lists of Views.
- * <P>
- * One notable difference is the use of {@link NestedElementContext} instead of
- * {@link ChainedElementContext}. This is because each resulting View must be associated with one of
- * the many possible elements found by the given locator. We can't simply use the locator as the
- * parent for each View (as in {@link ChainedElementContext}), because each View could, and probably
- * would, end up wrapping the exact same element. We must first find all of the elements for the
- * given locator, and then create a View for each that is nested underneath its respective element.
- * 
+ * <p>
+ * One notable difference is the use of {@link NestedElementContext} instead of {@link
+ * ChainedElementContext}. This is because each resulting View must be associated with one of the
+ * many possible elements found by the given locator. We can't simply use the locator as the parent
+ * for each View (as in {@link ChainedElementContext}), because each View could, and probably would,
+ * end up wrapping the exact same element. We must first find all of the elements for the given
+ * locator, and then create a View for each that is nested underneath its respective element.
+ *
  * @see ElementViewInvocationHandler
  * @see NestedElementContext
  */
 public class ElementViewListInvocationHandler implements InvocationHandler {
     private final Locator parentLocator;
     private final Supplier<View> viewSupplier;
-    
+
     private ElementContext context;
     private List<View> cachedList;
-    
+
     /**
      * The proxy needs to also implement LazyElement (so you can call setContext(elementContext))
-     * 
-     * @param viewSupplier
-     *            A supplier of real implementations that we will forward method calls to.
-     * @param by
+     *
+     * @param viewSupplier A supplier of real implementations that we will forward method calls to.
      */
     public ElementViewListInvocationHandler(Supplier<View> viewSupplier) {
         this(viewSupplier, null);
     }
-    
+
     /**
      * The proxy needs to also implement LazyElement (so you can call setContext(elementContext))
-     * 
-     * @param viewSupplier
-     *            A supplier of real implementations that we will forward method calls to.
-     * @param by
+     *
+     * @param viewSupplier A supplier of real implementations that we will forward method calls to.
+     * @param locator
      */
-    public ElementViewListInvocationHandler(Supplier<View> viewSupplier, @Nullable Locator locator) {
+    public ElementViewListInvocationHandler(Supplier<View> viewSupplier,
+            @Nullable Locator locator) {
         this(viewSupplier, locator, null);
     }
-    
+
     public ElementViewListInvocationHandler(Supplier<View> viewSupplier, @Nullable Locator locator,
             @Nullable ElementContext context) {
-        Objects.requireNonNull(viewSupplier);
-        
+        this.viewSupplier = Objects.requireNonNull(viewSupplier);
         this.parentLocator = locator;
-        this.viewSupplier = viewSupplier;
         this.context = context;
     }
-    
+
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         if ("setContext".equals(method.getName())) {
             context = (ElementContext) args[0];
             cachedList = null;
-            
+
             return null;
         }
-        
+
         if (cachedList == null) {
             List<Element> parentElements = parentLocator.findAll(Element.class, context);
-            
-            cachedList = parentElements.stream()
+
+            cachedList = parentElements
+                    .stream()
                     .map(this::getViewForParentElement)
                     .collect(Collectors.toList());
         }
@@ -105,7 +102,7 @@ public class ElementViewListInvocationHandler implements InvocationHandler {
             throw e.getCause();
         }
     }
-    
+
     private View getViewForParentElement(Element parentElement) {
         return viewSupplier.get().setContext(
                 NestedElementContext.makeNestedElementContext(context, parentElement));

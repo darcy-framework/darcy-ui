@@ -1,7 +1,7 @@
 /*
  Copyright 2014 Red Hat, Inc. and/or its affiliates.
 
- This file is part of darcy.
+ This file is part of darcy-webdriver.
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -17,27 +17,15 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.redhat.darcy.ui;
-
-import com.redhat.darcy.ui.elements.Element;
-
-import java.util.List;
+package com.redhat.darcy.util;
 
 /**
- * A context which can find UI elements.
+ * Indicates a type caches some value the first time it is retrieved, and reuses the cached value
+ * thereafter.
  */
-public interface ElementContext extends Context {
-    @Override
-    default ElementSelection find() {
-        return new DefaultElementSelection(this);
-    }
-
+public interface Caching {
     /**
-     * Creates a {@link Transition}, which will create a {@link TransitionEvent} based on some View,
-     * that you can wait for.
-     * @return
+     * Forces the result to be looked up again the next time it is needed.
      */
-    default Transition transition() {
-        return new SimpleTransition(this);
-    }
+    void invalidateCache();
 }

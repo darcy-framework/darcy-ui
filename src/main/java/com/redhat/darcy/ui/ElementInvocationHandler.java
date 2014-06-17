@@ -39,9 +39,6 @@ import javax.annotation.Nullable;
  * proxy effectively implements {@link LazyElement} and accepts the context with which to use to 
  * find the element. (Though not always necessary -- the context may be passed in the constructor.)
  * </li>
- * <li>Prevents a call to {@link Element#isDisplayed()} from throwing an exception if there is no
- * element found with which to call isDisplayed on. Instead of throwing the exception it will simply
- * return false.</li>
  * </ul>
  * 
  * @see LazyElement
@@ -79,18 +76,7 @@ public class ElementInvocationHandler implements InvocationHandler {
         }
         
         if (cachedElement == null) {
-            try {
-                cachedElement = locator.find(type, context);
-            } catch (Exception e) {
-                // We couldn't find the element. If all we want to know is if the element is
-                // displayed or not, well we can answer that question: no.
-                if ("isDisplayed".equals(method.getName())) {
-                    return false;
-                } else {
-                    // Otherwise, we are trying to act on an element we can't find.
-                    throw new NotFoundException(type, locator, e);
-                }
-            }
+            cachedElement = locator.find(type, context);
         }
 
         try {

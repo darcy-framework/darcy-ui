@@ -22,6 +22,7 @@ package com.redhat.darcy.ui;
 import javax.annotation.Nullable;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
@@ -81,7 +82,11 @@ public class ElementViewInvocationHandler implements InvocationHandler {
             return null;
         }
 
-        return method.invoke(view, args);
+        try {
+            return method.invoke(view, args);
+        } catch (InvocationTargetException e) {
+            throw e.getCause();
+        }
     }
 
     private void setContext(ElementContext context) {
