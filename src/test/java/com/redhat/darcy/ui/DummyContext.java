@@ -41,5 +41,10 @@ public class DummyContext implements ElementContext, FindsById {
         
         return (List<T>) found;
     }
-    
+
+    @Override
+    public <T> T findById(Class<T> type, String id) {
+        return findAllById(type, id).get(0);
+    }
+
 }
