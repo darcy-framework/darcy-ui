@@ -23,13 +23,5 @@ import java.util.List;
 
 public interface FindsByView {
     <T> List<T> findAllByView(Class<T> type, View view);
-    default <T> T findByView(Class<T> type, View view) {
-        List<T> found = findAllByView(type, view);
-        
-        if (found.isEmpty()) {
-            throw new NotFoundException(type, By.view(view));
-        }
-        
-        return found.get(0);
-    }
+    <T> T findByView(Class<T> type, View view);
 }

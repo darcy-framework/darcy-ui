@@ -23,13 +23,5 @@ import java.util.List;
 
 public interface FindsByChained {
     <T> List<T> findAllByChained(Class<T> type, Locator... locators);
-    default <T> T findByChained(Class<T> type, Locator... locators) {
-        List<T> found = findAllByChained(type, locators);
-        
-        if (found.isEmpty()) {
-            throw new NotFoundException(type, By.chained(locators));
-        }
-        
-        return found.get(0);
-    }
+    <T> T findByChained(Class<T> type, Locator... locators);
 }

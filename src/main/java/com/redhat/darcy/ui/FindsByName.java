@@ -23,13 +23,5 @@ import java.util.List;
 
 public interface FindsByName {
     <T> List<T> findAllByName(Class<T> type, String name);
-    default <T> T findByName(Class<T> type, String name) {
-        List<T> found = findAllByName(type, name);
-        
-        if (found.isEmpty()) {
-            throw new NotFoundException(type, By.name(name));
-        }
-        
-        return found.get(0);
-    }
+    <T> T findByName(Class<T> type, String name);
 }

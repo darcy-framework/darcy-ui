@@ -23,13 +23,5 @@ import java.util.List;
 
 public interface FindsByXPath {
     <T> List<T> findAllByXPath(Class<T> type, String xpath); 
-    default <T> T findByXPath(Class<T> type, String xpath) {
-        List<T> found = findAllByXPath(type, xpath);
-        
-        if (found.isEmpty()) {
-            throw new NotFoundException(type, By.xpath(xpath));
-        }
-        
-        return found.get(0);
-    }
+    <T> T findByXPath(Class<T> type, String xpath);
 }

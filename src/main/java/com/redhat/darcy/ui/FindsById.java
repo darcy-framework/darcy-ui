@@ -23,13 +23,5 @@ import java.util.List;
 
 public interface FindsById {
     <T> List<T> findAllById(Class<T> type, String id); 
-    default <T> T findById(Class<T> type, String id) {
-        List<T> found = findAllById(type, id);
-        
-        if (found.isEmpty()) {
-            throw new NotFoundException(type, By.id(id));
-        }
-        
-        return found.get(0);
-    }
+    <T> T findById(Class<T> type, String id);
 }

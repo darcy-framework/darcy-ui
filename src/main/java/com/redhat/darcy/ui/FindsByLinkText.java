@@ -23,13 +23,5 @@ import java.util.List;
 
 public interface FindsByLinkText {
     <T> List<T> findAllByLinkText(Class<T> type, String linkText);
-    default <T> T findByLinkText(Class<T> type, String linkText) {
-        List<T> found = findAllByLinkText(type, linkText);
-        
-        if (found.isEmpty()) {
-            throw new NotFoundException(type, By.linkText(linkText));
-        }
-        
-        return found.get(0);
-    }
+    <T> T findByLinkText(Class<T> type, String linkText);
 }

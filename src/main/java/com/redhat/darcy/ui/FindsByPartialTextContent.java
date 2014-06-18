@@ -23,13 +23,5 @@ import java.util.List;
 
 public interface FindsByPartialTextContent {
     <T> List<T> findAllByPartialTextContent(Class<T> type, String partialTextContent);
-    default <T> T findByPartialTextContent(Class<T> type, String partialTextContent) {
-        List<T> found = findAllByPartialTextContent(type, partialTextContent);
-        
-        if (found.isEmpty()) {
-            throw new NotFoundException(type, By.partialTextContent(partialTextContent));
-        }
-        
-        return found.get(0);
-    }
+    <T> T findByPartialTextContent(Class<T> type, String partialTextContent);
 }

@@ -25,13 +25,5 @@ import com.redhat.darcy.ui.elements.Element;
 
 public interface FindsByNested {
     <T> List<T> findAllByNested(Class<T> type, Element parent, Locator child);
-    default <T> T findByNested(Class<T> type, Element parent, Locator child) {
-        List<T> found = findAllByNested(type, parent, child);
-        
-        if (found.isEmpty()) {
-            throw new NotFoundException(type, By.nested(parent, child));
-        }
-        
-        return found.get(0);
-    }
+    <T> T findByNested(Class<T> type, Element parent, Locator child);
 }

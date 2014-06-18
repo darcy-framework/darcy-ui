@@ -23,13 +23,5 @@ import java.util.List;
 
 public interface FindsByTextContent {
     <T> List<T> findAllByTextContent(Class<T> type, String textContent);
-    default <T> T findByTextContent(Class<T> type, String textContent) {
-        List<T> found = findAllByTextContent(type, textContent);
-        
-        if (found.isEmpty()) {
-            throw new NotFoundException(type, By.textContent(textContent));
-        }
-        
-        return found.get(0);
-    }
+    <T> T findByTextContent(Class<T> type, String textContent);
 }
