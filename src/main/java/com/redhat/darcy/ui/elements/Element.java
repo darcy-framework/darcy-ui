@@ -19,7 +19,7 @@
 
 package com.redhat.darcy.ui.elements;
 
-public interface Element {
+public interface Element extends Findable {
     /**
      * Returns true if the element is visible to the user. 
      * @return

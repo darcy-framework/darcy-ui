@@ -22,6 +22,11 @@ package com.redhat.darcy.ui;
 import com.redhat.darcy.ui.elements.Label;
 
 public class AlwaysDisplayedLabel implements Label {
+
+    @Override
+    public boolean isPresent() {
+        return true;
+    }
     
     @Override
     public boolean isDisplayed() {
@@ -32,5 +37,4 @@ public class AlwaysDisplayedLabel implements Label {
     public String readText() {
         return "AlwaysDisplayedElement text";
     }
-    
 }

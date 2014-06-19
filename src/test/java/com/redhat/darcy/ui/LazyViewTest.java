@@ -32,6 +32,11 @@ public class LazyViewTest {
             ContextInterface parentContext;
 
             @Override
+            public boolean isPresent() {
+                return isLoaded();
+            }
+
+            @Override
             public boolean isDisplayed() {
                 return isLoaded();
             }

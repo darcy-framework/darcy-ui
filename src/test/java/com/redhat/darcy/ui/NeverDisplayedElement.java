@@ -27,5 +27,9 @@ public class NeverDisplayedElement implements Element {
     public boolean isDisplayed() {
         return false;
     }
-    
+
+    @Override
+    public boolean isPresent() {
+        return false;
+    }
 }
