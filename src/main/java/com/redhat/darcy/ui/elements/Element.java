@@ -21,7 +21,8 @@ package com.redhat.darcy.ui.elements;
 
 public interface Element extends Findable {
     /**
-     * Returns true if the element is visible to the user. 
+     * Returns true if the element is visible to the user. If the element can not be found at all (
+     * see {@link com.redhat.darcy.ui.elements.Findable}, this will just return false.
      * @return
      */
     boolean isDisplayed();

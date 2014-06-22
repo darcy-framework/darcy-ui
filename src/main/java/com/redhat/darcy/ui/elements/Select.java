@@ -20,11 +20,12 @@
 package com.redhat.darcy.ui.elements;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.redhat.darcy.ui.Locator;
 
 public interface Select extends Disableable {
     void select(Locator locator);
     List<SelectOption> getOptions();
-    SelectOption getCurrentlySelectedOption();
+    Optional<SelectOption> getCurrentlySelectedOption();
 }
