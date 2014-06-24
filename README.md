@@ -1,6 +1,6 @@
 darcy-ui
 =========
-[![Build Status](https://drone.io/github.com/darcy-framework/darcy/status.png)](https://drone.io/github.com/darcy-framework/darcy/latest)
+[![Build Status](https://travis-ci.org/darcy-framework/darcy-ui.svg?branch=master)](https://travis-ci.org/darcy-framework/darcy-ui)
 
 A framework for writing [**page objects**][6] in order to automate interaction with graphical user interfaces. Page objects are classes that model what a user can see and do with a specific page. In darcy each page, or subset of a page, is called a [View](https://github.com/darcy-framework/darcy/blob/master/src/main/java/com/redhat/darcy/ui/View.java).
 
