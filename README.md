@@ -1,6 +1,6 @@
 darcy-ui
 =========
-[![Build Status](https://travis-ci.org/darcy-framework/darcy-ui.svg?branch=master)](https://travis-ci.org/darcy-framework/darcy-ui) [![Coverage Status](https://coveralls.io/repos/darcy-framework/darcy-ui/badge.png)](https://coveralls.io/r/darcy-framework/darcy-ui)
+[![Build Status](https://travis-ci.org/darcy-framework/darcy-ui.svg?branch=master)](https://travis-ci.org/darcy-framework/darcy-ui) [![Coverage Status](https://coveralls.io/repos/darcy-framework/darcy-ui/badge.png?branch=master)](https://coveralls.io/r/darcy-framework/darcy-ui?branch=master)
 
 A framework for writing [**page objects**][6] in order to automate interaction with graphical user interfaces. Page objects are classes that model what a user can see and do with a specific page. In darcy each page, or subset of a page, is called a [View](https://github.com/darcy-framework/darcy/blob/master/src/main/java/com/redhat/darcy/ui/View.java).
 
