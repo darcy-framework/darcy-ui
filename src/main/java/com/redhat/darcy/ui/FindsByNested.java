@@ -19,9 +19,9 @@
 
 package com.redhat.darcy.ui;
 
-import java.util.List;
-
 import com.redhat.darcy.ui.elements.Element;
+
+import java.util.List;
 
 public interface FindsByNested {
     <T> List<T> findAllByNested(Class<T> type, Element parent, Locator child);

@@ -23,7 +23,6 @@ import com.redhat.darcy.ui.elements.Element;
 import com.redhat.darcy.util.ReflectionUtil;
 
 import java.lang.reflect.Proxy;
-import java.util.List;
 import java.util.Objects;
 
 /**

@@ -19,10 +19,6 @@
 
 package com.redhat.darcy.ui;
 
-import com.redhat.darcy.ui.elements.Element;
-
-import java.util.List;
-
 /**
  * A context which can find UI elements.
  */

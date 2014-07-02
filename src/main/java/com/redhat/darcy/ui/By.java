@@ -19,9 +19,9 @@
 
 package com.redhat.darcy.ui;
 
-import java.util.List;
-
 import com.redhat.darcy.ui.elements.Element;
+
+import java.util.List;
 
 /**
  * A helper class with static factories for {@link Locator}s, inspired by Selenium's By class.

@@ -19,13 +19,13 @@
 
 package com.redhat.darcy.ui;
 
+import com.redhat.darcy.ui.elements.Element;
+import com.redhat.darcy.ui.elements.LazyElement;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
-
-import com.redhat.darcy.ui.elements.Element;
-import com.redhat.darcy.ui.elements.LazyElement;
 
 /**
  * The InvocationHandler for proxied {@link Element}s. Provides some of the convenience-related 
