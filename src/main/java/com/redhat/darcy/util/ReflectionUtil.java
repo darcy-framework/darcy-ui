@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ReflectionUtil {
+public abstract class ReflectionUtil {
     public static List<Field> getAllDeclaredFields(Object object) {
         List<Field> allFields = new LinkedList<>();
         Class<?> objClass = object.getClass();
