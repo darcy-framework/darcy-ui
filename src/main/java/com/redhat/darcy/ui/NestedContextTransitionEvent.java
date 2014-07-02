@@ -19,6 +19,7 @@
 
 package com.redhat.darcy.ui;
 
+import static com.redhat.darcy.ui.ChainedElementContext.makeChainedElementContext;
 import static com.redhat.darcy.ui.matchers.ViewMatchers.isLoadedInContext;
 import static com.redhat.synq.HamcrestCondition.match;
 
@@ -31,8 +32,7 @@ public class NestedContextTransitionEvent<T extends View> extends ForwardingPoll
             Locator nestedContextLocator) {
         super(new DefaultPollEvent<>(match(
                 destination,
-                isLoadedInContext(ChainedElementContext.makeChainedElementContext(context,
-                        nestedContextLocator)))));
+                isLoadedInContext(makeChainedElementContext(context, nestedContextLocator)))));
     }
     
 }

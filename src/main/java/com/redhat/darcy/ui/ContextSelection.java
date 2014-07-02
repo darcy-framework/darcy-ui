@@ -43,4 +43,20 @@ public interface ContextSelection extends Selection {
      * @return
      */
     <T extends Context> List<T> contextsOfType(Class<T> contextType, Locator locator);
+
+    default ElementContext elementContext(Locator locator) {
+        return contextOfType(ElementContext.class, locator);
+    }
+
+    default List<ElementContext> elementContexts(Locator locator) {
+        return contextsOfType(ElementContext.class, locator);
+    }
+
+    default ParentContext parentContext(Locator locator) {
+        return contextOfType(ParentContext.class, locator);
+    }
+
+    default List<ParentContext> parentContexts(Locator locator) {
+        return contextsOfType(ParentContext.class, locator);
+    }
 }
