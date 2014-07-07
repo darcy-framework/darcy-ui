@@ -21,6 +21,9 @@ package com.redhat.darcy.ui;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import com.redhat.darcy.ui.annotations.NotRequired;
 import com.redhat.darcy.ui.annotations.Require;
@@ -240,4 +243,22 @@ public class AbstractViewIsLoadedTest {
         assertFalse("isLoaded should return false if load condition throws an exception.",
                 testView.isLoaded());
     }
+
+    @Test
+    public void shouldFavorIsLoadedOverIsDisplayedIfRequiredFieldIsAView() {
+        CustomElement mockElement = mock(CustomElement.class);
+
+        View testView = new AbstractView() {
+            @Require
+            CustomElement element = mockElement;
+        };
+
+        testView.setContext(new NullContext());
+        testView.isLoaded();
+
+        verify(mockElement).isLoaded();
+        verifyNoMoreInteractions(mockElement);
+    }
+
+    interface CustomElement extends View, Element {}
 }
