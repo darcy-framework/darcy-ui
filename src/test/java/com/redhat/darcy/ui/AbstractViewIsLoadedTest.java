@@ -29,10 +29,12 @@ import com.redhat.darcy.ui.annotations.NotRequired;
 import com.redhat.darcy.ui.annotations.Require;
 import com.redhat.darcy.ui.annotations.RequireAll;
 import com.redhat.darcy.ui.elements.Element;
+import com.redhat.darcy.ui.testing.doubles.AlwaysMetCondition;
+import com.redhat.darcy.ui.testing.doubles.NeverMetCondition;
+import com.redhat.synq.AbstractCondition;
+import com.redhat.synq.Condition;
 
 import org.junit.Test;
-
-import java.util.concurrent.Callable;
 
 @SuppressWarnings("unused")
 public class AbstractViewIsLoadedTest {
@@ -141,8 +143,8 @@ public class AbstractViewIsLoadedTest {
     public void shouldReturnTrueIfCustomLoadConditionUsedThatIsTrue() {
         View testView = new AbstractView() {
             @Override
-            public Callable<Boolean> loadCondition() {
-                return () -> true;
+            protected Condition<?> loadCondition() {
+                return new AlwaysMetCondition<>();
             }
         };
         
@@ -157,8 +159,8 @@ public class AbstractViewIsLoadedTest {
     public void shouldReturnFalseIfCustomLoadConditionUsedThatIsFalse() {
         View testView = new AbstractView() {
             @Override
-            public Callable<Boolean> loadCondition() {
-                return () -> false;
+            protected Condition<?> loadCondition() {
+                return new NeverMetCondition<>();
             }
         };
         
@@ -176,8 +178,8 @@ public class AbstractViewIsLoadedTest {
             private Element displayed = new AlwaysDisplayedLabel();
             
             @Override
-            public Callable<Boolean> loadCondition() {
-                return () -> true;
+            protected Condition<?> loadCondition() {
+                return new AlwaysMetCondition<>();
             }
         };
         
@@ -195,8 +197,8 @@ public class AbstractViewIsLoadedTest {
             private Element displayed = new AlwaysDisplayedLabel();
             
             @Override
-            public Callable<Boolean> loadCondition() {
-                return () -> false;
+            protected Condition<?> loadCondition() {
+                return new NeverMetCondition<>();
             }
         };
         
@@ -214,8 +216,8 @@ public class AbstractViewIsLoadedTest {
             private Element notDisplayed = new NeverDisplayedElement();
             
             @Override
-            public Callable<Boolean> loadCondition() {
-                return () -> true;
+            protected Condition<?> loadCondition() {
+                return new AlwaysMetCondition<>();
             }
         };
         
@@ -226,22 +228,20 @@ public class AbstractViewIsLoadedTest {
                 testView.isLoaded());
     }
     
-    @Test
-    public void shouldConsiderALoadConditionNotMetIfItThrowsAnException() {
+    @Test(expected = TestException.class)
+    public void shouldPropagateUncheckedExceptions() {
         View testView = new AbstractView() {
             @Override
-            public Callable<Boolean> loadCondition() {
-                return () -> {
-                    throw new Exception("You should see this logged but it should not fail the "
-                            + "test");
+            protected Condition<?> loadCondition() {
+                return new AbstractCondition<Void>() {
+                    @Override public boolean isMet() { throw new TestException(); }
+                    @Override public Void lastResult() { return null; }
                 };
             }
         };
         
         testView.setContext(new NullContext());
-        
-        assertFalse("isLoaded should return false if load condition throws an exception.",
-                testView.isLoaded());
+        testView.isLoaded();
     }
 
     @Test
@@ -261,4 +261,6 @@ public class AbstractViewIsLoadedTest {
     }
 
     interface CustomElement extends View, Element {}
+
+    class TestException extends RuntimeException {}
 }

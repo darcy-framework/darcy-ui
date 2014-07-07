@@ -5,6 +5,8 @@ import static org.junit.Assert.assertEquals;
 
 import com.redhat.darcy.ui.elements.Element;
 import com.redhat.darcy.ui.elements.LazyElement;
+import com.redhat.darcy.ui.testing.doubles.AlwaysMetCondition;
+import com.redhat.synq.Condition;
 
 import org.junit.Test;
 
@@ -47,8 +49,8 @@ public class LazyViewTest {
             }
             
             // At least one load condition is necessary to be a valid view
-            protected Callable<Boolean> loadCondition() {
-                return () -> true;
+            protected Condition<?> loadCondition() {
+                return new AlwaysMetCondition<>();
             }
         }
         

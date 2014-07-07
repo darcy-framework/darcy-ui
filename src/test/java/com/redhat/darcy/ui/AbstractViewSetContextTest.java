@@ -20,84 +20,103 @@
 package com.redhat.darcy.ui;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
 import com.redhat.darcy.ui.annotations.Require;
 import com.redhat.darcy.ui.elements.Elements;
 import com.redhat.darcy.ui.elements.Label;
+import com.redhat.darcy.ui.testing.doubles.AlwaysMetCondition;
+import com.redhat.synq.Condition;
 
 import org.junit.Test;
-
-import java.util.concurrent.Callable;
 
 public class AbstractViewSetContextTest {
     @Test(expected = MissingLoadConditionException.class)
     public void shouldThrowMissingLoadConditionExceptionIfNoLoadConditionIsPresent() {
         View testView = new AbstractView() {};
-        
+
         testView.setContext(new NullContext());
     }
-    
+
     @Test
     public void shouldInitializeLazyElements() {
         class TestView extends AbstractView {
             @Require
             private Label label = Elements.label(By.id("test"));
-            
+
             public String getLabelText() {
                 return label.readText();
             }
         };
-        
+
         TestView testView = new TestView();
-        
+
         testView.setContext(new DummyContext());
-        
-        assertEquals("Expected LazyElement to be initialized with dummy implementation.", 
+
+        assertEquals("Expected LazyElement to be initialized with dummy implementation.",
                 new AlwaysDisplayedLabel().readText(), testView.getLabelText());
     }
-    
+
     @Test
     public void shouldAssignAndCastViewContextToFieldsAnnotatedWithContext() {
         class SpecificContext extends DummyContext {
-            
+
         }
-        
+
         class TestView extends AbstractView {
             @com.redhat.darcy.ui.annotations.Context
             private SpecificContext castedContext;
-            
+
             // We need a load condition for this view to be valid
-            protected Callable<Boolean> loadCondition() {
-                return () -> true;
+            @Override
+            protected Condition<?> loadCondition() {
+                return new AlwaysMetCondition<>();
             }
         }
-        
+
         TestView testView = new TestView();
         SpecificContext specificContext = new SpecificContext();
-        
+
         testView.setContext(specificContext);
-        
+
         assertEquals(testView.getContext(), testView.castedContext);
     }
 
     @Test(expected = ClassCastException.class)
     public void shouldThrowExceptionIfAttemptToAssignContextToAnUnimplementedType() {
         class SpecificContext extends DummyContext {
-            
+
         }
-        
+
         class TestView extends AbstractView {
             @com.redhat.darcy.ui.annotations.Context
             private SpecificContext castedContext;
-            
+
             // We need a load condition for this view to be valid
-            protected Callable<Boolean> loadCondition() {
-                return () -> true;
+            @Override
+            protected Condition<?> loadCondition() {
+                return new AlwaysMetCondition<>();
             }
         }
-        
+
         TestView testView = new TestView();
-        
+
         testView.setContext(new DummyContext());
+    }
+
+    @Test
+    public void shouldCallOnSetContext() {
+        AbstractView testView = spy(new AbstractView() {
+            // We need a load condition for this view to be valid
+            @Override
+            protected Condition<?> loadCondition() {
+                return new AlwaysMetCondition<>();
+            }
+        });
+
+        testView.setContext(new NullContext());
+
+        verify(testView).onSetContext();
     }
 }

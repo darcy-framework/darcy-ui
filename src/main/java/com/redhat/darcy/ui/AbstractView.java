@@ -19,18 +19,23 @@
 
 package com.redhat.darcy.ui;
 
+import static com.redhat.darcy.ui.matchers.ElementMatchers.isDisplayed;
+
 import com.redhat.darcy.ui.annotations.Context;
 import com.redhat.darcy.ui.annotations.NotRequired;
 import com.redhat.darcy.ui.annotations.Require;
 import com.redhat.darcy.ui.annotations.RequireAll;
 import com.redhat.darcy.ui.elements.Element;
 import com.redhat.darcy.ui.elements.LazyElement;
+import com.redhat.darcy.ui.matchers.ElementMatchers;
+import com.redhat.darcy.ui.matchers.ViewMatchers;
 import com.redhat.darcy.util.ReflectionUtil;
+import com.redhat.synq.Condition;
+import com.redhat.synq.HamcrestCondition;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
 /**
@@ -51,7 +56,7 @@ public abstract class AbstractView implements View {
     /**
      * All of these need to evaluate to true for the View to be considered loaded.
      */
-    private final List<Callable<Boolean>> loadConditions = new ArrayList<>();
+    private final List<Condition<?>> loadConditions = new ArrayList<>();
 
     // Initialize the load conditions
     {
@@ -70,22 +75,13 @@ public abstract class AbstractView implements View {
             throw new MissingLoadConditionException(this);
         }
 
-        try {
-            for (Callable<Boolean> condition : loadConditions) {
-                if (!condition.call()) {
-                    return false;
-                }
+        for (Condition<?> condition : loadConditions) {
+            if (!condition.isMet()) {
+                return false;
             }
-
-            return true;
-        } catch (NullContextException | MissingLoadConditionException e) {
-            // Let this propagate in case of these exceptions
-            throw e;
-        } catch (Exception e) {
-            // Something went wrong in evaluating the load condition so we'll assume it's just not
-            // loaded yet. (For instance, not finding an element will throw an exception).
-            return false;
         }
+
+        return true;
     }
 
     /**
@@ -142,7 +138,7 @@ public abstract class AbstractView implements View {
      *
      * @return Null if not explicitly overridden by a subclass.
      */
-    protected Callable<Boolean> loadCondition() {
+    protected Condition<?> loadCondition() {
         return null;
     }
 
@@ -199,17 +195,17 @@ public abstract class AbstractView implements View {
             .collect(Collectors.toList()));
     }
 
-    private Callable<Boolean> getLoadConditionForElementField(Field field) {
+    private Condition<?> getLoadConditionForElementField(Field field) {
         try {
             Object element = field.get(this);
 
-            Callable<Boolean> callable;
+            Condition<?> loadCondition;
 
-            // Determine the applicable Callable for this type; prefer View over Element
+            // Determine the applicable condition for this type; prefer View over Element
             if (element instanceof View) {
-                callable = ((View) element)::isLoaded;
+                loadCondition = HamcrestCondition.match((View) element, ViewMatchers.isLoaded());
             } else if (element instanceof Element) {
-                callable = ((Element) element)::isDisplayed;
+                loadCondition = HamcrestCondition.match((Element) element, isDisplayed());
             } else {
                 return null;
             }
@@ -218,7 +214,7 @@ public abstract class AbstractView implements View {
             if (field.getAnnotation(Require.class) != null
                     || (field.getDeclaringClass().getAnnotation(RequireAll.class) != null
                     && field.getAnnotation(NotRequired.class) == null)) {
-                return callable;
+                return loadCondition;
             }
 
             return null;

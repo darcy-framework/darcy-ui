@@ -1,7 +1,7 @@
 /*
  Copyright 2014 Red Hat, Inc. and/or its affiliates.
 
- This file is part of darcy.
+ This file is part of darcy-ui.
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -19,29 +19,12 @@
 
 package com.redhat.darcy.ui.matchers;
 
-import com.redhat.darcy.ui.ElementContext;
-import com.redhat.darcy.ui.View;
+import com.redhat.darcy.ui.elements.Element;
 
-import org.hamcrest.Description;
-import org.hamcrest.TypeSafeMatcher;
+import org.hamcrest.Matcher;
 
-public class ViewIsLoadedInContext<T extends View> extends TypeSafeMatcher<T> {
-    private ElementContext context;
-    
-    public ViewIsLoadedInContext(ElementContext context) {
-        this.context = context;
+public abstract class ElementMatchers {
+    public static <T extends Element> Matcher<T> isDisplayed() {
+        return new ElementIsDisplayed<>();
     }
-    
-    @Override
-    public boolean matchesSafely(T view) {
-        view.setContext(context);
-        
-        return view.isLoaded();
-    }
-
-    @Override
-    public void describeTo(Description description) {
-        description.appendText("a view that is loaded in context, " + context);
-    }
-    
 }

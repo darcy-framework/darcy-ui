@@ -1,7 +1,7 @@
 /*
  Copyright 2014 Red Hat, Inc. and/or its affiliates.
 
- This file is part of darcy.
+ This file is part of darcy-ui.
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -17,31 +17,40 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.redhat.darcy.ui.matchers;
+package com.redhat.darcy.ui.testing.doubles;
 
-import com.redhat.darcy.ui.ElementContext;
-import com.redhat.darcy.ui.View;
+import com.redhat.synq.AbstractCondition;
 
-import org.hamcrest.Description;
-import org.hamcrest.TypeSafeMatcher;
+import java.util.function.Supplier;
 
-public class ViewIsLoadedInContext<T extends View> extends TypeSafeMatcher<T> {
-    private ElementContext context;
-    
-    public ViewIsLoadedInContext(ElementContext context) {
-        this.context = context;
+public class AlwaysMetCondition<T> extends AbstractCondition<T> {
+    private Supplier<T> result;
+
+    /**
+     * Returns null as last result.
+     */
+    public AlwaysMetCondition() {
+        this(() -> null);
     }
-    
+
+    /**
+     * Uses result as last result.
+     */
+    public AlwaysMetCondition(T result) {
+        this(() -> result);
+    }
+
+    public AlwaysMetCondition(Supplier<T> result) {
+        this.result = result;
+    }
+
     @Override
-    public boolean matchesSafely(T view) {
-        view.setContext(context);
-        
-        return view.isLoaded();
+    public boolean isMet() {
+        return true;
     }
 
     @Override
-    public void describeTo(Description description) {
-        description.appendText("a view that is loaded in context, " + context);
+    public T lastResult() {
+        return result.get();
     }
-    
 }

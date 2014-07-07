@@ -1,7 +1,7 @@
 /*
  Copyright 2014 Red Hat, Inc. and/or its affiliates.
 
- This file is part of darcy.
+ This file is part of darcy-ui.
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -17,19 +17,4 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.redhat.darcy.ui.matchers;
-
-import com.redhat.darcy.ui.ElementContext;
-import com.redhat.darcy.ui.View;
-
-import org.hamcrest.Matcher;
-
-public abstract class ViewMatchers {
-    public static <T extends View> Matcher<T> isLoaded() {
-        return new ViewIsLoaded<T>();
-    }
-
-    public static <T extends View> Matcher<T> isLoadedInContext(ElementContext context) {
-        return new ViewIsLoadedInContext<T>(context);
-    }
-}
+package com.redhat.darcy.ui.testing;
