@@ -21,6 +21,7 @@ package com.redhat.darcy.util;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasItems;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,7 +34,7 @@ import java.util.stream.Collectors;
 @RunWith(JUnit4.class)
 public class ReflectionUtilTest {
     @Test
-    public void shouldRetrieveAllFieldsInAClassAndNoMore() {
+    public void shouldRetrieveAllFieldsInAClass() {
         TestClass testClass = new TestClass();
 
         List<String> fieldNames = ReflectionUtil.getAllDeclaredFields(testClass)
@@ -41,7 +42,7 @@ public class ReflectionUtilTest {
                 .map(Field::getName)
                 .collect(Collectors.toList());
 
-        assertThat(fieldNames, containsInAnyOrder("test1", "test2", "test3"));
+        assertThat(fieldNames, hasItems("test1", "test2", "test3"));
     }
 
     @Test
@@ -53,7 +54,7 @@ public class ReflectionUtilTest {
                 .map(Field::getName)
                 .collect(Collectors.toList());
 
-        assertThat(fieldNames, containsInAnyOrder("test1", "test2", "test3", "test4", "test5"));
+        assertThat(fieldNames, hasItems("test1", "test2", "test3", "test4", "test5"));
     }
 
     @Test
