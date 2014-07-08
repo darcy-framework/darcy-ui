@@ -20,33 +20,45 @@
 package com.redhat.darcy.ui;
 
 import com.redhat.darcy.ui.elements.Element;
+import com.redhat.darcy.ui.elements.LazyElement;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.List;
+import java.util.Objects;
 
 /**
- * Like {@link ElementInvocationHandler}, except proxies a List of elements.
- * @see ElementInvocationHandler
+ * The InvocationHandler for proxied {@link Element}s. Provides some of the convenience-related 
+ * functionality that is expected of Darcy elements.
+ * <ul>
+ * <li>Lazily finds elements and caches them once they are found.</li>
+ * <li>Because the proxy is the thing actually tracking down the real element implementation, the 
+ * proxy effectively implements {@link LazyElement} and accepts the context with which to use to 
+ * find the element. (Though not always necessary -- the context may be passed in the constructor.)
+ * </li>
+ * </ul>
+ * 
+ * @see com.redhat.darcy.ui.elements.LazyElement
+ * @see com.redhat.darcy.ui.elements.Elements
+ * @see com.redhat.darcy.ui.AbstractView
  */
-public class ElementListInvocationHandler implements InvocationHandler {
+public class ElementHandler implements InvocationHandler {
     private Class<? extends Element> type;
     private Locator locator;
     private ElementContext context;
     
-    private List<? extends Element> cachedList;
+    private Element cachedElement;
     
-    public ElementListInvocationHandler(Class<? extends Element> type, Locator locator) {
-        this.type = type;
-        this.locator = locator;
+    public ElementHandler(Class<? extends Element> type, Locator locator) {
+        this.type = Objects.requireNonNull(type);
+        this.locator = Objects.requireNonNull(locator);
     }
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         if ("setContext".equals(method.getName())) {
             context = (ElementContext) args[0];
-            cachedList = null;
+            cachedElement = null;
             
             return null;
         }
@@ -54,13 +66,13 @@ public class ElementListInvocationHandler implements InvocationHandler {
         if (context == null) {
             throw new NullContextException();
         }
-
-        if (cachedList == null) {
-            cachedList = locator.findAll(type, context);
+        
+        if (cachedElement == null) {
+            cachedElement = locator.find(type, context);
         }
 
         try {
-            return method.invoke(cachedList, args);
+            return method.invoke(cachedElement, args);
         } catch (InvocationTargetException e) {
             throw e.getCause();
         }

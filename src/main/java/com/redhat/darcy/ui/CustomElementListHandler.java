@@ -23,7 +23,6 @@ import static com.redhat.darcy.ui.NestedElementContext.makeNestedElementContext;
 
 import com.redhat.darcy.ui.elements.Element;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -33,7 +32,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
- * Like {@link ElementViewInvocationHandler}, but for Lists of Views.
+ * Like {@link CustomElementHandler}, but for Lists of Views.
  * <p>
  * One notable difference is the use of {@link NestedElementContext} instead of {@link
  * ChainedElementContext}. This is because each resulting View must be associated with one of the
@@ -42,10 +41,10 @@ import java.util.stream.Collectors;
  * end up wrapping the exact same element. We must first find all of the elements for the given
  * locator, and then create a View for each that is nested underneath its respective element.
  *
- * @see ElementViewInvocationHandler
+ * @see CustomElementHandler
  * @see NestedElementContext
  */
-public class ElementViewListInvocationHandler implements InvocationHandler {
+public class CustomElementListHandler implements InvocationHandler {
     private final Locator parentLocator;
     private final Supplier<View> viewSupplier;
 
@@ -58,7 +57,7 @@ public class ElementViewListInvocationHandler implements InvocationHandler {
      * @param viewSupplier A supplier of real implementations that we will forward method calls to.
      * @param locator
      */
-    public ElementViewListInvocationHandler(Supplier<View> viewSupplier, Locator locator) {
+    public CustomElementListHandler(Supplier<View> viewSupplier, Locator locator) {
         this.viewSupplier = Objects.requireNonNull(viewSupplier, "viewSupplier");
         this.parentLocator = Objects.requireNonNull(locator, "locator");
     }

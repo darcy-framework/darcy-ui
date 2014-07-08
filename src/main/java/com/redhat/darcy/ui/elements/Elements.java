@@ -19,10 +19,10 @@
 
 package com.redhat.darcy.ui.elements;
 
-import com.redhat.darcy.ui.ElementInvocationHandler;
-import com.redhat.darcy.ui.ElementListInvocationHandler;
-import com.redhat.darcy.ui.ElementViewInvocationHandler;
-import com.redhat.darcy.ui.ElementViewListInvocationHandler;
+import com.redhat.darcy.ui.ElementHandler;
+import com.redhat.darcy.ui.ElementListHandler;
+import com.redhat.darcy.ui.CustomElementHandler;
+import com.redhat.darcy.ui.CustomElementListHandler;
 import com.redhat.darcy.ui.Locator;
 import com.redhat.darcy.ui.View;
 
@@ -37,7 +37,7 @@ import java.util.function.Supplier;
  * 
  * @author ahenning
  * @see {@link LazyElement}
- * @see {@link com.redhat.darcy.ui.ElementInvocationHandler LazyElementInvocationHandler}
+ * @see {@link com.redhat.darcy.ui.ElementHandler LazyElementInvocationHandler}
  *
  */
 public abstract class Elements {
@@ -55,7 +55,7 @@ public abstract class Elements {
             throw new IllegalArgumentException("Element type must be an interface, was: " + type);
         }
 
-        InvocationHandler invocationHandler = new ElementInvocationHandler(type, locator);
+        InvocationHandler invocationHandler = new ElementHandler(type, locator);
         
         return (T) Proxy.newProxyInstance(Elements.class.getClassLoader(), 
                 new Class[] { type, LazyElement.class },
@@ -75,7 +75,7 @@ public abstract class Elements {
             throw new IllegalArgumentException("Element type must be an interface, was: " + type);
         }
 
-        InvocationHandler invocationHandler = new ElementListInvocationHandler(type, locator);
+        InvocationHandler invocationHandler = new ElementListHandler(type, locator);
         
         return (List<T>) Proxy.newProxyInstance(Elements.class.getClassLoader(), 
                 new Class[] { List.class, LazyElement.class },
@@ -106,7 +106,7 @@ public abstract class Elements {
             throw new IllegalArgumentException("Element type must be an interface, was: " + type);
         }
 
-        InvocationHandler invocationHandler = new ElementViewInvocationHandler((View) implementation, 
+        InvocationHandler invocationHandler = new CustomElementHandler((View) implementation,
                 locator);
         
         return (T) Proxy.newProxyInstance(Elements.class.getClassLoader(), 
@@ -144,7 +144,7 @@ public abstract class Elements {
             }
         };
 
-        InvocationHandler invocationHandler = new ElementViewListInvocationHandler(viewSupplier,
+        InvocationHandler invocationHandler = new CustomElementListHandler(viewSupplier,
                 locator);
 
         return (T) Proxy.newProxyInstance(Elements.class.getClassLoader(),
