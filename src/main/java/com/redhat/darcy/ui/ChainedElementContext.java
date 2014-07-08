@@ -61,13 +61,6 @@ public class ChainedElementContext implements ForwardingElementContext {
                 new ForwardingElementContextInvocationHandler(
                         new ChainedElementContext(context, parentLocator)));
     }
-    /**
-     * 
-     * @param context The context to forward to.
-     */
-    private ChainedElementContext(ElementContext context) {
-        this(context, null);
-    }
     
     /**
      * 
