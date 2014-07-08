@@ -84,6 +84,14 @@ public class LazyListTest {
 
     @Test
     public void shouldCacheListViaToArray() {
+        lazyList.toArray();
+        lazyList.toArray();
+
+        verify(mockListSupplier, times(1)).get();
+    }
+
+    @Test
+    public void shouldCacheListViaToArrayWithType() {
         lazyList.toArray(null);
         lazyList.toArray(null);
 
@@ -118,6 +126,14 @@ public class LazyListTest {
     public void shouldCacheListViaAddAll() {
         lazyList.addAll(null);
         lazyList.addAll(null);
+
+        verify(mockListSupplier, times(1)).get();
+    }
+
+    @Test
+    public void shouldCacheListViaAddAllWithIndex() {
+        lazyList.addAll(1, null);
+        lazyList.addAll(1, null);
 
         verify(mockListSupplier, times(1)).get();
     }
