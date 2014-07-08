@@ -22,12 +22,14 @@ package com.redhat.darcy.ui.elements;
 import com.redhat.darcy.ui.ElementInvocationHandler;
 import com.redhat.darcy.ui.ElementListInvocationHandler;
 import com.redhat.darcy.ui.ElementViewInvocationHandler;
+import com.redhat.darcy.ui.ElementViewListInvocationHandler;
 import com.redhat.darcy.ui.Locator;
 import com.redhat.darcy.ui.View;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Static factories for the fundamental UI elements. Specifically, these return proxy instances of
@@ -108,6 +110,44 @@ public abstract class Elements {
                 locator);
         
         return (T) Proxy.newProxyInstance(Elements.class.getClassLoader(), 
+                new Class[] { type, LazyElement.class },
+                invocationHandler);
+    }
+
+    /**
+     * Wraps an element implementation in a proxy so that it may be assigned to a parent View
+     * lazily, like elements.
+     * <P>
+     * The provided implementation must, itself, be a View. If you want to override fundamental UI
+     * elements, this is done at the automation-library wrapper level and specific to that
+     * ViewContext implementation.
+     *
+     * @param type The interface this custom element implements.
+     * @param locator
+     * @param implementation Must also implement View
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends Element> T elements(Class<T> type, Locator locator,
+            Supplier<T> implementation) {
+        if (!type.isInterface()) {
+            throw new IllegalArgumentException("Element type must be an interface, was: " + type);
+        }
+
+        Supplier<View> viewSupplier = () -> {
+            try {
+                return (View) implementation.get();
+            } catch (ClassCastException e) {
+                throw new IllegalArgumentException("Custom element types must also implement View. "
+                        + "To override or add a fundamental element type is implementation "
+                        + "specific.");
+            }
+        };
+
+        InvocationHandler invocationHandler = new ElementViewListInvocationHandler(viewSupplier,
+                locator);
+
+        return (T) Proxy.newProxyInstance(Elements.class.getClassLoader(),
                 new Class[] { type, LazyElement.class },
                 invocationHandler);
     }

@@ -19,6 +19,8 @@
 
 package com.redhat.darcy.ui;
 
+import static com.redhat.darcy.ui.NestedElementContext.makeNestedElementContext;
+
 import com.redhat.darcy.ui.elements.Element;
 
 import javax.annotation.Nullable;
@@ -54,27 +56,11 @@ public class ElementViewListInvocationHandler implements InvocationHandler {
      * The proxy needs to also implement LazyElement (so you can call setContext(elementContext))
      *
      * @param viewSupplier A supplier of real implementations that we will forward method calls to.
-     */
-    public ElementViewListInvocationHandler(Supplier<View> viewSupplier) {
-        this(viewSupplier, null);
-    }
-
-    /**
-     * The proxy needs to also implement LazyElement (so you can call setContext(elementContext))
-     *
-     * @param viewSupplier A supplier of real implementations that we will forward method calls to.
      * @param locator
      */
-    public ElementViewListInvocationHandler(Supplier<View> viewSupplier,
-            @Nullable Locator locator) {
-        this(viewSupplier, locator, null);
-    }
-
-    public ElementViewListInvocationHandler(Supplier<View> viewSupplier, @Nullable Locator locator,
-            @Nullable ElementContext context) {
-        this.viewSupplier = Objects.requireNonNull(viewSupplier);
-        this.parentLocator = locator;
-        this.context = context;
+    public ElementViewListInvocationHandler(Supplier<View> viewSupplier, Locator locator) {
+        this.viewSupplier = Objects.requireNonNull(viewSupplier, "viewSupplier");
+        this.parentLocator = Objects.requireNonNull(locator, "locator");
     }
 
     @Override
@@ -103,7 +89,6 @@ public class ElementViewListInvocationHandler implements InvocationHandler {
     }
 
     private View getViewForParentElement(Element parentElement) {
-        return viewSupplier.get().setContext(
-                NestedElementContext.makeNestedElementContext(context, parentElement));
+        return viewSupplier.get().setContext(makeNestedElementContext(context, parentElement));
     }
 }
