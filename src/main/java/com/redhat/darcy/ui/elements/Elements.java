@@ -35,7 +35,6 @@ import java.util.function.Supplier;
  * Static factories for the fundamental UI elements. Specifically, these return proxy instances of
  * those elements, so that they may be defined statically and loaded lazily.
  * 
- * @author ahenning
  * @see {@link LazyElement}
  * @see {@link com.redhat.darcy.ui.ElementHandler LazyElementInvocationHandler}
  *
