@@ -182,9 +182,9 @@ public abstract class AbstractView implements View {
                     throw new RuntimeException(e);
                 }
             })
-            .filter((o) -> o instanceof LazyElement)
-            .map((e) -> (LazyElement) e)
-            .forEach((e) -> e.setContext(getContext()));
+            .filter(o -> o instanceof LazyElement)
+            .map(e -> (LazyElement) e)
+            .forEach(e -> e.setContext(getContext()));
     }
 
     private void readLoadConditionAnnotations(List<Field> fields) {
