@@ -23,6 +23,8 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 
 import com.redhat.darcy.ui.elements.Button;
+import com.redhat.darcy.ui.elements.Elements;
+import com.redhat.darcy.ui.elements.LazyElement;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,18 +41,21 @@ public class ElementProxyTest {
         doThrow(new TestException()).when(exceptionThrowingButton).click();
 
         TestContext testContext = new TestContext() {
-            @Override
-            public <T> List<T> findAllById(Class<T> type, String id) {
+            @SuppressWarnings("unchecked")
+            @Override public <T> List<T> findAllById(Class<T> type, String id) {
                 return (List<T>) Collections.singletonList(exceptionThrowingButton);
             }
 
-            @Override
-            public <T> T findById(Class<T> type, String id) {
+            @SuppressWarnings("unchecked")
+            @Override public <T> T findById(Class<T> type, String id) {
                 return (T) exceptionThrowingButton;
             }
         };
 
-        testContext.find().button(By.id("test")).click();
+        Button button = Elements.button(By.id("test"));
+        ((LazyElement) button).setContext(testContext);
+
+        button.click();
     }
 
     private interface TestContext extends ElementContext, FindsById {}
