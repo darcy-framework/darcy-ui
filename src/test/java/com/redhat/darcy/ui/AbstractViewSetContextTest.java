@@ -20,20 +20,20 @@
 package com.redhat.darcy.ui;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import com.redhat.darcy.ui.annotations.Require;
-import com.redhat.darcy.ui.elements.Elements;
-import com.redhat.darcy.ui.elements.Label;
+import com.redhat.darcy.ui.elements.Element;
+import com.redhat.darcy.ui.elements.LazyElement;
 import com.redhat.darcy.ui.testing.doubles.AlwaysMetCondition;
 import com.redhat.synq.Condition;
 
+import org.junit.Ignore;
 import org.junit.Test;
+
+import java.util.List;
 
 public class AbstractViewSetContextTest {
     @Test(expected = MissingLoadConditionException.class)
@@ -44,21 +44,35 @@ public class AbstractViewSetContextTest {
     }
 
     @Test
-    public void shouldFindElementFieldsWithSetContext() {
-        DummyContext mockContext = mock(DummyContext.class);
-        when(mockContext.findById(Label.class, "test")).thenReturn(mock(Label.class));
+    public void shouldSetContextOnElementFieldsThatImplementLazyElement() {
+        DummyContext dummyContext = new DummyContext();
 
         class TestView extends AbstractView {
             @Require
-            Label label = Elements.label(By.id("test"));
+            Element mockElement = mock(ElementThatIsLazy.class);
         };
 
         TestView testView = new TestView();
+        testView.setContext(dummyContext);
 
-        testView.setContext(mockContext);
-        testView.label.readText(); // Do something on the element to prompt it to be found
+        verify((LazyElement) testView.mockElement).setContext(dummyContext);
+    }
 
-        verify(mockContext).findById(anyObject(), anyString());
+    @Ignore("issue #13 prevents this test from passing: " +
+            "https://github.com/darcy-framework/darcy-ui/issues/13")
+    @Test
+    public void shouldSetContextOnListFieldsThatImplementLazyElement() {
+        DummyContext dummyContext = new DummyContext();
+
+        class TestView extends AbstractView {
+            @Require
+            List<Element> mockElementList = mock(ElementListThatIsLazy.class);
+        };
+
+        TestView testView = new TestView();
+        testView.setContext(dummyContext);
+
+        verify((LazyElement) testView.mockElementList).setContext(dummyContext);
     }
 
     @Test
@@ -122,4 +136,7 @@ public class AbstractViewSetContextTest {
 
         verify(testView).onSetContext();
     }
+
+    interface ElementThatIsLazy extends Element, LazyElement {}
+    interface ElementListThatIsLazy extends List<Element>, LazyElement {}
 }
