@@ -127,8 +127,8 @@ public abstract class Elements {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public static <T extends Element> T elements(Class<T> type, Locator locator,
-            Supplier<T> implementation) {
+    public static <T extends Element> List<T> elements(Class<T> type, Locator locator,
+            Supplier<? extends T> implementation) {
         if (!type.isInterface()) {
             throw new IllegalArgumentException("Element type must be an interface, was: " + type);
         }
@@ -146,8 +146,8 @@ public abstract class Elements {
         InvocationHandler invocationHandler = new CustomElementListHandler(viewSupplier,
                 locator);
 
-        return (T) Proxy.newProxyInstance(Elements.class.getClassLoader(),
-                new Class[] { type, LazyElement.class },
+        return (List<T>) Proxy.newProxyInstance(Elements.class.getClassLoader(),
+                new Class[] { List.class, LazyElement.class },
                 invocationHandler);
     }
     
