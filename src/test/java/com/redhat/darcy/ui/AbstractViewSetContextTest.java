@@ -19,7 +19,6 @@
 
 package com.redhat.darcy.ui;
 
-import static org.hamcrest.Matchers.any;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
