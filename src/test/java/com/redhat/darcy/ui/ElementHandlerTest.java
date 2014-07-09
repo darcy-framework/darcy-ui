@@ -119,5 +119,11 @@ public class ElementHandlerTest {
         handler.invoke(null, Element.class.getMethod("isDisplayed"), new Object[]{});
     }
 
+    @Test(expected = NullContextException.class)
+    public void shouldThrowNullContextExceptionIfMethodIsCalledWithoutAContextBeingSet() throws
+            Throwable {
+        handler.invoke(null, Element.class.getMethod("isDisplayed"), new Object[] {});
+    }
+
     private class TestException extends RuntimeException {}
 }
