@@ -34,7 +34,7 @@ import java.util.Collections;
 import java.util.List;
 
 @RunWith(JUnit4.class)
-public class ElementProxyTest {
+public class ElementHandlerTest {
     @Test(expected = TestException.class)
     public void shouldUnwrapInvocationTargetException() {
         Button exceptionThrowingButton = mock(Button.class);
