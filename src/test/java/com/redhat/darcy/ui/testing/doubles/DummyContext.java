@@ -17,8 +17,10 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.redhat.darcy.ui;
+package com.redhat.darcy.ui.testing.doubles;
 
+import com.redhat.darcy.ui.ElementContext;
+import com.redhat.darcy.ui.FindsById;
 import com.redhat.darcy.ui.elements.Label;
 
 import java.util.ArrayList;

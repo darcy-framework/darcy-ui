@@ -28,6 +28,8 @@ import com.redhat.darcy.ui.annotations.Require;
 import com.redhat.darcy.ui.elements.Element;
 import com.redhat.darcy.ui.elements.LazyElement;
 import com.redhat.darcy.ui.testing.doubles.AlwaysMetCondition;
+import com.redhat.darcy.ui.testing.doubles.DummyContext;
+import com.redhat.darcy.ui.testing.doubles.NullContext;
 import com.redhat.synq.Condition;
 
 import org.junit.Ignore;

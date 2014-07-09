@@ -25,6 +25,8 @@ import com.redhat.darcy.ui.elements.Element;
 import com.redhat.darcy.ui.elements.Elements;
 import com.redhat.darcy.ui.elements.Label;
 import com.redhat.darcy.ui.elements.LazyElement;
+import com.redhat.darcy.ui.testing.doubles.AlwaysDisplayedLabel;
+import com.redhat.darcy.ui.testing.doubles.DummyContext;
 
 import org.junit.Test;
 

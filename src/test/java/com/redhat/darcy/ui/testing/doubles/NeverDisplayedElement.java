@@ -17,24 +17,19 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.redhat.darcy.ui;
+package com.redhat.darcy.ui.testing.doubles;
 
-import com.redhat.darcy.ui.elements.Label;
+import com.redhat.darcy.ui.elements.Element;
 
-public class AlwaysDisplayedLabel implements Label {
-
-    @Override
-    public boolean isPresent() {
-        return true;
-    }
+public class NeverDisplayedElement implements Element {
     
     @Override
     public boolean isDisplayed() {
-        return true;
+        return false;
     }
 
     @Override
-    public String readText() {
-        return "AlwaysDisplayedElement text";
+    public boolean isPresent() {
+        return false;
     }
 }

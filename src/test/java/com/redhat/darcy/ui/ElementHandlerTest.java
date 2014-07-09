@@ -20,7 +20,6 @@
 package com.redhat.darcy.ui;
 
 import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -28,12 +27,11 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.redhat.darcy.ui.elements.Button;
 import com.redhat.darcy.ui.elements.Element;
-import com.redhat.darcy.ui.elements.Elements;
 import com.redhat.darcy.ui.elements.Findable;
 import com.redhat.darcy.ui.elements.LazyElement;
 import com.redhat.darcy.ui.elements.TextInput;
+import com.redhat.darcy.ui.testing.doubles.DummyContext;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -41,8 +39,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.lang.reflect.Method;
-import java.util.Collections;
-import java.util.List;
 
 @RunWith(JUnit4.class)
 public class ElementHandlerTest {

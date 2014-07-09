@@ -29,8 +29,11 @@ import com.redhat.darcy.ui.annotations.NotRequired;
 import com.redhat.darcy.ui.annotations.Require;
 import com.redhat.darcy.ui.annotations.RequireAll;
 import com.redhat.darcy.ui.elements.Element;
+import com.redhat.darcy.ui.testing.doubles.AlwaysDisplayedLabel;
 import com.redhat.darcy.ui.testing.doubles.AlwaysMetCondition;
+import com.redhat.darcy.ui.testing.doubles.NeverDisplayedElement;
 import com.redhat.darcy.ui.testing.doubles.NeverMetCondition;
+import com.redhat.darcy.ui.testing.doubles.NullContext;
 import com.redhat.synq.AbstractCondition;
 import com.redhat.synq.Condition;
 
@@ -57,7 +60,7 @@ public class AbstractViewIsLoadedTest {
         assertTrue("isLoaded should return true if all required elements are displayed.", 
                 testView.isLoaded());
     }
-    
+
     @Test
     public void shouldReturnFalseIfNotAllRequiredElementsAreDisplayed() {
         View testView = new AbstractView() {

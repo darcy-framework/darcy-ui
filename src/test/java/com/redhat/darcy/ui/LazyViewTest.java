@@ -6,11 +6,10 @@ import static org.junit.Assert.assertEquals;
 import com.redhat.darcy.ui.elements.Element;
 import com.redhat.darcy.ui.elements.LazyElement;
 import com.redhat.darcy.ui.testing.doubles.AlwaysMetCondition;
+import com.redhat.darcy.ui.testing.doubles.DummyContext;
 import com.redhat.synq.Condition;
 
 import org.junit.Test;
-
-import java.util.concurrent.Callable;
 
 public class LazyViewTest {
     interface ContextInterface {

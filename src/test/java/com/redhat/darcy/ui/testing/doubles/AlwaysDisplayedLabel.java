@@ -17,14 +17,24 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.redhat.darcy.ui;
+package com.redhat.darcy.ui.testing.doubles;
 
-import com.redhat.darcy.ui.elements.Element;
+import com.redhat.darcy.ui.elements.Label;
 
-/**
- * Context that returns null when finding any element.
- */
-public class NullContext implements ElementContext {
-    // TODO: NullElementSelection find();
+public class AlwaysDisplayedLabel implements Label {
+
+    @Override
+    public boolean isPresent() {
+        return true;
+    }
     
+    @Override
+    public boolean isDisplayed() {
+        return true;
+    }
+
+    @Override
+    public String readText() {
+        return "AlwaysDisplayedElement text";
+    }
 }
