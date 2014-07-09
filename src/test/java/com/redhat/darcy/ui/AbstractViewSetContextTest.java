@@ -19,9 +19,14 @@
 
 package com.redhat.darcy.ui;
 
+import static org.hamcrest.Matchers.any;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.redhat.darcy.ui.annotations.Require;
 import com.redhat.darcy.ui.elements.Elements;
@@ -40,22 +45,21 @@ public class AbstractViewSetContextTest {
     }
 
     @Test
-    public void shouldInitializeLazyElements() {
+    public void shouldFindElementFieldsWithSetContext() {
+        DummyContext mockContext = mock(DummyContext.class);
+        when(mockContext.findById(Label.class, "test")).thenReturn(mock(Label.class));
+
         class TestView extends AbstractView {
             @Require
-            private Label label = Elements.label(By.id("test"));
-
-            public String getLabelText() {
-                return label.readText();
-            }
+            Label label = Elements.label(By.id("test"));
         };
 
         TestView testView = new TestView();
 
-        testView.setContext(new DummyContext());
+        testView.setContext(mockContext);
+        testView.label.readText(); // Do something on the element to prompt it to be found
 
-        assertEquals("Expected LazyElement to be initialized with dummy implementation.",
-                new AlwaysDisplayedLabel().readText(), testView.getLabelText());
+        verify(mockContext).findById(anyObject(), anyString());
     }
 
     @Test
