@@ -19,46 +19,109 @@
 
 package com.redhat.darcy.ui;
 
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.redhat.darcy.ui.elements.Button;
+import com.redhat.darcy.ui.elements.Element;
 import com.redhat.darcy.ui.elements.Elements;
+import com.redhat.darcy.ui.elements.Findable;
 import com.redhat.darcy.ui.elements.LazyElement;
+import com.redhat.darcy.ui.elements.TextInput;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 
 @RunWith(JUnit4.class)
 public class ElementHandlerTest {
-    @Test(expected = TestException.class)
-    public void shouldUnwrapInvocationTargetException() {
-        Button exceptionThrowingButton = mock(Button.class);
-        doThrow(new TestException()).when(exceptionThrowingButton).click();
+    Method setContext;
+    DummyContext mockContext;
+    ElementHandler handler;
+    Element mockElement;
+    Locator mockLocator;
 
-        TestContext testContext = new TestContext() {
-            @SuppressWarnings("unchecked")
-            @Override public <T> List<T> findAllById(Class<T> type, String id) {
-                return (List<T>) Collections.singletonList(exceptionThrowingButton);
-            }
+    @Before
+    public void setup() throws NoSuchMethodException {
+        setContext = LazyElement.class.getMethod("setContext", ElementContext.class);
 
-            @SuppressWarnings("unchecked")
-            @Override public <T> T findById(Class<T> type, String id) {
-                return (T) exceptionThrowingButton;
-            }
-        };
+        mockContext = mock(DummyContext.class);
+        mockElement = mock(Element.class);
+        mockLocator = mock(Locator.class);
 
-        Button button = Elements.button(By.id("test"));
-        ((LazyElement) button).setContext(testContext);
+        when(mockLocator.find(anyObject(), anyObject())).thenReturn(mockElement);
 
-        button.click();
+        handler = new ElementHandler(TextInput.class, mockLocator);
     }
 
-    private interface TestContext extends ElementContext, FindsById {}
+    @Test
+    public void shouldImplementSetContextAndUseContextToLookupElement() throws Throwable {
+        // This should set the mock context to be used later
+        handler.invoke(null, setContext, new Object[] { mockContext });
+
+        // This should cause the context to be used to find the element if it was properly set
+        handler.invoke(null, Element.class.getMethod("isDisplayed"), new Object[] {});
+
+        // Verify the context was used
+        verify(mockLocator).find(anyObject(), eq(mockContext));
+    }
+
+    @Test
+    public void shouldLookupElementWithAppropriateType() throws Throwable {
+        // This should set the mock context to be used later
+        handler.invoke(null, setContext, new Object[] { mockContext });
+
+        // This should cause the context to be used to find the element if it was properly set
+        handler.invoke(null, Element.class.getMethod("isDisplayed"), new Object[] {});
+
+        // Verify the mock was used
+        verify(mockLocator).find(eq(TextInput.class), anyObject());
+    }
+
+    @Test
+    public void shouldForwardMethodsToFoundElement() throws Throwable {
+        // This should set the mock context to be used later
+        handler.invoke(null, setContext, new Object[] { mockContext });
+
+        // This should cause the context to be used to find the element if it was properly set
+        handler.invoke(null, Findable.class.getMethod("isPresent"), new Object[] {});
+
+        verify(mockElement).isPresent();
+    }
+
+    @Test
+    public void shouldCacheAndReuseFoundElement() throws Throwable {
+        // This should set the mock context to be used later
+        handler.invoke(null, setContext, new Object[] { mockContext });
+
+        // This should cause the context to be used to find the element if it was properly set
+        handler.invoke(null, Element.class.getMethod("isDisplayed"), new Object[] {});
+        handler.invoke(null, Element.class.getMethod("isDisplayed"), new Object[] {});
+
+        verify(mockLocator, times(1)).find(anyObject(), anyObject());
+    }
+
+    @Test(expected = TestException.class)
+    public void shouldThrowCauseOfInvocationTargetExceptions() throws Throwable {
+        when(mockElement.isDisplayed()).thenThrow(new TestException());
+
+        // This should set the mock context to be used later
+        handler.invoke(null, setContext, new Object[]{mockContext});
+
+        // This should cause the context to be used to find the element if it was properly set
+        handler.invoke(null, Element.class.getMethod("isDisplayed"), new Object[]{});
+    }
 
     private class TestException extends RuntimeException {}
 }
