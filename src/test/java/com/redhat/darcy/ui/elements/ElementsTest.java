@@ -72,4 +72,24 @@ public class ElementsTest {
         assertThat(Proxy.getInvocationHandler(elementList),
                 instanceOf(CustomElementListHandler.class));
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowExceptionIfElementTypeIsNotAnInterfaceForElement() {
+        Elements.element(AlwaysDisplayedLabel.class, By.id("test"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowExceptionIfElementTypeIsNotAnInterfaceForElements() {
+        Elements.elements(AlwaysDisplayedLabel.class, By.id("test"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowExceptionIfElementTypeIsNotAnInterfaceForCustomElement() {
+        Elements.element(StubCustomElement.class, By.id("test"), new StubCustomElement());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowExceptionIfElementTypeIsNotAnInterfaceForCustomElements() {
+        Elements.elements(StubCustomElement.class, By.id("test"), StubCustomElement::new);
+    }
 }
