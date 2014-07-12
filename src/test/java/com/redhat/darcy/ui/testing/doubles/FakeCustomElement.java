@@ -19,33 +19,25 @@
 
 package com.redhat.darcy.ui.testing.doubles;
 
-import com.redhat.darcy.ui.ElementContext;
-import com.redhat.darcy.ui.View;
+import com.redhat.darcy.ui.AbstractView;
 import com.redhat.darcy.ui.elements.Element;
+import com.redhat.synq.Condition;
+import com.redhat.synq.HamcrestCondition;
 
-public class StubCustomElement implements View, Element {
+public class FakeCustomElement extends AbstractView implements Element {
+
     @Override
     public boolean isDisplayed() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isPresent() {
-        return false;
+        return true;
     }
 
     @Override
-    public View setContext(ElementContext context) {
-        return null;
-    }
-
-    @Override
-    public ElementContext getContext() {
-        return null;
-    }
-
-    @Override
-    public boolean isLoaded() {
-        return false;
+    public Condition<?> loadCondition() {
+        return HamcrestCondition.isTrueOrNonNull(() -> true);
     }
 }

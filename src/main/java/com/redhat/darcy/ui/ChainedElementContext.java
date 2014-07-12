@@ -23,6 +23,7 @@ import com.redhat.darcy.util.ReflectionUtil;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Proxy;
+import java.util.List;
 import java.util.Objects;
 
 /**

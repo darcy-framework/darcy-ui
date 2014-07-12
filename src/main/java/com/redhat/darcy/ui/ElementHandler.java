@@ -20,7 +20,6 @@
 package com.redhat.darcy.ui;
 
 import com.redhat.darcy.ui.elements.Element;
-import com.redhat.darcy.ui.elements.LazyElement;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -33,7 +32,7 @@ import java.util.Objects;
  * <ul>
  * <li>Lazily finds elements and caches them once they are found.</li>
  * <li>Because the proxy is the thing actually tracking down the real element implementation, the 
- * proxy effectively implements {@link LazyElement} and accepts the context with which to use to 
+ * proxy effectively implements {@link com.redhat.darcy.ui.elements.LazyElement} and accepts the context with which to use to
  * find the element. (Though not always necessary -- the context may be passed in the constructor.)
  * </li>
  * </ul>

@@ -28,7 +28,7 @@ import com.redhat.darcy.ui.CustomElementListHandler;
 import com.redhat.darcy.ui.ElementHandler;
 import com.redhat.darcy.ui.ElementListHandler;
 import com.redhat.darcy.ui.testing.doubles.AlwaysDisplayedLabel;
-import com.redhat.darcy.ui.testing.doubles.StubCustomElement;
+import com.redhat.darcy.ui.testing.doubles.FakeCustomElement;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,7 +57,7 @@ public class ElementsTest {
 
     @Test
     public void shouldCreateProxyUsingCustomElementHandlerForCustomElements() {
-        Element element = Elements.element(Element.class, By.id("id"), new StubCustomElement());
+        Element element = Elements.element(Element.class, By.id("id"), new FakeCustomElement());
 
         assertThat(element, instanceOf(Proxy.class));
         assertThat(Proxy.getInvocationHandler(element), instanceOf(CustomElementHandler.class));
@@ -66,7 +66,7 @@ public class ElementsTest {
     @Test
     public void shouldCreateProxyUsingCustomElementListHandlerForCustomElementLists() {
         List<Element> elementList = Elements.elements(Element.class, By.id("test"),
-                StubCustomElement::new);
+                FakeCustomElement::new);
 
         assertThat(elementList, instanceOf(Proxy.class));
         assertThat(Proxy.getInvocationHandler(elementList),
@@ -85,11 +85,16 @@ public class ElementsTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowExceptionIfElementTypeIsNotAnInterfaceForCustomElement() {
-        Elements.element(StubCustomElement.class, By.id("test"), new StubCustomElement());
+        Elements.element(FakeCustomElement.class, By.id("test"), new FakeCustomElement());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowExceptionIfViewImplementationIsNotAView() {
+        Elements.element(Element.class, By.id("test"), new AlwaysDisplayedLabel());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowExceptionIfElementTypeIsNotAnInterfaceForCustomElements() {
-        Elements.elements(StubCustomElement.class, By.id("test"), StubCustomElement::new);
+        Elements.elements(FakeCustomElement.class, By.id("test"), FakeCustomElement::new);
     }
 }

@@ -27,7 +27,6 @@ import com.redhat.darcy.ui.annotations.Require;
 import com.redhat.darcy.ui.annotations.RequireAll;
 import com.redhat.darcy.ui.elements.Element;
 import com.redhat.darcy.ui.elements.LazyElement;
-import com.redhat.darcy.ui.matchers.ElementMatchers;
 import com.redhat.darcy.ui.matchers.ViewMatchers;
 import com.redhat.darcy.util.ReflectionUtil;
 import com.redhat.synq.Condition;
@@ -90,7 +89,7 @@ public abstract class AbstractView implements View {
      * <li>If a field is annotated with {@link Context}, then the context parameter will be casted
      * and assigned to that field. If the context does not implement that fields type, a
      * {@link ClassCastException} will be thrown.</li>
-     * <li>If there are fields that implement {@link LazyElement}, then they were created in such
+     * <li>If there are fields that implement {@link com.redhat.darcy.ui.elements.LazyElement}, then they were created in such
      * a way that they do not know about their owning View and, therefore, ElementContext. When
      * setContext is called, LazyElements will get the context assigned to them.</li>
      * <li>If there are {@link Require}, {@link RequireAll}, or {@link NotRequired} annotations,
