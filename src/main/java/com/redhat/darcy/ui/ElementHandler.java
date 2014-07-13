@@ -32,12 +32,12 @@ import java.util.Objects;
  * <ul>
  * <li>Lazily finds elements and caches them once they are found.</li>
  * <li>Because the proxy is the thing actually tracking down the real element implementation, the 
- * proxy effectively implements {@link com.redhat.darcy.ui.elements.LazyElement} and accepts the context with which to use to
+ * proxy effectively implements {@link HasElementContext} and accepts the context with which to use to
  * find the element. (Though not always necessary -- the context may be passed in the constructor.)
  * </li>
  * </ul>
  * 
- * @see com.redhat.darcy.ui.elements.LazyElement
+ * @see HasElementContext
  * @see com.redhat.darcy.ui.elements.Elements
  * @see com.redhat.darcy.ui.AbstractView
  */

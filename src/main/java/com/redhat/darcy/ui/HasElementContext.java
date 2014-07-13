@@ -17,29 +17,11 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.redhat.darcy.ui.testing.doubles;
-
-import com.redhat.darcy.ui.ElementContext;
-import com.redhat.darcy.ui.View;
+package com.redhat.darcy.ui;
 
 /**
- * Simple view implementation that always returns true for isLoaded.
+ * Indicates a type may be assigned an {@link com.redhat.darcy.ui.ElementContext}.
  */
-public class AlwaysLoadedView implements View {
-    private ElementContext context;
-
-    @Override
-    public void setContext(ElementContext context) {
-        this.context = context;
-    }
-
-    @Override
-    public ElementContext getContext() {
-        return context;
-    }
-
-    @Override
-    public boolean isLoaded() {
-        return true;
-    }
+public interface HasElementContext {
+    void setContext(ElementContext elementContext);
 }

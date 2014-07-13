@@ -46,38 +46,23 @@ public class DefaultElementSelection implements ElementSelection {
         return locator.findAll(elementType, context);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public <T extends Element> T elementOfType(Class<T> elementType, Locator locator,
-            T implementation) {
-        if (!(implementation instanceof View)) {
-            throw new IllegalArgumentException("Element implementation must also be a View. " +
-                    "(" + implementation + ")");
-        }
+    public <T extends Element & View> T elementOfType(T implementation, Locator locator) {
+        implementation.setContext(makeChainedElementContext(context, locator));
 
-        View view = (View) implementation;
-
-        return (T) view.setContext(makeChainedElementContext(context, locator));
+        return implementation;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public <T extends Element> List<T> elementsOfType(Class<T> elementType, Locator locator,
-            Supplier<? extends T> implementation) {
-        Supplier<View> viewSupplier = () -> {
-            try {
-                return (View) implementation.get();
-            } catch (ClassCastException e) {
-                throw new IllegalArgumentException("Custom element types must also implement View. "
-                        + "To override or add a fundamental element type is implementation "
-                        + "specific.");
-            }
-        };
-
-        return new LazyList<>(() -> locator.findAll(Element.class, context)
+    public <T extends Element & View> List<T> elementsOfType(Supplier<T> implementation,
+            Locator locator) {
+        return new LazyList<T>(() -> locator.findAll(Element.class, context)
                 .stream()
-                .map(e -> viewSupplier.get().setContext(makeNestedElementContext(context, e)))
-                .map(v -> (T) v)
+                .map(e -> {
+                    T view = implementation.get();
+                    view.setContext(makeNestedElementContext(context, e));
+                    return view;
+                })
                 .collect(Collectors.toList()));
     }
 }

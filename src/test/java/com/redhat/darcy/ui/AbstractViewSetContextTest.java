@@ -26,7 +26,6 @@ import static org.mockito.Mockito.verify;
 
 import com.redhat.darcy.ui.annotations.Require;
 import com.redhat.darcy.ui.elements.Element;
-import com.redhat.darcy.ui.elements.LazyElement;
 import com.redhat.darcy.ui.testing.doubles.AlwaysMetCondition;
 import com.redhat.darcy.ui.testing.doubles.DummyContext;
 import com.redhat.darcy.ui.testing.doubles.NullContext;
@@ -57,7 +56,7 @@ public class AbstractViewSetContextTest {
         TestView testView = new TestView();
         testView.setContext(dummyContext);
 
-        verify((LazyElement) testView.mockElement).setContext(dummyContext);
+        verify((HasElementContext) testView.mockElement).setContext(dummyContext);
     }
 
     @Ignore("issue #13 prevents this test from passing: " +
@@ -74,7 +73,7 @@ public class AbstractViewSetContextTest {
         TestView testView = new TestView();
         testView.setContext(dummyContext);
 
-        verify((LazyElement) testView.mockElementList).setContext(dummyContext);
+        verify((HasElementContext) testView.mockElementList).setContext(dummyContext);
     }
 
     @Test

@@ -1,7 +1,7 @@
 /*
  Copyright 2014 Red Hat, Inc. and/or its affiliates.
 
- This file is part of darcy.
+ This file is part of darcy-ui.
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -17,14 +17,15 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.redhat.darcy.ui.elements;
-
-import com.redhat.darcy.ui.ElementContext;
+package com.redhat.darcy.ui;
 
 /**
- * Used by proxy instances so that elements may be assigned to Views lazily via reflection.
- * Implementing this manually does not have any effect.
+ * Interface for element fields created statically and assigned an ElementContext to look in
+ * by {@link com.redhat.darcy.ui.AbstractView}. Real implementations must be found via a locator and
+ * a context. A context is associated with a View at runtime, so these element fields, when created,
+ * have no context to refer to. Thus, they must be created as proxies, which delay looking up the
+ * actual element until the element is used. The context is assigned via this interface and {@code
+ * AbstractView}.
  */
-public interface LazyElement {
-    void setContext(ElementContext elementContext);
+public interface LazyElement extends HasElementContext {
 }

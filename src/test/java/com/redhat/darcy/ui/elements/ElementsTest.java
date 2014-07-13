@@ -21,12 +21,20 @@ package com.redhat.darcy.ui.elements;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import com.redhat.darcy.ui.By;
 import com.redhat.darcy.ui.CustomElementHandler;
 import com.redhat.darcy.ui.CustomElementListHandler;
+import com.redhat.darcy.ui.ElementContext;
 import com.redhat.darcy.ui.ElementHandler;
 import com.redhat.darcy.ui.ElementListHandler;
+import com.redhat.darcy.ui.HasElementContext;
+import com.redhat.darcy.ui.LazyElement;
+import com.redhat.darcy.ui.Locator;
 import com.redhat.darcy.ui.testing.doubles.AlwaysDisplayedLabel;
 import com.redhat.darcy.ui.testing.doubles.FakeCustomElement;
 
@@ -35,40 +43,45 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.lang.reflect.Proxy;
+import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(JUnit4.class)
 public class ElementsTest {
     @Test
-    public void shouldCreateProxyUsingElementHandlerForElements() {
+    public void shouldCreateProxyImplementingLazyElementUsingElementHandlerForElements() {
         Element element = Elements.element(By.id("test"));
 
         assertThat(element, instanceOf(Proxy.class));
+        assertThat(element, instanceOf(LazyElement.class));
         assertThat(Proxy.getInvocationHandler(element), instanceOf(ElementHandler.class));
     }
 
     @Test
-    public void shouldCreateProxyUsingElementListHandlerForElementLists() {
+    public void shouldCreateProxyImplementingLazyElementUsingElementListHandlerForElementLists() {
         List<Element> elementList = Elements.elements(By.id("test"));
 
         assertThat(elementList, instanceOf(Proxy.class));
+        assertThat(elementList, instanceOf(LazyElement.class));
         assertThat(Proxy.getInvocationHandler(elementList), instanceOf(ElementListHandler.class));
     }
 
     @Test
-    public void shouldCreateProxyUsingCustomElementHandlerForCustomElements() {
+    public void shouldCreateProxyImplementingLazyElementUsingCustomElementHandlerForCustomElements() {
         Element element = Elements.element(Element.class, By.id("id"), new FakeCustomElement());
 
         assertThat(element, instanceOf(Proxy.class));
+        assertThat(element, instanceOf(LazyElement.class));
         assertThat(Proxy.getInvocationHandler(element), instanceOf(CustomElementHandler.class));
     }
 
     @Test
-    public void shouldCreateProxyUsingCustomElementListHandlerForCustomElementLists() {
+    public void shouldCreateProxyImplementingLazyElementUsingCustomElementListHandlerForCustomElementLists() {
         List<Element> elementList = Elements.elements(Element.class, By.id("test"),
                 FakeCustomElement::new);
 
         assertThat(elementList, instanceOf(Proxy.class));
+        assertThat(elementList, instanceOf(LazyElement.class));
         assertThat(Proxy.getInvocationHandler(elementList),
                 instanceOf(CustomElementListHandler.class));
     }
@@ -89,12 +102,30 @@ public class ElementsTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowExceptionIfViewImplementationIsNotAView() {
+    public void shouldThrowExceptionIfViewImplementationIsNotAViewForCustomElement() {
         Elements.element(Element.class, By.id("test"), new AlwaysDisplayedLabel());
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowExceptionIfElementTypeIsNotAnInterfaceForCustomElements() {
+    @Test
+    public void shouldNotThrowExceptionIfElementTypeIsNotAnInterfaceForCustomElementLists() {
         Elements.elements(FakeCustomElement.class, By.id("test"), FakeCustomElement::new);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowExceptionIfImplementationDoesNotImplementViewForCustomElementLists() {
+        List<Element> backingList = new ArrayList<>();
+        backingList.add(mock(Element.class));
+        Locator mockLocator = mock(Locator.class);
+        when(mockLocator.findAll(eq(Element.class), anyObject())).thenReturn(backingList);
+
+        // Unfortunately can't reflect type information (especially on method refs or lambdas)
+        // about generics
+        List<Label> labels = Elements.elements(Label.class, mockLocator, AlwaysDisplayedLabel::new);
+
+        // Needs context to lookup elements (otherwise NullContextException)
+        ((HasElementContext) labels).setContext(mock(ElementContext.class));
+
+        // Will call supplier for views, checking for type compatibility
+        labels.get(0);
     }
 }

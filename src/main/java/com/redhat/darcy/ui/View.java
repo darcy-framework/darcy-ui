@@ -32,16 +32,13 @@ package com.redhat.darcy.ui;
  * 
  * @see AbstractView
  */
-public interface View {
+public interface View extends HasElementContext {
     /**
      * Sets the context for the current View, and also initializes the View should the
      * implementation require.
-     * 
-     * @param context
-     * @return "this" and as such should always be safe to cast to the specific subtype it was
-     *         called on.
      */
-    View setContext(ElementContext context);
+    @Override
+    void setContext(ElementContext context);
     
     ElementContext getContext();
     

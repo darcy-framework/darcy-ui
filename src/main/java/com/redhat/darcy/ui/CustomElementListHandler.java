@@ -72,9 +72,7 @@ public class CustomElementListHandler implements InvocationHandler {
         }
 
         if (cachedList == null) {
-            List<Element> parentElements = parentLocator.findAll(Element.class, context);
-
-            cachedList = parentElements
+            cachedList = parentLocator.findAll(Element.class, context)
                     .stream()
                     .map(this::getViewForParentElement)
                     .collect(Collectors.toList());
@@ -88,6 +86,9 @@ public class CustomElementListHandler implements InvocationHandler {
     }
 
     private View getViewForParentElement(Element parentElement) {
-        return viewSupplier.get().setContext(makeNestedElementContext(context, parentElement));
+        View view = viewSupplier.get();
+        view.setContext(makeNestedElementContext(context, parentElement));
+
+        return view;
     }
 }

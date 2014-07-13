@@ -19,16 +19,18 @@
 
 package com.redhat.darcy.ui;
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.redhat.darcy.ui.elements.Element;
 import com.redhat.darcy.ui.elements.TextInput;
+import com.redhat.darcy.ui.testing.doubles.AlwaysDisplayedLabel;
 import com.redhat.darcy.ui.testing.doubles.FakeCustomElement;
 import com.redhat.darcy.util.LazyList;
 
@@ -69,30 +71,29 @@ public class DefaultElementSelectionTest {
         Locator mockLocator = mock(Locator.class);
 
         DefaultElementSelection selection = new DefaultElementSelection(mockContext);
-        Element customElement = selection.elementOfType(Element.class, mockLocator,
-                new FakeCustomElement());
+        Element customElement = selection.elementOfType(new FakeCustomElement(), mockLocator);
 
         assertThat(customElement, instanceOf(View.class));
         assertNotNull(((View) customElement).getContext());
     }
 
     @Test
-    public void shouldReturnLazyListForCustomElementLists() {
+    public void shouldReturnLazyListForCustomElementListsBackedByElementListFoundByLocator() {
         ElementContext mockContext = mock(ElementContext.class);
         Locator mockLocator = mock(Locator.class);
-        List<Element> listSpy = spy(new ArrayList<>());
-
-        when(mockLocator.findAll(Element.class, mockContext)).thenReturn(listSpy);
+        List<Element> backingList = new ArrayList<>();
+        // Set up some state about the backing list (size is 2)
+        backingList.add(new AlwaysDisplayedLabel());
+        backingList.add(new AlwaysDisplayedLabel());
+        when(mockLocator.findAll(Element.class, mockContext)).thenReturn(backingList);
 
         DefaultElementSelection selection = new DefaultElementSelection(mockContext);
-        List<Element> elements = selection.elementsOfType(Element.class, mockLocator,
-                FakeCustomElement::new);
-
-        elements.size();
+        List<FakeCustomElement> elements = selection.elementsOfType(FakeCustomElement::new, mockLocator);
 
         assertThat(elements, instanceOf(LazyList.class));
-        verify(listSpy).size();
+        assertThat("Custom element list should be backed by list of elements found by locator.",
+                elements.size(), is(equalTo(2)));
     }
 
-    interface ElementList extends List<Element> {}
+    // TODO: Need to test that custom element is setup with correct context / locator
 }

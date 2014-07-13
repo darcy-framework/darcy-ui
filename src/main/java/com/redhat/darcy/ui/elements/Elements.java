@@ -19,10 +19,11 @@
 
 package com.redhat.darcy.ui.elements;
 
-import com.redhat.darcy.ui.ElementHandler;
-import com.redhat.darcy.ui.ElementListHandler;
 import com.redhat.darcy.ui.CustomElementHandler;
 import com.redhat.darcy.ui.CustomElementListHandler;
+import com.redhat.darcy.ui.ElementHandler;
+import com.redhat.darcy.ui.ElementListHandler;
+import com.redhat.darcy.ui.LazyElement;
 import com.redhat.darcy.ui.Locator;
 import com.redhat.darcy.ui.View;
 
@@ -35,8 +36,8 @@ import java.util.function.Supplier;
  * Static factories for the fundamental UI elements. Specifically, these return proxy instances of
  * those elements, so that they may be defined statically and loaded lazily.
  * 
- * @see {@link LazyElement}
- * @see {@link com.redhat.darcy.ui.ElementHandler LazyElementInvocationHandler}
+ * @see {@link com.redhat.darcy.ui.LazyElement}
+ * @see {@link com.redhat.darcy.ui.ElementHandler}
  *
  */
 public abstract class Elements {
@@ -88,27 +89,23 @@ public abstract class Elements {
      * The provided implementation must, itself, be a View. If you want to override fundamental UI
      * elements, this is done at the automation-library wrapper level and specific to that 
      * ViewContext implementation.
-     * 
-     * @param type The interface this custom element implements.
-     * @param locator
-     * @param implementation Must also implement View
-     * @return
      */
     @SuppressWarnings("unchecked")
-    public static <T extends Element> T element(Class<T> type, Locator locator, T implementation) {
-        if (!(implementation instanceof View)) {
-            throw new IllegalArgumentException("Element implementation must also be a View. " +
-                    "(" + implementation + ")");
-        }
-
+    public static <T extends Element> T element(Class<T> type, Locator locator,
+            T implementation) {
         if (!type.isInterface()) {
             throw new IllegalArgumentException("Element type must be an interface, was: " + type);
         }
 
-        InvocationHandler invocationHandler = new CustomElementHandler((View) implementation,
-                locator);
-        
-        return (T) Proxy.newProxyInstance(Elements.class.getClassLoader(), 
+        if (!View.class.isAssignableFrom(implementation.getClass())) {
+            throw new IllegalArgumentException("Implementation must be a View. If you wish to " +
+                    "override fundamental Element types, this must be done at the automation " +
+                    "library level.");
+        }
+
+        InvocationHandler invocationHandler = new CustomElementHandler((View) implementation, locator);
+
+        return (T) Proxy.newProxyInstance(Elements.class.getClassLoader(),
                 new Class[] { type, LazyElement.class },
                 invocationHandler);
     }
@@ -120,31 +117,23 @@ public abstract class Elements {
      * The provided implementation must, itself, be a View. If you want to override fundamental UI
      * elements, this is done at the automation-library wrapper level and specific to that
      * ViewContext implementation.
-     *
-     * @param type The interface this custom element implements.
-     * @param locator
-     * @param implementation Must also implement View
-     * @return
      */
+    // The Class<T> type param is not really necessary but it makes the API consistent with creating
+    // a single ViewElement field, and allows the returned list type to be of a parent interface.
     @SuppressWarnings("unchecked")
-    public static <T extends Element> List<T> elements(Class<T> type, Locator locator,
-            Supplier<? extends T> implementation) {
-        if (!type.isInterface()) {
-            throw new IllegalArgumentException("Element type must be an interface, was: " + type);
-        }
-
+    public static <T extends Element> List<T> elements(@SuppressWarnings("unused") Class<T> type,
+            Locator locator, Supplier<? extends T> implementation) {
         Supplier<View> viewSupplier = () -> {
             try {
                 return (View) implementation.get();
             } catch (ClassCastException e) {
-                throw new IllegalArgumentException("Custom element types must also implement View. "
-                        + "To override or add a fundamental element type is implementation "
-                        + "specific.");
+                throw new IllegalArgumentException("Implementation must be a View. If you wish to " +
+                        "override fundamental Element types, this must be done at the automation " +
+                        "library level.");
             }
         };
 
-        InvocationHandler invocationHandler = new CustomElementListHandler(viewSupplier,
-                locator);
+        InvocationHandler invocationHandler = new CustomElementListHandler(viewSupplier, locator);
 
         return (List<T>) Proxy.newProxyInstance(Elements.class.getClassLoader(),
                 new Class[] { List.class, LazyElement.class },

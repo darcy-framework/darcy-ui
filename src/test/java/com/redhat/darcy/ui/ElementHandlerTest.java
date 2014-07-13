@@ -29,7 +29,6 @@ import static org.mockito.Mockito.when;
 
 import com.redhat.darcy.ui.elements.Element;
 import com.redhat.darcy.ui.elements.Findable;
-import com.redhat.darcy.ui.elements.LazyElement;
 import com.redhat.darcy.ui.elements.TextInput;
 import com.redhat.darcy.ui.testing.doubles.DummyContext;
 
@@ -50,7 +49,7 @@ public class ElementHandlerTest {
 
     @Before
     public void setup() throws NoSuchMethodException {
-        setContext = LazyElement.class.getMethod("setContext", ElementContext.class);
+        setContext = HasElementContext.class.getMethod("setContext", ElementContext.class);
 
         mockContext = mock(DummyContext.class);
         mockElement = mock(Element.class);

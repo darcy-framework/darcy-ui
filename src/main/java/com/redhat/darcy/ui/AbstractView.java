@@ -26,7 +26,6 @@ import com.redhat.darcy.ui.annotations.NotRequired;
 import com.redhat.darcy.ui.annotations.Require;
 import com.redhat.darcy.ui.annotations.RequireAll;
 import com.redhat.darcy.ui.elements.Element;
-import com.redhat.darcy.ui.elements.LazyElement;
 import com.redhat.darcy.ui.matchers.ViewMatchers;
 import com.redhat.darcy.util.ReflectionUtil;
 import com.redhat.synq.Condition;
@@ -89,9 +88,10 @@ public abstract class AbstractView implements View {
      * <li>If a field is annotated with {@link Context}, then the context parameter will be casted
      * and assigned to that field. If the context does not implement that fields type, a
      * {@link ClassCastException} will be thrown.</li>
-     * <li>If there are fields that implement {@link com.redhat.darcy.ui.elements.LazyElement}, then they were created in such
-     * a way that they do not know about their owning View and, therefore, ElementContext. When
-     * setContext is called, LazyElements will get the context assigned to them.</li>
+     * <li>If there are fields that implement {@link com.redhat.darcy.ui.LazyElement}, then they
+     * were created in such a way that they do not know about their owning View and, therefore,
+     * ElementContext. When setContext is called, LazyElements will get the context assigned to
+     * them.</li>
      * <li>If there are {@link Require}, {@link RequireAll}, or {@link NotRequired} annotations,
      * appropriate load conditions will be constructed and placed in {@link #loadConditions}.</li>
      * <li>Calls {@link #onSetContext()} so that implementations of AbstractView may provide their
@@ -99,7 +99,7 @@ public abstract class AbstractView implements View {
      * </ul>
      */
     @Override
-    public final View setContext(ElementContext context) {
+    public void setContext(ElementContext context) {
         List<Field> fields = ReflectionUtil.getAllDeclaredFields(this);
 
         if (this.context == null) { // This only needs to happen once
@@ -108,16 +108,14 @@ public abstract class AbstractView implements View {
 
         this.context = context;
 
-        injectContexts(fields);
-        initializeLazyElements(fields);
+        assignAndCastContextToFieldsAnnotatedWithContext(fields);
+        setContextOnLazyElements(fields);
 
         if (loadConditions.isEmpty()) {
             throw new MissingLoadConditionException(this);
         }
 
         onSetContext();
-
-        return this;
     }
 
     @Override
@@ -158,7 +156,7 @@ public abstract class AbstractView implements View {
         return context.transition();
     }
 
-    private void injectContexts(List<Field> fields) {
+    private void assignAndCastContextToFieldsAnnotatedWithContext(List<Field> fields) {
         fields.stream()
             .filter(f -> f.getAnnotation(Context.class) != null)
             .forEach(f -> {
@@ -170,11 +168,11 @@ public abstract class AbstractView implements View {
             });
     }
 
-    private void initializeLazyElements(List<Field> fields) {
+    private void setContextOnLazyElements(List<Field> fields) {
         fields.stream()
             .filter(f -> Element.class.isAssignableFrom(f.getType())
                     || List.class.isAssignableFrom(f.getType()))
-            .map((f) -> {
+            .map(f -> {
                 try {
                     return f.get(this);
                 } catch (IllegalAccessException e) {

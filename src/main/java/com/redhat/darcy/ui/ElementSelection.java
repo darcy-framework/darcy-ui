@@ -60,10 +60,9 @@ public interface ElementSelection extends Selection {
      */
     <T extends Element> List<T> elementsOfType(Class<T> elementType, Locator locator);
 
-    <T extends Element> T elementOfType(Class<T> elementType, Locator locator, T implementation);
+    <T extends Element & View> T elementOfType(T implementation, Locator locator);
 
-    <T extends Element> List<T> elementsOfType(Class<T> elementType, Locator locator,
-            Supplier<? extends T> implementation);
+    <T extends Element & View> List<T> elementsOfType(Supplier<T> implementation, Locator locator);
 
     default Element element(Locator locator) {
         return elementOfType(Element.class, locator);
