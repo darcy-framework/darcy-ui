@@ -44,10 +44,6 @@ public abstract class Elements {
     /**
      * Looks up a automation-library-specific implementation for that element type, assuming an
      * implementation is registered for that class.
-     * 
-     * @param type
-     * @param locator
-     * @return
      */
     @SuppressWarnings("unchecked")
     public static <T extends Element> T element(Class<T> type, Locator locator) {
@@ -64,10 +60,6 @@ public abstract class Elements {
     /**
      * Looks up a automation-library-specific implementation for that element type, assuming an
      * implementation is registered for that class.
-     * 
-     * @param type
-     * @param locator
-     * @return
      */
     @SuppressWarnings("unchecked")
     public static <T extends Element> List<T> elements(Class<T> type, Locator locator) {
