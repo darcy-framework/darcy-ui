@@ -19,7 +19,7 @@
 
 package com.redhat.darcy.ui.matchers;
 
-import com.redhat.darcy.ui.elements.Element;
+import com.redhat.darcy.ui.api.elements.Element;
 
 import org.hamcrest.Matcher;
 

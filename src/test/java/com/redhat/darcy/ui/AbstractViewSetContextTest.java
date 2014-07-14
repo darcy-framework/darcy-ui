@@ -25,7 +25,10 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 import com.redhat.darcy.ui.annotations.Require;
-import com.redhat.darcy.ui.elements.Element;
+import com.redhat.darcy.ui.api.HasElementContext;
+import com.redhat.darcy.ui.api.View;
+import com.redhat.darcy.ui.api.elements.Element;
+import com.redhat.darcy.ui.internal.LazyElement;
 import com.redhat.darcy.ui.testing.doubles.AlwaysMetCondition;
 import com.redhat.darcy.ui.testing.doubles.DummyContext;
 import com.redhat.darcy.ui.testing.doubles.NullContext;

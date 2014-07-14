@@ -19,8 +19,6 @@
 
 package com.redhat.darcy.ui;
 
-import com.redhat.darcy.DarcyException;
-
 public class NullViewException extends DarcyException {
     private static final long serialVersionUID = 2699773441075296762L;
     

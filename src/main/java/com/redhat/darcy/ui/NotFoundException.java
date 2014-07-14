@@ -19,7 +19,7 @@
 
 package com.redhat.darcy.ui;
 
-import com.redhat.darcy.DarcyException;
+import com.redhat.darcy.ui.api.Locator;
 
 public class NotFoundException extends DarcyException {
     private static final long serialVersionUID = 3099804576753238242L;

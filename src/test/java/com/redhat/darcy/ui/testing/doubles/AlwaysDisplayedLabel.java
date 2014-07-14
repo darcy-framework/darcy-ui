@@ -19,7 +19,7 @@
 
 package com.redhat.darcy.ui.testing.doubles;
 
-import com.redhat.darcy.ui.elements.Label;
+import com.redhat.darcy.ui.api.elements.Label;
 
 public class AlwaysDisplayedLabel implements Label {
 

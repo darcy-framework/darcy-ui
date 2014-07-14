@@ -25,7 +25,11 @@ import com.redhat.darcy.ui.annotations.Context;
 import com.redhat.darcy.ui.annotations.NotRequired;
 import com.redhat.darcy.ui.annotations.Require;
 import com.redhat.darcy.ui.annotations.RequireAll;
-import com.redhat.darcy.ui.elements.Element;
+import com.redhat.darcy.ui.api.ElementContext;
+import com.redhat.darcy.ui.api.Transition;
+import com.redhat.darcy.ui.api.View;
+import com.redhat.darcy.ui.api.elements.Element;
+import com.redhat.darcy.ui.internal.LazyElement;
 import com.redhat.darcy.ui.matchers.ViewMatchers;
 import com.redhat.darcy.util.ReflectionUtil;
 import com.redhat.synq.Condition;
@@ -38,10 +42,11 @@ import java.util.stream.Collectors;
 
 /**
  * A partial implementation of View that initializes LazyElements in
- * {@link #setContext(ElementContext)}, and simplifies defining load conditions (via
- * {@link Require}, {@link RequireAll}, {@link NotRequired}, and {@link #loadCondition()}.
+ * {@link #setContext(com.redhat.darcy.ui.api.ElementContext)}, and simplifies defining load
+ * conditions (via {@link Require}, {@link RequireAll}, {@link NotRequired}, and
+ * {@link #loadCondition()}.
  *
- * @see #setContext(ElementContext)
+ * @see #setContext(com.redhat.darcy.ui.api.ElementContext)
  * @see #loadCondition()
  * @see #onSetContext()
  */
@@ -88,7 +93,7 @@ public abstract class AbstractView implements View {
      * <li>If a field is annotated with {@link Context}, then the context parameter will be casted
      * and assigned to that field. If the context does not implement that fields type, a
      * {@link ClassCastException} will be thrown.</li>
-     * <li>If there are fields that implement {@link com.redhat.darcy.ui.LazyElement}, then they
+     * <li>If there are fields that implement {@link com.redhat.darcy.ui.internal.LazyElement}, then they
      * were created in such a way that they do not know about their owning View and, therefore,
      * ElementContext. When setContext is called, LazyElements will get the context assigned to
      * them.</li>

@@ -19,7 +19,7 @@
 
 package com.redhat.darcy.ui.testing.doubles;
 
-import com.redhat.darcy.ui.elements.Element;
+import com.redhat.darcy.ui.api.elements.Element;
 
 public class NeverDisplayedElement implements Element {
     

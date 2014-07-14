@@ -19,7 +19,7 @@
 
 package com.redhat.darcy.ui.annotations;
 
-import com.redhat.darcy.ui.ElementContext;
+import com.redhat.darcy.ui.api.ElementContext;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

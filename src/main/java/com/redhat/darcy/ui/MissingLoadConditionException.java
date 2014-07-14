@@ -19,7 +19,7 @@
 
 package com.redhat.darcy.ui;
 
-import com.redhat.darcy.DarcyException;
+import com.redhat.darcy.ui.api.View;
 
 public class MissingLoadConditionException extends DarcyException {
     private static final long serialVersionUID = 6736051185845550602L;

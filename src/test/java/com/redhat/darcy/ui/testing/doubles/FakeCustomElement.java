@@ -20,7 +20,7 @@
 package com.redhat.darcy.ui.testing.doubles;
 
 import com.redhat.darcy.ui.AbstractView;
-import com.redhat.darcy.ui.elements.Element;
+import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.synq.Condition;
 import com.redhat.synq.HamcrestCondition;
 

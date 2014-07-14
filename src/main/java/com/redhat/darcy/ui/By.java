@@ -19,13 +19,25 @@
 
 package com.redhat.darcy.ui;
 
-import com.redhat.darcy.ui.elements.Element;
+import com.redhat.darcy.ui.api.Context;
+import com.redhat.darcy.ui.api.Locator;
+import com.redhat.darcy.ui.api.View;
+import com.redhat.darcy.ui.api.elements.Element;
+import com.redhat.darcy.ui.internal.FindsByChained;
+import com.redhat.darcy.ui.internal.FindsById;
+import com.redhat.darcy.ui.internal.FindsByLinkText;
+import com.redhat.darcy.ui.internal.FindsByName;
+import com.redhat.darcy.ui.internal.FindsByNested;
+import com.redhat.darcy.ui.internal.FindsByPartialTextContent;
+import com.redhat.darcy.ui.internal.FindsByTextContent;
+import com.redhat.darcy.ui.internal.FindsByView;
+import com.redhat.darcy.ui.internal.FindsByXPath;
 
 import java.util.List;
 
 /**
- * A helper class with static factories for {@link Locator}s, inspired by Selenium's By class.
- *
+ * A helper class with static factories for {@link com.redhat.darcy.ui.api.Locator}s, inspired by
+ * Selenium's By class.
  */
 public abstract class By {
     public static Locator id(String id) {

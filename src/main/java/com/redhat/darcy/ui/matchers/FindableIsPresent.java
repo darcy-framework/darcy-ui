@@ -19,7 +19,7 @@
 
 package com.redhat.darcy.ui.matchers;
 
-import com.redhat.darcy.ui.elements.Findable;
+import com.redhat.darcy.ui.api.elements.Findable;
 
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
