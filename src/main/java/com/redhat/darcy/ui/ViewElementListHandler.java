@@ -32,7 +32,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
- * Like {@link CustomElementHandler}, but for Lists of Views.
+ * Like {@link ViewElementHandler}, but for Lists of Views.
  * <p>
  * One notable difference is the use of {@link NestedElementContext} instead of {@link
  * ChainedElementContext}. This is because each resulting View must be associated with one of the
@@ -41,10 +41,10 @@ import java.util.stream.Collectors;
  * end up wrapping the exact same element. We must first find all of the elements for the given
  * locator, and then create a View for each that is nested underneath its respective element.
  *
- * @see CustomElementHandler
+ * @see ViewElementHandler
  * @see NestedElementContext
  */
-public class CustomElementListHandler implements InvocationHandler {
+public class ViewElementListHandler implements InvocationHandler {
     private final Locator parentLocator;
     private final Supplier<View> viewSupplier;
 
@@ -57,7 +57,7 @@ public class CustomElementListHandler implements InvocationHandler {
      * @param viewSupplier A supplier of real implementations that we will forward method calls to.
      * @param locator
      */
-    public CustomElementListHandler(Supplier<View> viewSupplier, Locator locator) {
+    public ViewElementListHandler(Supplier<View> viewSupplier, Locator locator) {
         this.viewSupplier = Objects.requireNonNull(viewSupplier, "viewSupplier");
         this.parentLocator = Objects.requireNonNull(locator, "locator");
     }

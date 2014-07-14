@@ -38,7 +38,7 @@ import java.util.Objects;
  *
  * @see ChainedElementContext
  */
-public class CustomElementHandler implements InvocationHandler {
+public class ViewElementHandler implements InvocationHandler {
     private final Locator parentLocator;
     private final View view;
 
@@ -47,7 +47,7 @@ public class CustomElementHandler implements InvocationHandler {
      *
      * @param view A real implementation that we will forward method calls to.
      */
-    public CustomElementHandler(View view) {
+    public ViewElementHandler(View view) {
         this(view, null, null);
     }
 
@@ -57,11 +57,11 @@ public class CustomElementHandler implements InvocationHandler {
      * @param view A real implementation that we will forward method calls to.
      * @param locator
      */
-    public CustomElementHandler(View view, @Nullable Locator locator) {
+    public ViewElementHandler(View view, @Nullable Locator locator) {
         this(view, locator, null);
     }
 
-    public CustomElementHandler(View view, @Nullable Locator locator,
+    public ViewElementHandler(View view, @Nullable Locator locator,
             @Nullable ElementContext context) {
         Objects.requireNonNull(view);
 

@@ -27,8 +27,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.redhat.darcy.ui.By;
-import com.redhat.darcy.ui.CustomElementHandler;
-import com.redhat.darcy.ui.CustomElementListHandler;
+import com.redhat.darcy.ui.ViewElementHandler;
+import com.redhat.darcy.ui.ViewElementListHandler;
 import com.redhat.darcy.ui.ElementContext;
 import com.redhat.darcy.ui.ElementHandler;
 import com.redhat.darcy.ui.ElementListHandler;
@@ -72,7 +72,7 @@ public class ElementsTest {
 
         assertThat(element, instanceOf(Proxy.class));
         assertThat(element, instanceOf(LazyElement.class));
-        assertThat(Proxy.getInvocationHandler(element), instanceOf(CustomElementHandler.class));
+        assertThat(Proxy.getInvocationHandler(element), instanceOf(ViewElementHandler.class));
     }
 
     @Test
@@ -83,7 +83,7 @@ public class ElementsTest {
         assertThat(elementList, instanceOf(Proxy.class));
         assertThat(elementList, instanceOf(LazyElement.class));
         assertThat(Proxy.getInvocationHandler(elementList),
-                instanceOf(CustomElementListHandler.class));
+                instanceOf(ViewElementListHandler.class));
     }
 
     @Test(expected = IllegalArgumentException.class)

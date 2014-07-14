@@ -19,8 +19,8 @@
 
 package com.redhat.darcy.ui.elements;
 
-import com.redhat.darcy.ui.CustomElementHandler;
-import com.redhat.darcy.ui.CustomElementListHandler;
+import com.redhat.darcy.ui.ViewElementHandler;
+import com.redhat.darcy.ui.ViewElementListHandler;
 import com.redhat.darcy.ui.ElementHandler;
 import com.redhat.darcy.ui.ElementListHandler;
 import com.redhat.darcy.ui.LazyElement;
@@ -103,7 +103,7 @@ public abstract class Elements {
                     "library level.");
         }
 
-        InvocationHandler invocationHandler = new CustomElementHandler((View) implementation, locator);
+        InvocationHandler invocationHandler = new ViewElementHandler((View) implementation, locator);
 
         return (T) Proxy.newProxyInstance(Elements.class.getClassLoader(),
                 new Class[] { type, LazyElement.class },
@@ -133,7 +133,7 @@ public abstract class Elements {
             }
         };
 
-        InvocationHandler invocationHandler = new CustomElementListHandler(viewSupplier, locator);
+        InvocationHandler invocationHandler = new ViewElementListHandler(viewSupplier, locator);
 
         return (List<T>) Proxy.newProxyInstance(Elements.class.getClassLoader(),
                 new Class[] { List.class, LazyElement.class },

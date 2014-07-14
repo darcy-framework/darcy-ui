@@ -23,7 +23,6 @@ import com.redhat.darcy.util.ReflectionUtil;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Proxy;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -57,7 +56,7 @@ public class ChainedElementContext implements ForwardingElementContext {
     public static ElementContext makeChainedElementContext(ElementContext context,
             @Nullable Locator parentLocator) {
         return (ElementContext) Proxy.newProxyInstance(
-                CustomElementHandler.class.getClassLoader(),
+                ViewElementHandler.class.getClassLoader(),
                 ReflectionUtil.getAllInterfaces(context).toArray(new Class[]{}),
                 new ForwardingElementContextInvocationHandler(
                         new ChainedElementContext(context, parentLocator)));
