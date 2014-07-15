@@ -23,8 +23,8 @@ import static com.redhat.darcy.ui.internal.ChainedElementContext.makeChainedElem
 import static com.redhat.darcy.ui.matchers.ViewMatchers.isLoadedInContext;
 import static com.redhat.synq.HamcrestCondition.match;
 
-import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.ElementContext;
+import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.View;
 import com.redhat.synq.DefaultPollEvent;
 import com.redhat.synq.ForwardingPollEvent;

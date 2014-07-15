@@ -33,7 +33,6 @@ import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.View;
 import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.ui.api.elements.TextInput;
-import com.redhat.darcy.ui.internal.DefaultElementSelection;
 import com.redhat.darcy.ui.testing.doubles.AlwaysDisplayedLabel;
 import com.redhat.darcy.ui.testing.doubles.FakeCustomElement;
 import com.redhat.darcy.util.LazyList;
@@ -49,53 +48,53 @@ import java.util.List;
 public class DefaultElementSelectionTest {
     @Test
     public void shouldLookupElementTypeUsingLocatorAndContext() {
-        ElementContext mockContext = Mockito.mock(ElementContext.class);
-        Locator mockLocator = Mockito.mock(Locator.class);
+        ElementContext mockContext = mock(ElementContext.class);
+        Locator mockLocator = mock(Locator.class);
 
         DefaultElementSelection selection = new DefaultElementSelection(mockContext);
         selection.elementOfType(TextInput.class, mockLocator);
 
-        Mockito.verify(mockLocator).find(TextInput.class, mockContext);
+        verify(mockLocator).find(TextInput.class, mockContext);
     }
 
     @Test
     public void shouldLookupElementListUsingLocatorAndContext() {
-        ElementContext mockContext = Mockito.mock(ElementContext.class);
-        Locator mockLocator = Mockito.mock(Locator.class);
+        ElementContext mockContext = mock(ElementContext.class);
+        Locator mockLocator = mock(Locator.class);
 
         DefaultElementSelection selection = new DefaultElementSelection(mockContext);
         selection.elementsOfType(TextInput.class, mockLocator);
 
-        Mockito.verify(mockLocator).findAll(TextInput.class, mockContext);
+        verify(mockLocator).findAll(TextInput.class, mockContext);
     }
 
     @Test
     public void shouldReturnViewWithSetContextForCustomElements() {
-        ElementContext mockContext = Mockito.mock(ElementContext.class);
-        Locator mockLocator = Mockito.mock(Locator.class);
+        ElementContext mockContext = mock(ElementContext.class);
+        Locator mockLocator = mock(Locator.class);
 
         DefaultElementSelection selection = new DefaultElementSelection(mockContext);
         Element customElement = selection.elementOfType(new FakeCustomElement(), mockLocator);
 
-        Assert.assertThat(customElement, instanceOf(View.class));
-        Assert.assertNotNull(((View) customElement).getContext());
+        assertThat(customElement, instanceOf(View.class));
+        assertNotNull(((View) customElement).getContext());
     }
 
     @Test
     public void shouldReturnLazyListForCustomElementListsBackedByElementListFoundByLocator() {
-        ElementContext mockContext = Mockito.mock(ElementContext.class);
-        Locator mockLocator = Mockito.mock(Locator.class);
+        ElementContext mockContext = mock(ElementContext.class);
+        Locator mockLocator = mock(Locator.class);
         List<Element> backingList = new ArrayList<>();
         // Set up some state about the backing list (size is 2)
         backingList.add(new AlwaysDisplayedLabel());
         backingList.add(new AlwaysDisplayedLabel());
-        Mockito.when(mockLocator.findAll(Element.class, mockContext)).thenReturn(backingList);
+        when(mockLocator.findAll(Element.class, mockContext)).thenReturn(backingList);
 
         DefaultElementSelection selection = new DefaultElementSelection(mockContext);
         List<FakeCustomElement> elements = selection.elementsOfType(FakeCustomElement::new, mockLocator);
 
-        Assert.assertThat(elements, instanceOf(LazyList.class));
-        Assert.assertThat("Custom element list should be backed by list of elements found by " +
+        assertThat(elements, instanceOf(LazyList.class));
+        assertThat("Custom element list should be backed by list of elements found by " +
                         "locator.",
                 elements.size(), is(equalTo(2)));
     }

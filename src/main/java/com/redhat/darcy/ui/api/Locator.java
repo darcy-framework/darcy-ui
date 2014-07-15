@@ -19,8 +19,6 @@
 
 package com.redhat.darcy.ui.api;
 
-import com.redhat.darcy.ui.api.Context;
-
 import java.util.List;
 
 /**

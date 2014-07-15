@@ -20,9 +20,9 @@
 package com.redhat.darcy.ui.internal;
 
 import com.redhat.darcy.ui.By;
-import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.ElementContext;
 import com.redhat.darcy.ui.api.ElementSelection;
+import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.util.ReflectionUtil;
 
 import javax.annotation.Nullable;

@@ -26,18 +26,16 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.redhat.darcy.ui.By;
-import com.redhat.darcy.ui.Elements;
+import com.redhat.darcy.ui.api.ElementContext;
+import com.redhat.darcy.ui.api.HasElementContext;
+import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.ui.api.elements.Label;
-import com.redhat.darcy.ui.internal.ViewElementHandler;
-import com.redhat.darcy.ui.internal.ViewElementListHandler;
-import com.redhat.darcy.ui.api.ElementContext;
 import com.redhat.darcy.ui.internal.ElementHandler;
 import com.redhat.darcy.ui.internal.ElementListHandler;
-import com.redhat.darcy.ui.api.HasElementContext;
 import com.redhat.darcy.ui.internal.LazyElement;
-import com.redhat.darcy.ui.api.Locator;
+import com.redhat.darcy.ui.internal.ViewElementHandler;
+import com.redhat.darcy.ui.internal.ViewElementListHandler;
 import com.redhat.darcy.ui.testing.doubles.AlwaysDisplayedLabel;
 import com.redhat.darcy.ui.testing.doubles.FakeCustomElement;
 

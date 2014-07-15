@@ -22,9 +22,9 @@ package com.redhat.darcy.ui.internal;
 import static com.redhat.darcy.ui.internal.ChainedElementContext.makeChainedElementContext;
 import static com.redhat.darcy.ui.internal.NestedElementContext.makeNestedElementContext;
 
-import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.ElementContext;
 import com.redhat.darcy.ui.api.ElementSelection;
+import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.View;
 import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.util.LazyList;

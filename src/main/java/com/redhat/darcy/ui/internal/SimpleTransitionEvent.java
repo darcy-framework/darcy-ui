@@ -28,8 +28,6 @@ import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.ParentContext;
 import com.redhat.darcy.ui.api.TransitionEvent;
 import com.redhat.darcy.ui.api.View;
-import com.redhat.darcy.ui.internal.NestedContextTransitionEvent;
-import com.redhat.darcy.ui.internal.NewContextTransitionEvent;
 import com.redhat.synq.DefaultPollEvent;
 import com.redhat.synq.Event;
 import com.redhat.synq.ForwardingPollEvent;

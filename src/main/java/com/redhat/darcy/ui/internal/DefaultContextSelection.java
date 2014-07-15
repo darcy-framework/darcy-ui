@@ -19,10 +19,10 @@
 
 package com.redhat.darcy.ui.internal;
 
-import com.redhat.darcy.ui.api.Locator;
-import com.redhat.darcy.ui.api.ParentContext;
 import com.redhat.darcy.ui.api.Context;
 import com.redhat.darcy.ui.api.ContextSelection;
+import com.redhat.darcy.ui.api.Locator;
+import com.redhat.darcy.ui.api.ParentContext;
 
 import java.util.List;
 

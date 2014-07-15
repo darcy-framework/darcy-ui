@@ -19,8 +19,8 @@
 
 package com.redhat.darcy.ui.internal;
 
-import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.ElementSelection;
+import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.View;
 import com.redhat.darcy.ui.api.elements.Element;
 

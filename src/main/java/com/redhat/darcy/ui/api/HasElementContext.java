@@ -19,8 +19,6 @@
 
 package com.redhat.darcy.ui.api;
 
-import com.redhat.darcy.ui.api.ElementContext;
-
 /**
  * Indicates a type may be assigned an {@link com.redhat.darcy.ui.api.ElementContext}.
  */

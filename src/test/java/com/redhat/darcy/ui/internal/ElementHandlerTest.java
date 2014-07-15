@@ -21,7 +21,6 @@ package com.redhat.darcy.ui.internal;
 
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -34,7 +33,6 @@ import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.ui.api.elements.Findable;
 import com.redhat.darcy.ui.api.elements.TextInput;
-import com.redhat.darcy.ui.internal.ElementHandler;
 import com.redhat.darcy.ui.testing.doubles.DummyContext;
 
 import org.junit.Before;
@@ -56,11 +54,11 @@ public class ElementHandlerTest {
     public void setup() throws NoSuchMethodException {
         setContext = HasElementContext.class.getMethod("setContext", ElementContext.class);
 
-        mockContext = Mockito.mock(DummyContext.class);
-        mockElement = Mockito.mock(Element.class);
-        mockLocator = Mockito.mock(Locator.class);
+        mockContext = mock(DummyContext.class);
+        mockElement = mock(Element.class);
+        mockLocator = mock(Locator.class);
 
-        Mockito.when(mockLocator.find(Matchers.anyObject(), Matchers.anyObject())).thenReturn(mockElement);
+        when(mockLocator.find(anyObject(), anyObject())).thenReturn(mockElement);
 
         handler = new ElementHandler(TextInput.class, mockLocator);
     }
@@ -74,7 +72,7 @@ public class ElementHandlerTest {
         handler.invoke(null, Element.class.getMethod("isDisplayed"), new Object[] {});
 
         // Verify the context was used
-        Mockito.verify(mockLocator).find(Matchers.anyObject(), Matchers.eq(mockContext));
+        verify(mockLocator).find(anyObject(), eq(mockContext));
     }
 
     @Test
@@ -86,7 +84,7 @@ public class ElementHandlerTest {
         handler.invoke(null, Element.class.getMethod("isDisplayed"), new Object[] {});
 
         // Verify the mock was used
-        Mockito.verify(mockLocator).find(Matchers.eq(TextInput.class), Matchers.anyObject());
+        verify(mockLocator).find(eq(TextInput.class), anyObject());
     }
 
     @Test
@@ -97,7 +95,7 @@ public class ElementHandlerTest {
         // This should cause the context to be used to find the element if it was properly set
         handler.invoke(null, Findable.class.getMethod("isPresent"), new Object[] {});
 
-        Mockito.verify(mockElement).isPresent();
+        verify(mockElement).isPresent();
     }
 
     @Test
@@ -109,12 +107,12 @@ public class ElementHandlerTest {
         handler.invoke(null, Element.class.getMethod("isDisplayed"), new Object[] {});
         handler.invoke(null, Element.class.getMethod("isDisplayed"), new Object[] {});
 
-        Mockito.verify(mockLocator, Mockito.times(1)).find(Matchers.anyObject(), Matchers.anyObject());
+        verify(mockLocator, times(1)).find(anyObject(), anyObject());
     }
 
     @Test(expected = TestException.class)
     public void shouldThrowCauseOfInvocationTargetExceptions() throws Throwable {
-        Mockito.when(mockElement.isDisplayed()).thenThrow(new TestException());
+        when(mockElement.isDisplayed()).thenThrow(new TestException());
 
         // This should set the mock context to be used later
         handler.invoke(null, setContext, new Object[]{mockContext});

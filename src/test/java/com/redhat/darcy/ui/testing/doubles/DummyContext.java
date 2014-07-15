@@ -20,8 +20,8 @@
 package com.redhat.darcy.ui.testing.doubles;
 
 import com.redhat.darcy.ui.api.ElementContext;
-import com.redhat.darcy.ui.internal.FindsById;
 import com.redhat.darcy.ui.api.elements.Label;
+import com.redhat.darcy.ui.internal.FindsById;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -22,7 +22,6 @@ package com.redhat.darcy.ui.internal;
 import com.redhat.darcy.ui.api.ElementContext;
 import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.View;
-import com.redhat.darcy.ui.internal.ChainedElementContext;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.InvocationHandler;

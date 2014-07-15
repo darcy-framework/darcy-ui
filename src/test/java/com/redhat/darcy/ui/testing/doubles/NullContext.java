@@ -20,7 +20,6 @@
 package com.redhat.darcy.ui.testing.doubles;
 
 import com.redhat.darcy.ui.api.ElementContext;
-import com.redhat.darcy.ui.api.elements.Element;
 
 /**
  * Context that returns null when finding any element.
