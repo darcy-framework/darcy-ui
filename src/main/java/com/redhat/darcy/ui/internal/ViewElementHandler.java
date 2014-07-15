@@ -85,6 +85,11 @@ public class ViewElementHandler implements InvocationHandler {
             return null;
         }
 
+        // Don't check for null context here; view should handle that itself.
+        // Plus, these methods may still work without a context:
+        // - getContext
+        // - isLoaded
+
         try {
             return method.invoke(view, args);
         } catch (InvocationTargetException e) {

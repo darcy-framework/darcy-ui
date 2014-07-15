@@ -21,6 +21,7 @@ package com.redhat.darcy.ui.internal;
 
 import static com.redhat.darcy.ui.internal.NestedElementContext.makeNestedElementContext;
 
+import com.redhat.darcy.ui.NullContextException;
 import com.redhat.darcy.ui.api.ElementContext;
 import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.View;
@@ -73,6 +74,11 @@ public class ViewElementListHandler implements InvocationHandler {
 
             return null;
         }
+
+        if (context == null) {
+            throw new NullContextException();
+        }
+
 
         if (cachedList == null) {
             cachedList = parentLocator.findAll(Element.class, context)
