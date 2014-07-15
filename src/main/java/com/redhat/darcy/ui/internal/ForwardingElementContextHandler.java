@@ -34,10 +34,10 @@ import java.lang.reflect.Method;
  * @see NestedElementContext#makeNestedElementContext(com.redhat.darcy.ui.api.ElementContext,
  * com.redhat.darcy.ui.api.elements.Element)
  */
-public class ForwardingElementContextInvocationHandler implements InvocationHandler {
+public class ForwardingElementContextHandler implements InvocationHandler {
     private final ForwardingElementContext context;
 
-    public ForwardingElementContextInvocationHandler(
+    public ForwardingElementContextHandler(
             ForwardingElementContext forwardingElementContext) {
         this.context = forwardingElementContext;
     }

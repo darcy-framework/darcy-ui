@@ -55,14 +55,14 @@ public class NestedElementContext implements ForwardingElementContext {
      * @param context
      * @param parentLocator
      * @return
-     * @see ForwardingElementContextInvocationHandler
+     * @see ForwardingElementContextHandler
      */
     public static ElementContext makeNestedElementContext(ElementContext context,
             Element parentElement) {
         return (ElementContext) Proxy.newProxyInstance(
                 ViewElementHandler.class.getClassLoader(),
                 ReflectionUtil.getAllInterfaces(context).toArray(new Class[]{}),
-                new ForwardingElementContextInvocationHandler(
+                new ForwardingElementContextHandler(
                         new NestedElementContext(context, parentElement)));
     }
     

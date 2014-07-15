@@ -55,14 +55,14 @@ public class ChainedElementContext implements ForwardingElementContext {
      * @param context
      * @param parentLocator
      * @return
-     * @see ForwardingElementContextInvocationHandler
+     * @see ForwardingElementContextHandler
      */
     public static ElementContext makeChainedElementContext(ElementContext context,
             @Nullable Locator parentLocator) {
         return (ElementContext) Proxy.newProxyInstance(
                 ViewElementHandler.class.getClassLoader(),
                 ReflectionUtil.getAllInterfaces(context).toArray(new Class[]{}),
-                new ForwardingElementContextInvocationHandler(
+                new ForwardingElementContextHandler(
                         new ChainedElementContext(context, parentLocator)));
     }
     
