@@ -19,6 +19,7 @@
 
 package com.redhat.darcy.ui.internal;
 
+import com.redhat.darcy.ui.api.ElementContext;
 import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.elements.Element;
 
@@ -27,4 +28,11 @@ import java.util.List;
 public interface FindsByNested {
     <T> List<T> findAllByNested(Class<T> type, Element parent, Locator child);
     <T> T findByNested(Class<T> type, Element parent, Locator child);
+
+    /**
+     * Returns this context where all look ups will start from the specified root element,
+     * essentially transforming every locator on this context with a unary operator:
+     * L -> By.nested(root, L)
+     */
+    ElementContext withRootElement(Element root);
 }

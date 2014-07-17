@@ -19,9 +19,6 @@
 
 package com.redhat.darcy.ui.internal;
 
-import static com.redhat.darcy.ui.internal.ChainedElementContext.makeChainedElementContext;
-import static com.redhat.darcy.ui.internal.NestedElementContext.makeNestedElementContext;
-
 import com.redhat.darcy.ui.api.ElementContext;
 import com.redhat.darcy.ui.api.ElementSelection;
 import com.redhat.darcy.ui.api.Locator;
@@ -52,7 +49,12 @@ public class DefaultElementSelection implements ElementSelection {
 
     @Override
     public <T extends Element & View> T elementOfType(T implementation, Locator locator) {
-        implementation.setContext(makeChainedElementContext(context, locator));
+        if (!(context instanceof FindsByChained)) {
+            throw new UnsupportedOperationException("Context must support chaining locators in " +
+                    "order to find a custom element.");
+        }
+
+        implementation.setContext(((FindsByChained) context).withRootLocator(locator));
 
         return implementation;
     }
@@ -60,11 +62,16 @@ public class DefaultElementSelection implements ElementSelection {
     @Override
     public <T extends Element & View> List<T> elementsOfType(Supplier<T> implementation,
             Locator locator) {
+        if (!(context instanceof FindsByNested)) {
+            throw new UnsupportedOperationException("Context must support finding elements under " +
+                    "another element in order to find a list of custom elements.");
+        }
+
         return new LazyList<T>(() -> locator.findAll(Element.class, context)
                 .stream()
                 .map(e -> {
                     T view = implementation.get();
-                    view.setContext(makeNestedElementContext(context, e));
+                    view.setContext(((FindsByNested) context).withRootElement(e));
                     return view;
                 })
                 .collect(Collectors.toList()));

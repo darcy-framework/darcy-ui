@@ -19,8 +19,6 @@
 
 package com.redhat.darcy.ui.internal;
 
-import static com.redhat.darcy.ui.internal.NestedElementContext.makeNestedElementContext;
-
 import com.redhat.darcy.ui.NullContextException;
 import com.redhat.darcy.ui.api.ElementContext;
 import com.redhat.darcy.ui.api.Locator;
@@ -96,7 +94,8 @@ public class ViewElementListHandler implements InvocationHandler {
 
     private View getViewForParentElement(Element parentElement) {
         View view = viewSupplier.get();
-        view.setContext(makeNestedElementContext(context, parentElement));
+
+        view.setContext(((FindsByNested) context).withRootElement(parentElement));
 
         return view;
     }

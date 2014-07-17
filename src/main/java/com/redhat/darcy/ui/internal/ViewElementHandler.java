@@ -39,8 +39,6 @@ import java.util.Objects;
  * <p>
  * Often, a View within a View is a <em>custom</em> element, which abstracts some organization of
  * lower-level elements that form a higher level "widget" of some kind.
- *
- * @see com.redhat.darcy.ui.internal.ChainedElementContext
  */
 public class ViewElementHandler implements InvocationHandler {
     private final Locator parentLocator;
@@ -98,6 +96,6 @@ public class ViewElementHandler implements InvocationHandler {
     }
 
     private void setContext(ElementContext context) {
-        view.setContext(ChainedElementContext.makeChainedElementContext(context, parentLocator));
+        view.setContext(((FindsByChained) context).withRootLocator(parentLocator));
     }
 }

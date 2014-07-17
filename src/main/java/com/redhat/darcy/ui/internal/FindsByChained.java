@@ -19,6 +19,7 @@
 
 package com.redhat.darcy.ui.internal;
 
+import com.redhat.darcy.ui.api.ElementContext;
 import com.redhat.darcy.ui.api.Locator;
 
 import java.util.List;
@@ -26,4 +27,11 @@ import java.util.List;
 public interface FindsByChained {
     <T> List<T> findAllByChained(Class<T> type, Locator... locators);
     <T> T findByChained(Class<T> type, Locator... locators);
+
+    /**
+     * Returns this context where all look ups will start from the specified root locator,
+     * essentially transforming every locator on this context with a unary operator:
+     * L -> By.chained(root, L)
+     */
+    ElementContext withRootLocator(Locator root);
 }
