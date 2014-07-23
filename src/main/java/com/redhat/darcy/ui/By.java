@@ -88,7 +88,7 @@ public abstract class By {
             try {
                 return ((FindsById) context).findAllById(type, id);
             } catch (ClassCastException cce) {
-                throw new LocatorNotSupportedException();
+                throw new LocatorNotSupportedException(this);
             }
         }
         
@@ -97,7 +97,7 @@ public abstract class By {
             try {
                 return ((FindsById) context).findById(type, id);
             } catch (ClassCastException cce) {
-                throw new LocatorNotSupportedException();
+                throw new LocatorNotSupportedException(this);
             }
         }
     }
@@ -114,7 +114,7 @@ public abstract class By {
             try {
                 return ((FindsByName) context).findAllByName(type, name);
             } catch (ClassCastException cce) {
-                throw new LocatorNotSupportedException();
+                throw new LocatorNotSupportedException(this);
             }
         }
 
@@ -123,7 +123,7 @@ public abstract class By {
             try {
                 return ((FindsByName) context).findByName(type, name);
             } catch (ClassCastException cce) {
-                throw new LocatorNotSupportedException();
+                throw new LocatorNotSupportedException(this);
             }
         }
     }
@@ -140,7 +140,7 @@ public abstract class By {
             try {
                 return ((FindsByLinkText) context).findAllByLinkText(type, linkText);
             } catch (ClassCastException cce) {
-                throw new LocatorNotSupportedException();
+                throw new LocatorNotSupportedException(this);
             }
         }
 
@@ -149,7 +149,7 @@ public abstract class By {
             try {
                 return ((FindsByLinkText) context).findByLinkText(type, linkText);
             } catch (ClassCastException cce) {
-                throw new LocatorNotSupportedException();
+                throw new LocatorNotSupportedException(this);
             }
         }
     }
@@ -166,7 +166,7 @@ public abstract class By {
             try {
                 return ((FindsByTextContent) context).findAllByTextContent(type, textContent);
             } catch (ClassCastException cce) {
-                throw new LocatorNotSupportedException();
+                throw new LocatorNotSupportedException(this);
             }
         }
 
@@ -175,7 +175,7 @@ public abstract class By {
             try {
                 return ((FindsByTextContent) context).findByTextContent(type, textContent);
             } catch (ClassCastException cce) {
-                throw new LocatorNotSupportedException();
+                throw new LocatorNotSupportedException(this);
             }
         }
     }
@@ -193,7 +193,7 @@ public abstract class By {
                 return ((FindsByPartialTextContent) context)
                         .findAllByPartialTextContent(type, partialTextContent);
             } catch (ClassCastException cce) {
-                throw new LocatorNotSupportedException();
+                throw new LocatorNotSupportedException(this);
             }
         }
 
@@ -203,7 +203,7 @@ public abstract class By {
                 return ((FindsByPartialTextContent) context)
                         .findByPartialTextContent(type, partialTextContent);
             } catch (ClassCastException cce) {
-                throw new LocatorNotSupportedException();
+                throw new LocatorNotSupportedException(this);
             }
         }
     }
@@ -220,7 +220,7 @@ public abstract class By {
             try {
                 return ((FindsByXPath) context).findAllByXPath(type, xpath);
             } catch (ClassCastException cce) {
-                throw new LocatorNotSupportedException();
+                throw new LocatorNotSupportedException(this);
             }
         }
 
@@ -229,7 +229,7 @@ public abstract class By {
             try {
                 return ((FindsByXPath) context).findByXPath(type, xpath);
             } catch (ClassCastException cce) {
-                throw new LocatorNotSupportedException();
+                throw new LocatorNotSupportedException(this);
             }
         }
     }
@@ -246,7 +246,7 @@ public abstract class By {
             try {
                 return ((FindsByView) context).findAllByView(type, view);
             } catch (ClassCastException cce) {
-                throw new LocatorNotSupportedException();
+                throw new LocatorNotSupportedException(this);
             }
         }
 
@@ -255,7 +255,7 @@ public abstract class By {
             try {
                 return ((FindsByView) context).findByView(type, view);
             } catch (ClassCastException cce) {
-                throw new LocatorNotSupportedException();
+                throw new LocatorNotSupportedException(this);
             }
         }
     }
@@ -272,7 +272,7 @@ public abstract class By {
             try {
                 return ((FindsByChained) context).findAllByChained(type, locators);
             } catch (ClassCastException cce) {
-                throw new LocatorNotSupportedException();
+                throw new LocatorNotSupportedException(this);
             }
         }
 
@@ -281,7 +281,7 @@ public abstract class By {
             try {
                 return ((FindsByChained) context).findByChained(type, locators);
             } catch (ClassCastException cce) {
-                throw new LocatorNotSupportedException();
+                throw new LocatorNotSupportedException(this);
             }
         }
     }
@@ -300,7 +300,7 @@ public abstract class By {
             try {
                 return ((FindsByNested) context).findAllByNested(type, parent, child);
             } catch (ClassCastException cce) {
-                throw new LocatorNotSupportedException();
+                throw new LocatorNotSupportedException(this);
             }
         }
 
@@ -309,7 +309,7 @@ public abstract class By {
             try {
                 return ((FindsByNested) context).findByNested(type, parent, child);
             } catch (ClassCastException cce) {
-                throw new LocatorNotSupportedException();
+                throw new LocatorNotSupportedException(this);
             }
         }
     }

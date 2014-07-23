@@ -19,10 +19,12 @@
 
 package com.redhat.darcy.ui;
 
+import com.redhat.darcy.ui.api.Locator;
+
 public class LocatorNotSupportedException extends DarcyException {
     private static final long serialVersionUID = 4864540602281829455L;
 
-    public LocatorNotSupportedException() {
-        super("The provided locator is not supported by the provided context.");
+    public LocatorNotSupportedException(Locator locator) {
+        super("This Context does not support the provided locator:  " + locator);
     }
 }
