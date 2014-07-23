@@ -87,7 +87,7 @@ public abstract class By {
         public <T> List<T> findAll(Class<T> type, Context context) {
             try {
                 return ((FindsById) context).findAllById(type, id);
-            } catch (ClassCastException ece) {
+            } catch (ClassCastException cce) {
                 throw new LocatorNotSupportedException();
             }
         }
