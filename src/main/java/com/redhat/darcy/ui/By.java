@@ -85,12 +85,20 @@ public abstract class By {
         
         @Override
         public <T> List<T> findAll(Class<T> type, Context context) {
-            return ((FindsById) context).findAllById(type, id);
+            try {
+                return ((FindsById) context).findAllById(type, id);
+            } catch (ClassCastException cce) {
+                throw new LocatorNotSupportedException(this);
+            }
         }
         
         @Override
         public <T> T find(Class<T> type, Context context) {
-            return ((FindsById) context).findById(type, id);
+            try {
+                return ((FindsById) context).findById(type, id);
+            } catch (ClassCastException cce) {
+                throw new LocatorNotSupportedException(this);
+            }
         }
     }
     
@@ -103,12 +111,20 @@ public abstract class By {
         
         @Override
         public <T> List<T> findAll(Class<T> type, Context context) {
-            return ((FindsByName) context).findAllByName(type, name);
+            try {
+                return ((FindsByName) context).findAllByName(type, name);
+            } catch (ClassCastException cce) {
+                throw new LocatorNotSupportedException(this);
+            }
         }
 
         @Override
         public <T> T find(Class<T> type, Context context) {
-            return ((FindsByName) context).findByName(type, name);
+            try {
+                return ((FindsByName) context).findByName(type, name);
+            } catch (ClassCastException cce) {
+                throw new LocatorNotSupportedException(this);
+            }
         }
     }
     
@@ -121,12 +137,20 @@ public abstract class By {
         
         @Override
         public <T> List<T> findAll(Class<T> type, Context context) {
-            return ((FindsByLinkText) context).findAllByLinkText(type, linkText);
+            try {
+                return ((FindsByLinkText) context).findAllByLinkText(type, linkText);
+            } catch (ClassCastException cce) {
+                throw new LocatorNotSupportedException(this);
+            }
         }
 
         @Override
         public <T> T find(Class<T> type, Context context) {
-            return ((FindsByLinkText) context).findByLinkText(type, linkText);
+            try {
+                return ((FindsByLinkText) context).findByLinkText(type, linkText);
+            } catch (ClassCastException cce) {
+                throw new LocatorNotSupportedException(this);
+            }
         }
     }
     
@@ -139,12 +163,20 @@ public abstract class By {
         
         @Override
         public <T> List<T> findAll(Class<T> type, Context context) {
-            return ((FindsByTextContent) context).findAllByTextContent(type, textContent);
+            try {
+                return ((FindsByTextContent) context).findAllByTextContent(type, textContent);
+            } catch (ClassCastException cce) {
+                throw new LocatorNotSupportedException(this);
+            }
         }
 
         @Override
         public <T> T find(Class<T> type, Context context) {
-            return ((FindsByTextContent) context).findByTextContent(type, textContent);
+            try {
+                return ((FindsByTextContent) context).findByTextContent(type, textContent);
+            } catch (ClassCastException cce) {
+                throw new LocatorNotSupportedException(this);
+            }
         }
     }
     
@@ -157,14 +189,22 @@ public abstract class By {
         
         @Override
         public <T> List<T> findAll(Class<T> type, Context context) {
-            return ((FindsByPartialTextContent) context)
-                    .findAllByPartialTextContent(type, partialTextContent);
+            try {
+                return ((FindsByPartialTextContent) context)
+                        .findAllByPartialTextContent(type, partialTextContent);
+            } catch (ClassCastException cce) {
+                throw new LocatorNotSupportedException(this);
+            }
         }
 
         @Override
         public <T> T find(Class<T> type, Context context) {
-            return ((FindsByPartialTextContent) context)
-                    .findByPartialTextContent(type, partialTextContent);
+            try {
+                return ((FindsByPartialTextContent) context)
+                        .findByPartialTextContent(type, partialTextContent);
+            } catch (ClassCastException cce) {
+                throw new LocatorNotSupportedException(this);
+            }
         }
     }
     
@@ -177,12 +217,20 @@ public abstract class By {
         
         @Override
         public <T> List<T> findAll(Class<T> type, Context context) {
-            return ((FindsByXPath) context).findAllByXPath(type, xpath);
+            try {
+                return ((FindsByXPath) context).findAllByXPath(type, xpath);
+            } catch (ClassCastException cce) {
+                throw new LocatorNotSupportedException(this);
+            }
         }
 
         @Override
         public <T> T find(Class<T> type, Context context) {
-            return ((FindsByXPath) context).findByXPath(type, xpath);
+            try {
+                return ((FindsByXPath) context).findByXPath(type, xpath);
+            } catch (ClassCastException cce) {
+                throw new LocatorNotSupportedException(this);
+            }
         }
     }
     
@@ -195,12 +243,20 @@ public abstract class By {
         
         @Override
         public <T> List<T> findAll(Class<T> type, Context context) {
-            return ((FindsByView) context).findAllByView(type, view);
+            try {
+                return ((FindsByView) context).findAllByView(type, view);
+            } catch (ClassCastException cce) {
+                throw new LocatorNotSupportedException(this);
+            }
         }
 
         @Override
         public <T> T find(Class<T> type, Context context) {
-            return ((FindsByView) context).findByView(type, view);
+            try {
+                return ((FindsByView) context).findByView(type, view);
+            } catch (ClassCastException cce) {
+                throw new LocatorNotSupportedException(this);
+            }
         }
     }
     
@@ -213,12 +269,20 @@ public abstract class By {
         
         @Override
         public <T> List<T> findAll(Class<T> type, Context context) {
-            return ((FindsByChained) context).findAllByChained(type, locators);
+            try {
+                return ((FindsByChained) context).findAllByChained(type, locators);
+            } catch (ClassCastException cce) {
+                throw new LocatorNotSupportedException(this);
+            }
         }
 
         @Override
         public <T> T find(Class<T> type, Context context) {
-            return ((FindsByChained) context).findByChained(type, locators);
+            try {
+                return ((FindsByChained) context).findByChained(type, locators);
+            } catch (ClassCastException cce) {
+                throw new LocatorNotSupportedException(this);
+            }
         }
     }
     
@@ -233,12 +297,20 @@ public abstract class By {
         
         @Override
         public <T> List<T> findAll(Class<T> type, Context context) {
-            return ((FindsByNested) context).findAllByNested(type, parent, child);
+            try {
+                return ((FindsByNested) context).findAllByNested(type, parent, child);
+            } catch (ClassCastException cce) {
+                throw new LocatorNotSupportedException(this);
+            }
         }
 
         @Override
         public <T> T find(Class<T> type, Context context) {
-            return ((FindsByNested) context).findByNested(type, parent, child);
+            try {
+                return ((FindsByNested) context).findByNested(type, parent, child);
+            } catch (ClassCastException cce) {
+                throw new LocatorNotSupportedException(this);
+            }
         }
     }
 }
