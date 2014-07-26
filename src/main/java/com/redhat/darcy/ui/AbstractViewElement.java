@@ -17,38 +17,40 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.redhat.darcy.ui.internal;
+package com.redhat.darcy.ui;
 
-import com.redhat.darcy.ui.AbstractView;
-import com.redhat.darcy.ui.By;
+import com.redhat.darcy.ui.annotations.Require;
 import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.elements.Element;
 
 import java.util.function.UnaryOperator;
 
-public class AbstractViewElement extends AbstractView implements Element {
+public abstract class AbstractViewElement extends AbstractView implements Element {
+    @Require
     protected Element parent;
 
     private final UnaryOperator<Locator> locatorTransform;
 
-    public AbstractViewElement(Locator parent) {
+    protected AbstractViewElement(Locator parent) {
         locatorTransform = l -> By.chained(parent, l);
+
+        // TODO: If we can get the parent element, why not just use this for finding nested elements?
         this.parent = getContext().find().element(parent);
     }
 
-    public AbstractViewElement(Element parent) {
+    protected AbstractViewElement(Element parent) {
         locatorTransform = l -> By.nested(parent, l);
         this.parent = parent;
     }
 
     @Override
     public boolean isDisplayed() {
-        return false;
+        return parent.isDisplayed();
     }
 
     @Override
     public boolean isPresent() {
-        return false;
+        return parent.isPresent();
     }
 
     protected Locator nested(Locator locator) {

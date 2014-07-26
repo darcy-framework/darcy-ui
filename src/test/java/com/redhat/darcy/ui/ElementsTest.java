@@ -33,7 +33,7 @@ import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.ui.api.elements.Label;
 import com.redhat.darcy.ui.internal.ElementHandler;
 import com.redhat.darcy.ui.internal.ElementListHandler;
-import com.redhat.darcy.ui.internal.LazyElement;
+import com.redhat.darcy.ui.internal.InheritsContext;
 import com.redhat.darcy.ui.internal.ViewElementHandler;
 import com.redhat.darcy.ui.internal.ViewElementListHandler;
 import com.redhat.darcy.ui.testing.doubles.AlwaysDisplayedLabel;
@@ -54,7 +54,7 @@ public class ElementsTest {
         Element element = Elements.element(By.id("test"));
 
         assertThat(element, instanceOf(Proxy.class));
-        assertThat(element, instanceOf(LazyElement.class));
+        assertThat(element, instanceOf(InheritsContext.class));
         assertThat(Proxy.getInvocationHandler(element), instanceOf(ElementHandler.class));
     }
 
@@ -63,7 +63,7 @@ public class ElementsTest {
         List<Element> elementList = Elements.elements(By.id("test"));
 
         assertThat(elementList, instanceOf(Proxy.class));
-        assertThat(elementList, instanceOf(LazyElement.class));
+        assertThat(elementList, instanceOf(InheritsContext.class));
         assertThat(Proxy.getInvocationHandler(elementList), instanceOf(ElementListHandler.class));
     }
 
@@ -72,7 +72,7 @@ public class ElementsTest {
         Element element = Elements.element(Element.class, By.id("id"), new FakeCustomElement());
 
         assertThat(element, instanceOf(Proxy.class));
-        assertThat(element, instanceOf(LazyElement.class));
+        assertThat(element, instanceOf(InheritsContext.class));
         assertThat(Proxy.getInvocationHandler(element), instanceOf(ViewElementHandler.class));
     }
 
@@ -82,7 +82,7 @@ public class ElementsTest {
                 FakeCustomElement::new);
 
         assertThat(elementList, instanceOf(Proxy.class));
-        assertThat(elementList, instanceOf(LazyElement.class));
+        assertThat(elementList, instanceOf(InheritsContext.class));
         assertThat(Proxy.getInvocationHandler(elementList),
                 instanceOf(ViewElementListHandler.class));
     }

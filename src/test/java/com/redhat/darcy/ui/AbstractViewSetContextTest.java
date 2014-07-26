@@ -28,7 +28,7 @@ import com.redhat.darcy.ui.annotations.Require;
 import com.redhat.darcy.ui.api.HasElementContext;
 import com.redhat.darcy.ui.api.View;
 import com.redhat.darcy.ui.api.elements.Element;
-import com.redhat.darcy.ui.internal.LazyElement;
+import com.redhat.darcy.ui.internal.InheritsContext;
 import com.redhat.darcy.ui.testing.doubles.AlwaysMetCondition;
 import com.redhat.darcy.ui.testing.doubles.DummyContext;
 import com.redhat.darcy.ui.testing.doubles.NullContext;
@@ -141,6 +141,6 @@ public class AbstractViewSetContextTest {
         verify(testView).onSetContext();
     }
 
-    interface ElementThatIsLazy extends Element, LazyElement {}
-    interface ElementListThatIsLazy extends List<Element>, LazyElement {}
+    interface ElementThatIsLazy extends Element, InheritsContext {}
+    interface ElementListThatIsLazy extends List<Element>, InheritsContext {}
 }
