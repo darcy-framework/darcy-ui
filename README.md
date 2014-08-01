@@ -1,6 +1,7 @@
 darcy-ui
 =========
 [![Build Status](https://travis-ci.org/darcy-framework/darcy-ui.svg?branch=master)](https://travis-ci.org/darcy-framework/darcy-ui) [![Coverage Status](https://coveralls.io/repos/darcy-framework/darcy-ui/badge.png?branch=master)](https://coveralls.io/r/darcy-framework/darcy-ui?branch=master)
+[![Stories in Ready](https://badge.waffle.io/darcy-framework/darcy-ui.png?label=ready&title=Ready)](https://waffle.io/darcy-framework/darcy-ui)
 
 **Darcy** is a framework for writing [**page objects**](http://martinfowler.com/bliki/PageObject.html) in order to automate interaction with graphical user interfaces. Page objects are classes that model what a user can see and do with a specific page.
 
