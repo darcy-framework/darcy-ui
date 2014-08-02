@@ -19,16 +19,16 @@
 
 package com.redhat.darcy.ui;
 
-import com.redhat.darcy.ui.api.elements.Element;
+import com.redhat.darcy.ui.api.elements.Findable;
 
-public class ElementNotPresentException extends ElementException {
-    public ElementNotPresentException(Element element) {
-        super("Can't interact with an element if it is not present.\n" +
-                "Element was a " + element);
+public class FindableNotPresentException extends DarcyException {
+    public FindableNotPresentException(Findable findable) {
+        super("Can't interact with something if it is not present.\n" +
+                "Tried to interact with a " + findable);
     }
 
-    public ElementNotPresentException(Element element, Throwable cause) {
-        super("Can't interact with an element if it is not present.\n" +
-                "Element was a " + element, cause);
+    public FindableNotPresentException(Findable findable, Throwable cause) {
+        super("Can't interact with something if it is not present.\n" +
+                "Tried to interact with a " + findable, cause);
     }
 }
