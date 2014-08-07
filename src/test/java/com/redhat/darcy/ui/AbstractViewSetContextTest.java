@@ -28,7 +28,6 @@ import com.redhat.darcy.ui.annotations.Require;
 import com.redhat.darcy.ui.api.HasElementContext;
 import com.redhat.darcy.ui.api.View;
 import com.redhat.darcy.ui.api.elements.Element;
-import com.redhat.darcy.ui.internal.InheritsContext;
 import com.redhat.darcy.ui.testing.doubles.AlwaysMetCondition;
 import com.redhat.darcy.ui.testing.doubles.DummyContext;
 import com.redhat.darcy.ui.testing.doubles.NullContext;
@@ -53,7 +52,7 @@ public class AbstractViewSetContextTest {
 
         class TestView extends AbstractView {
             @Require
-            Element mockElement = mock(ElementThatIsLazy.class);
+            Element mockElement = mock(ElementThatHasContext.class);
         };
 
         TestView testView = new TestView();
@@ -70,7 +69,7 @@ public class AbstractViewSetContextTest {
 
         class TestView extends AbstractView {
             @Require
-            List<Element> mockElementList = mock(ElementListThatIsLazy.class);
+            List<Element> mockElementList = mock(ElementListThatHasContext.class);
         };
 
         TestView testView = new TestView();
@@ -104,7 +103,7 @@ public class AbstractViewSetContextTest {
         assertEquals(testView.getContext(), testView.castedContext);
     }
 
-    @Test(expected = ClassCastException.class)
+    @Test(expected = DarcyException.class)
     public void shouldThrowExceptionIfAttemptToAssignContextToAnUnimplementedType() {
         class SpecificContext extends DummyContext {
 
@@ -141,6 +140,6 @@ public class AbstractViewSetContextTest {
         verify(testView).onSetContext();
     }
 
-    interface ElementThatIsLazy extends Element, InheritsContext {}
-    interface ElementListThatIsLazy extends List<Element>, InheritsContext {}
+    interface ElementThatHasContext extends Element, HasElementContext {}
+    interface ElementListThatHasContext extends List<Element>, HasElementContext {}
 }

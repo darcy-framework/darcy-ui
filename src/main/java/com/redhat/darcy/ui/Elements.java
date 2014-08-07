@@ -19,6 +19,7 @@
 
 package com.redhat.darcy.ui;
 
+import com.redhat.darcy.ui.api.HasElementContext;
 import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.elements.Button;
 import com.redhat.darcy.ui.api.elements.Element;
@@ -28,7 +29,6 @@ import com.redhat.darcy.ui.api.elements.Select;
 import com.redhat.darcy.ui.api.elements.TextInput;
 import com.redhat.darcy.ui.internal.ElementHandler;
 import com.redhat.darcy.ui.internal.ElementListHandler;
-import com.redhat.darcy.ui.internal.InheritsContext;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
@@ -36,10 +36,13 @@ import java.util.List;
 
 /**
  * Static factories for the fundamental UI elements. Specifically, these return proxy instances of
- * those elements, so that they may be defined statically and loaded lazily.
- * 
- * @see {@link com.redhat.darcy.ui.internal.InheritsContext}
- * @see {@link com.redhat.darcy.ui.internal.ElementHandler}
+ * those elements, so that they may be defined as instance fields in a View that may not yet have
+ * a context with which to retrieve element references. This elements can be assigned a context
+ * after instantiation.
+ *
+ * @see com.redhat.darcy.ui.AbstractView
+ * @see com.redhat.darcy.ui.api.HasElementContext
+ * @see com.redhat.darcy.ui.internal.ElementHandler
  *
  */
 public abstract class Elements {
@@ -56,7 +59,7 @@ public abstract class Elements {
         InvocationHandler invocationHandler = new ElementHandler(type, locator);
         
         return (T) Proxy.newProxyInstance(Elements.class.getClassLoader(), 
-                new Class[] { type, InheritsContext.class },
+                new Class[] { type, HasElementContext.class },
                 invocationHandler);
     }
     /**
@@ -72,7 +75,7 @@ public abstract class Elements {
         InvocationHandler invocationHandler = new ElementListHandler(type, locator);
         
         return (List<T>) Proxy.newProxyInstance(Elements.class.getClassLoader(), 
-                new Class[] { List.class, InheritsContext.class },
+                new Class[] { List.class, HasElementContext.class },
                 invocationHandler);
     }
     

@@ -43,9 +43,15 @@ public interface View extends HasElementContext {
     ElementContext getContext();
     
     /**
-     * 
-     * @throws com.redhat.darcy.ui.NullContextException if the context has not yet been set on this View.
-     * @return
+     * Accurately determining whether or not a View is loaded is critical to synchronizing your
+     * automation code with a user interface. Return true if this View, and only this View, is
+     * loaded, which is usually reliably determined by checked for the visible of the specific
+     * configuration of elements that make up this View.
+     *
+     * <p>{@link com.redhat.darcy.ui.AbstractView} simplifies this determination by allowing the use
+     * of annotations to configure how to determine whether or not this View is loaded.
+     *
+     * @see com.redhat.darcy.ui.AbstractView
      */
     boolean isLoaded();
 }

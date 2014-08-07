@@ -22,6 +22,7 @@ package com.redhat.darcy.ui;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
@@ -261,7 +262,8 @@ public class AbstractViewIsLoadedTest {
         testView.isLoaded();
 
         verify(mockElement).isLoaded();
-        verifyNoMoreInteractions(mockElement);
+        verify(mockElement, never()).isDisplayed();
+        verify(mockElement, never()).isPresent();
     }
 
     interface CustomElement extends View, Element {}

@@ -19,41 +19,48 @@
 
 package com.redhat.darcy.ui;
 
-import com.redhat.darcy.ui.annotations.Require;
+import com.redhat.darcy.ui.api.ElementContext;
 import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.elements.Element;
+import com.redhat.synq.Condition;
 
+import java.util.List;
 import java.util.function.UnaryOperator;
 
 public abstract class AbstractViewElement extends AbstractView implements Element {
-    @Require
-    protected Element parent;
+    protected final Element parent;
 
     private final UnaryOperator<Locator> locatorTransform;
 
-    protected AbstractViewElement(Locator parent) {
-        locatorTransform = l -> By.chained(parent, l);
+    private ElementContext context;
 
-        // TODO: If we can get the parent element, why not just use this for finding nested elements?
-        this.parent = getContext().find().element(parent);
+    protected AbstractViewElement(Locator parent) {
+        // How to specify element type? Is this ever going to be needed?
+        this(Elements.element(parent), l -> By.chained(parent, l));
     }
 
     protected AbstractViewElement(Element parent) {
-        locatorTransform = l -> By.nested(parent, l);
+        this(parent, l -> By.nested(parent, l));
+    }
+
+    private AbstractViewElement(Element parent, UnaryOperator<Locator> locatorTransform) {
+        super();
+
         this.parent = parent;
+        this.locatorTransform = locatorTransform;
     }
 
     @Override
     public boolean isDisplayed() {
-        return parent.isDisplayed();
+        return analyzer.getDisplayConditions().stream().allMatch(Condition::isMet);
     }
 
     @Override
     public boolean isPresent() {
-        return parent.isPresent();
+        return analyzer.getIsPresentConditions().stream().allMatch(Condition::isMet);
     }
 
-    protected Locator nested(Locator locator) {
+    protected final Locator nested(Locator locator) {
         return locatorTransform.apply(locator);
     }
 }

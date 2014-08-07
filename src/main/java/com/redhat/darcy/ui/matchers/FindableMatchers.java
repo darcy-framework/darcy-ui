@@ -17,14 +17,14 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.redhat.darcy.ui.annotations;
+package com.redhat.darcy.ui.matchers;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.redhat.darcy.ui.api.elements.Findable;
 
-@Target(ElementType.TYPE_USE)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface InheritsContext {
+import org.hamcrest.Matcher;
+
+public class FindableMatchers {
+    public static <T extends Findable> Matcher<T> isPresent() {
+        return new FindableIsPresent<>();
+    }
 }
