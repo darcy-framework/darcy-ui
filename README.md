@@ -53,13 +53,7 @@ Check out the [Automating Applications with Darcy][5] GitBook to learn more abou
 contributing
 ============
 
-Pull requests welcome and encouraged! Please read the documentation to get started, and check out the issue list if you're looking for something to do.
-
-I have homework towards encouraging contribution:
-- [x] Create issues for missing features
-- [ ] Document architecture
-- [x] Establish unit testing framework (if necessary) (it wasn't necessary)
-- [ ] Add more unit tests (in progress)
+Try it out and open an issue if you don't like something! Pull requests welcome and encouraged! Please read the documentation to get started, and check out the issue list if you're looking for something to do.
 
 license
 =======
