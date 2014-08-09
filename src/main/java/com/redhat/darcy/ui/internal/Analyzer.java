@@ -88,7 +88,7 @@ public class Analyzer {
             analyze();
 
             isDisplayed.addAll(requiredObjects.stream()
-                    .filter(o -> !(o instanceof Element)) // Should check instance or field type?
+                    .filter(o -> o instanceof Element) // Should check instance or field type?
                     .map(e -> HamcrestCondition.match((Element) e, ElementMatchers.isDisplayed()))
                     .collect(Collectors.toList()));
 
@@ -105,7 +105,7 @@ public class Analyzer {
             analyze();
 
             isPresent.addAll(requiredObjects.stream()
-                    .filter(o -> !(o instanceof Findable)) // Should check instance or field type?
+                    .filter(o -> o instanceof Findable) // Should check instance or field type?
                     .map(f -> HamcrestCondition.match((Findable) f, FindableMatchers.isPresent()))
                     .collect(Collectors.toList()));
 
