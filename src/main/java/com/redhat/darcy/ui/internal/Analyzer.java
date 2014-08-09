@@ -21,6 +21,7 @@ package com.redhat.darcy.ui.internal;
 
 import com.redhat.darcy.ui.DarcyException;
 import com.redhat.darcy.ui.NoRequiredElementsException;
+import com.redhat.darcy.ui.annotations.Context;
 import com.redhat.darcy.ui.annotations.NotRequired;
 import com.redhat.darcy.ui.annotations.Require;
 import com.redhat.darcy.ui.annotations.RequireAll;
@@ -145,10 +146,11 @@ public class Analyzer {
 
     private List<Field> filterRequired(List<Field> fields) {
         return fields.stream()
-                .filter(f -> f.getAnnotation(Require.class) != null
+                .filter(f -> f.getAnnotation(Context.class) == null
+                        && (f.getAnnotation(Require.class) != null
                         // Use the field's declaring class for RequireAll; may be a super class
                         || (f.getDeclaringClass().getAnnotation(RequireAll.class) != null
-                        && f.getAnnotation(NotRequired.class) == null))
+                        && f.getAnnotation(NotRequired.class) == null)))
                 .collect(Collectors.toList());
     }
 
