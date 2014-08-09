@@ -31,6 +31,7 @@ import static org.mockito.Mockito.when;
 import com.redhat.darcy.ui.api.Context;
 import com.redhat.darcy.ui.api.ElementContext;
 import com.redhat.darcy.ui.api.Locator;
+import com.redhat.darcy.ui.api.ViewElement;
 import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.ui.api.elements.TextInput;
 import com.redhat.darcy.ui.testing.doubles.AlwaysDisplayedLabel;
@@ -69,18 +70,31 @@ public class DefaultElementSelectionTest {
     }
 
     @Test
-    public void shouldSetContextWithRootLocatorForCustomElements() {
+    public void shouldSetContextOnViewElements() {
         ElementContext mockContext = mock(ElementContext.class);
-        Locator mockLocator = mock(Locator.class);
 
         DefaultElementSelection selection = new DefaultElementSelection(mockContext);
-        FakeCustomElement customElement = selection.elementOfType(FakeCustomElement::new, mockLocator);
+        FakeCustomElement customElement = selection.elementOfType(FakeCustomElement::new,
+                mock(Locator.class));
 
         assertSame(mockContext, customElement.getContext());
     }
 
     @Test
-    public void shouldReturnLazyListForCustomElementLists() {
+    public void shouldPassLocatorToViewElementConstructor() {
+        ElementContext mockContext = mock(ElementContext.class);
+        Locator mockLocator = mock(Locator.class);
+        ChainedViewElementFactory mockConstructor = mock(ChainedViewElementFactory.class);
+        when(mockConstructor.newElement(any(Locator.class))).thenReturn(mock(ViewElement.class));
+
+        DefaultElementSelection selection = new DefaultElementSelection(mockContext);
+        selection.elementOfType(mockConstructor, mockLocator);
+
+        verify(mockConstructor).newElement(mockLocator);
+    }
+
+    @Test
+    public void shouldReturnLazyListForViewElementLists() {
         // Given...
         ElementContext mockContext = mock(ElementContext.class);
         Locator mockLocator = mock(Locator.class);
@@ -105,7 +119,7 @@ public class DefaultElementSelectionTest {
     }
 
     @Test
-    public void shouldBackCustomElementListWithEachElementFoundViaLocator() {
+    public void shouldBackViewElementListWithEachElementFoundViaLocator() {
         ElementContext mockContext = mock(ElementContext.class);
         Locator mockLocator = mock(Locator.class);
 

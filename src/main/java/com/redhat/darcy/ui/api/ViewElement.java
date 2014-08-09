@@ -24,8 +24,8 @@ import com.redhat.darcy.ui.api.elements.Element;
 /**
  * Abstraction of some reusable collection of fundamental element types and conditions. If
  * ViewElements have constructors (or factory methods) that implement
- * {@link com.redhat.darcy.ui.internal.ChainedElementConstructor} and / or
- * {@link com.redhat.darcy.ui.internal.NestedElementConstructor} they may be found like regular
+ * {@link com.redhat.darcy.ui.internal.ChainedViewElementFactory} and / or
+ * {@link com.redhat.darcy.ui.internal.NestedViewElementFactory} they may be found like regular
  * elements.
  *
  * <p>It is suggested that all ViewElement implementations create static factory methods that accept

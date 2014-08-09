@@ -24,11 +24,8 @@ import com.redhat.darcy.ui.api.ElementSelection;
 import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.View;
 import com.redhat.darcy.ui.api.elements.Element;
-import com.redhat.darcy.util.LazyList;
 
 import java.util.List;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 public class DefaultElementSelection implements ElementSelection {
     private final ElementContext context;
@@ -48,7 +45,7 @@ public class DefaultElementSelection implements ElementSelection {
     }
 
     @Override
-    public <T extends Element & View> T elementOfType(ChainedElementConstructor<T> elementCtor,
+    public <T extends Element & View> T elementOfType(ChainedViewElementFactory<T> elementCtor,
             Locator locator) {
         T element = elementCtor.newElement(locator);
         element.setContext(context);
@@ -57,7 +54,7 @@ public class DefaultElementSelection implements ElementSelection {
     }
 
     @Override
-    public <T extends Element & View> List<T> elementsOfType(NestedElementConstructor<T> elementCtor,
+    public <T extends Element & View> List<T> elementsOfType(NestedViewElementFactory<T> elementCtor,
             Locator locator) {
         ViewElementList<T> elementList = new ViewElementList<>(elementCtor, locator);
         elementList.setContext(context);

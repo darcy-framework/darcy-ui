@@ -25,11 +25,10 @@ import com.redhat.darcy.ui.api.elements.Label;
 import com.redhat.darcy.ui.api.elements.Link;
 import com.redhat.darcy.ui.api.elements.Select;
 import com.redhat.darcy.ui.api.elements.TextInput;
-import com.redhat.darcy.ui.internal.ChainedElementConstructor;
-import com.redhat.darcy.ui.internal.NestedElementConstructor;
+import com.redhat.darcy.ui.internal.ChainedViewElementFactory;
+import com.redhat.darcy.ui.internal.NestedViewElementFactory;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 /**
  * A {@link Selection} for {@link com.redhat.darcy.ui.api.elements.Element}s.
@@ -62,10 +61,10 @@ public interface ElementSelection extends Selection {
      */
     <T extends Element> List<T> elementsOfType(Class<T> elementType, Locator locator);
 
-    <T extends Element & View> T elementOfType(ChainedElementConstructor<T> elementCtor,
+    <T extends Element & View> T elementOfType(ChainedViewElementFactory<T> elementCtor,
             Locator locator);
 
-    <T extends Element & View> List<T> elementsOfType(NestedElementConstructor<T> elementCtor,
+    <T extends Element & View> List<T> elementsOfType(NestedViewElementFactory<T> elementCtor,
             Locator locator);
 
     default Element element(Locator locator) {
