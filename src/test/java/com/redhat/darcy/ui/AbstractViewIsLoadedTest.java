@@ -24,22 +24,17 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import com.redhat.darcy.ui.annotations.NotRequired;
 import com.redhat.darcy.ui.annotations.Require;
 import com.redhat.darcy.ui.annotations.RequireAll;
 import com.redhat.darcy.ui.api.View;
+import com.redhat.darcy.ui.api.ViewElement;
 import com.redhat.darcy.ui.api.elements.Element;
-import com.redhat.darcy.ui.internal.Analyzer;
 import com.redhat.darcy.ui.testing.doubles.AlwaysDisplayedLabel;
-import com.redhat.darcy.ui.testing.doubles.AlwaysMetCondition;
 import com.redhat.darcy.ui.testing.doubles.NeverDisplayedElement;
-import com.redhat.darcy.ui.testing.doubles.NeverMetCondition;
 import com.redhat.darcy.ui.testing.doubles.NullContext;
-import com.redhat.synq.AbstractCondition;
-import com.redhat.synq.Condition;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -169,11 +164,11 @@ public class AbstractViewIsLoadedTest {
 
     @Test
     public void shouldFavorIsLoadedOverIsDisplayedIfRequiredFieldIsAView() {
-        CustomElement mockElement = mock(CustomElement.class);
+        ViewElement mockElement = mock(ViewElement.class);
 
         View testView = new AbstractView() {
             @Require
-            CustomElement element = mockElement;
+            ViewElement element = mockElement;
         };
 
         testView.isLoaded();
@@ -182,8 +177,6 @@ public class AbstractViewIsLoadedTest {
         verify(mockElement, never()).isDisplayed();
         verify(mockElement, never()).isPresent();
     }
-
-    interface CustomElement extends View, Element {}
 
     class TestException extends RuntimeException {}
 }

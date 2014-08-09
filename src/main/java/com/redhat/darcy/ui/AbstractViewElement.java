@@ -20,12 +20,13 @@
 package com.redhat.darcy.ui;
 
 import com.redhat.darcy.ui.api.Locator;
+import com.redhat.darcy.ui.api.ViewElement;
 import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.synq.Condition;
 
 import java.util.function.UnaryOperator;
 
-public abstract class AbstractViewElement extends AbstractView implements Element {
+public abstract class AbstractViewElement extends AbstractView implements ViewElement {
     /**
      * The parent element of this ViewElement, should one be present.
      *
