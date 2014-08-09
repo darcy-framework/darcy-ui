@@ -32,6 +32,7 @@ import com.redhat.darcy.ui.annotations.RequireAll;
 import com.redhat.darcy.ui.api.View;
 import com.redhat.darcy.ui.api.ViewElement;
 import com.redhat.darcy.ui.api.elements.Element;
+import com.redhat.darcy.ui.api.elements.Findable;
 import com.redhat.darcy.ui.testing.doubles.AlwaysDisplayedLabel;
 import com.redhat.darcy.ui.testing.doubles.NeverDisplayedElement;
 import com.redhat.darcy.ui.testing.doubles.NullContext;
@@ -163,19 +164,61 @@ public class AbstractViewIsLoadedTest {
     }
 
     @Test
-    public void shouldFavorIsLoadedOverIsDisplayedIfRequiredFieldIsAView() {
-        ViewElement mockElement = mock(ViewElement.class);
+    public void shouldReturnTrueIfRequiredFieldIsAViewThatIsLoaded() {
+        View mockView = mock(View.class);
+        when(mockView.isLoaded()).thenReturn(true);
 
         View testView = new AbstractView() {
             @Require
-            ViewElement element = mockElement;
+            View view = mockView;
         };
 
-        testView.isLoaded();
+        assertTrue("isLoaded should check View fields for isLoaded.", testView.isLoaded());
 
-        verify(mockElement).isLoaded();
-        verify(mockElement, never()).isDisplayed();
-        verify(mockElement, never()).isPresent();
+        verify(mockView).isLoaded();
+    }
+
+    @Test
+    public void shouldReturnFalseIfRequiredFieldIsAViewThatIsNotLoaded() {
+        View mockView = mock(View.class);
+        when(mockView.isLoaded()).thenReturn(false);
+
+        View testView = new AbstractView() {
+            @Require
+            View view = mockView;
+        };
+
+        assertFalse("isLoaded should check View fields for isLoaded.", testView.isLoaded());
+
+        verify(mockView).isLoaded();
+    }
+
+    @Test
+    public void shouldReturnTrueIfRequiredFieldIsAFindableThatIsPresent() {
+        Findable mockFindable = mock(Findable.class);
+        when(mockFindable.isPresent()).thenReturn(true);
+
+        View testView = new AbstractView() {
+            @Require
+            Findable findable = mockFindable;
+        };
+
+        assertTrue("isLoaded should check Findable fields for isPresent if they do not implement " +
+                "View or Element.", testView.isLoaded());
+    }
+
+    @Test
+    public void shouldReturnFalseIfRequiredFieldIsAFindableThatIsNotPresent() {
+        Findable mockFindable = mock(Findable.class);
+        when(mockFindable.isPresent()).thenReturn(false);
+
+        View testView = new AbstractView() {
+            @Require
+            Findable findable = mockFindable;
+        };
+
+        assertFalse("isLoaded should check Findable fields for isPresent if they do not implement" +
+                "View or Element.", testView.isLoaded());
     }
 
     class TestException extends RuntimeException {}
