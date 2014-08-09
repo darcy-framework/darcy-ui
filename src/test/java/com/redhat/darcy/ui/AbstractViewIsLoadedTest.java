@@ -22,7 +22,6 @@ package com.redhat.darcy.ui;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -30,12 +29,10 @@ import com.redhat.darcy.ui.annotations.NotRequired;
 import com.redhat.darcy.ui.annotations.Require;
 import com.redhat.darcy.ui.annotations.RequireAll;
 import com.redhat.darcy.ui.api.View;
-import com.redhat.darcy.ui.api.ViewElement;
 import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.ui.api.elements.Findable;
 import com.redhat.darcy.ui.testing.doubles.AlwaysDisplayedLabel;
 import com.redhat.darcy.ui.testing.doubles.NeverDisplayedElement;
-import com.redhat.darcy.ui.testing.doubles.NullContext;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -159,7 +156,6 @@ public class AbstractViewIsLoadedTest {
             @Require Element element = throwsExceptionOnIsDisplayed;
         };
         
-        testView.setContext(new NullContext());
         testView.isLoaded();
     }
 
