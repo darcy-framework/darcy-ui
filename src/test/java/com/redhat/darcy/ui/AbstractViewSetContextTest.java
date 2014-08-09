@@ -39,19 +39,25 @@ import org.junit.Test;
 import java.util.List;
 
 public class AbstractViewSetContextTest {
-    @Test(expected = MissingLoadConditionException.class)
-    public void shouldThrowMissingLoadConditionExceptionIfNoLoadConditionIsPresent() {
-        View testView = new AbstractView() {};
-
-        testView.setContext(new NullContext());
-    }
-
     @Test
-    public void shouldSetContextOnElementFieldsThatImplementLazyElement() {
+    public void shouldSetContextOnFieldsWhosDeclaredTypeImplementsHasElementContext() {
         DummyContext dummyContext = new DummyContext();
 
         class TestView extends AbstractView {
-            @Require
+            HasElementContext mockHasElementContext = mock(HasElementContext.class);
+        };
+
+        TestView testView = new TestView();
+        testView.setContext(dummyContext);
+
+        verify(testView.mockHasElementContext).setContext(dummyContext);
+    }
+
+    @Test
+    public void shouldSetContextOnElementFieldsThatImplementHasElementContext() {
+        DummyContext dummyContext = new DummyContext();
+
+        class TestView extends AbstractView {
             Element mockElement = mock(ElementThatHasContext.class);
         };
 
@@ -61,14 +67,11 @@ public class AbstractViewSetContextTest {
         verify((HasElementContext) testView.mockElement).setContext(dummyContext);
     }
 
-    @Ignore("issue #13 prevents this test from passing: " +
-            "https://github.com/darcy-framework/darcy-ui/issues/13")
     @Test
-    public void shouldSetContextOnListFieldsThatImplementLazyElement() {
+    public void shouldSetContextOnListFieldsThatImplementHasElementContext() {
         DummyContext dummyContext = new DummyContext();
 
         class TestView extends AbstractView {
-            @Require
             List<Element> mockElementList = mock(ElementListThatHasContext.class);
         };
 
@@ -87,12 +90,6 @@ public class AbstractViewSetContextTest {
         class TestView extends AbstractView {
             @com.redhat.darcy.ui.annotations.Context
             private SpecificContext castedContext;
-
-            // We need a load condition for this view to be valid
-            @Override
-            protected Condition<?> loadCondition() {
-                return new AlwaysMetCondition<>();
-            }
         }
 
         TestView testView = new TestView();
@@ -112,12 +109,6 @@ public class AbstractViewSetContextTest {
         class TestView extends AbstractView {
             @com.redhat.darcy.ui.annotations.Context
             private SpecificContext castedContext;
-
-            // We need a load condition for this view to be valid
-            @Override
-            protected Condition<?> loadCondition() {
-                return new AlwaysMetCondition<>();
-            }
         }
 
         TestView testView = new TestView();
@@ -127,13 +118,7 @@ public class AbstractViewSetContextTest {
 
     @Test
     public void shouldCallOnSetContext() {
-        AbstractView testView = spy(new AbstractView() {
-            // We need a load condition for this view to be valid
-            @Override
-            protected Condition<?> loadCondition() {
-                return new AlwaysMetCondition<>();
-            }
-        });
+        AbstractView testView = spy(new AbstractView() {});
 
         testView.setContext(new NullContext());
 

@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 public class ViewElementList<T extends Element> implements List<T>, HasElementContext {
     private final NestedElementConstructor<? extends T> element;
     private final Locator locator;
-    private List<T> backingList;
+    private LazyList<T> backingList;
 
     public ViewElementList(NestedElementConstructor<? extends T> element, Locator locator) {
         this.element = element;

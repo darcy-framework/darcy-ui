@@ -57,7 +57,8 @@ public class Initializer {
      */
     private void setContext(ElementContext context) {
         fields.stream()
-                .filter(f -> Element.class.isAssignableFrom(f.getType())
+                .filter(f -> HasElementContext.class.isAssignableFrom(f.getType())
+                        || Element.class.isAssignableFrom(f.getType())
                         || List.class.isAssignableFrom(f.getType()))
                 // TODO: .filter(f -> f.getAnnotation(IndependentContext.class) == null)
                 .map(f -> {

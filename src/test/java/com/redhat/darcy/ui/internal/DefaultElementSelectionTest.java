@@ -20,24 +20,21 @@
 package com.redhat.darcy.ui.internal;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.redhat.darcy.ui.api.Context;
 import com.redhat.darcy.ui.api.ElementContext;
 import com.redhat.darcy.ui.api.Locator;
-import com.redhat.darcy.ui.api.View;
 import com.redhat.darcy.ui.api.elements.Element;
-import com.redhat.darcy.ui.api.elements.Label;
 import com.redhat.darcy.ui.api.elements.TextInput;
 import com.redhat.darcy.ui.testing.doubles.AlwaysDisplayedLabel;
 import com.redhat.darcy.ui.testing.doubles.FakeCustomElement;
-import com.redhat.darcy.ui.testing.doubles.NullContext;
-import com.redhat.darcy.util.LazyList;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -71,73 +68,65 @@ public class DefaultElementSelectionTest {
         verify(mockLocator).findAll(TextInput.class, mockContext);
     }
 
-//    @Test
-//    public void shouldSetContextWithRootLocatorForCustomElements() {
-//        ContextThatFindsByChained mockContext = mock(ContextThatFindsByChained.class);
-//        ElementContext nullContext = new NullContext();
-//        Locator mockLocator = mock(Locator.class);
-//
-//        when(mockContext.withRootLocator(anyObject())).thenReturn(nullContext);
-//
-//        DefaultElementSelection selection = new DefaultElementSelection(mockContext);
-//        FakeCustomElement customElement = selection.elementOfType(new FakeCustomElement(), mockLocator);
-//
-//        verify(mockContext).withRootLocator(mockLocator);
-//        assertSame(nullContext, customElement.getContext());
-//    }
+    @Test
+    public void shouldSetContextWithRootLocatorForCustomElements() {
+        ContextThatFindsByChained mockContext = mock(ContextThatFindsByChained.class);
+        Locator mockLocator = mock(Locator.class);
 
-//    @Test
-//    public void shouldReturnLazyListForCustomElementLists() {
-//        // Given...
-//        ContextThatFindsByNested mockContext = mock(ContextThatFindsByNested.class);
-//        Locator mockLocator = mock(Locator.class);
-//
-//        List<Element> backingList = new ArrayList<>();
-//        backingList.add(new AlwaysDisplayedLabel());
-//        backingList.add(new AlwaysDisplayedLabel());
-//        when(mockLocator.findAll(Element.class, mockContext)).thenReturn(backingList);
-//
-//        DefaultElementSelection selection = new DefaultElementSelection(mockContext);
-//
-//        // When...
-//        List<FakeCustomElement> elements = selection.elementsOfType(FakeCustomElement::new, mockLocator);
-//
-//        // Then...
-//        assertThat(elements, instanceOf(LazyList.class));
-//    }
+        DefaultElementSelection selection = new DefaultElementSelection(mockContext);
+        FakeCustomElement customElement = selection.elementOfType(FakeCustomElement::new, mockLocator);
 
-//    @Test
-//    public void shouldBackCustomElementListWithEachElementFoundViaLocator() {
-//        // Given...
-//        ContextThatFindsByNested mockContext = mock(ContextThatFindsByNested.class);
-//        Locator mockLocator = mock(Locator.class);
-//
-//        List<Element> backingList = new ArrayList<>();
-//        Label label1 = new AlwaysDisplayedLabel();
-//        Label label2 = new AlwaysDisplayedLabel();
-//        backingList.add(label1);
-//        backingList.add(label2);
-//        when(mockLocator.findAll(Element.class, mockContext)).thenReturn(backingList);
-//
-//        ElementContext label1Context = new NullContext();
-//        ElementContext label2Context = new NullContext();
-//        when(mockContext.withRootElement(label1)).thenReturn(label1Context);
-//        when(mockContext.withRootElement(label2)).thenReturn(label2Context);
-//
-//        DefaultElementSelection selection = new DefaultElementSelection(mockContext);
-//
-//        // When...
-//        List<FakeCustomElement> elements = selection.elementsOfType(FakeCustomElement::new, mockLocator);
-//
-//        // Then...
-//        assertThat(elements, instanceOf(LazyList.class));
-//
-//        List<ElementContext> contexts = elements.stream()
-//                .map(View::getContext)
-//                .collect(Collectors.toList());
-//
-//        assertThat(contexts, containsInAnyOrder(label1Context, label2Context));
-//    }
+        assertSame(mockContext, customElement.getContext());
+    }
+
+    @Test
+    public void shouldReturnLazyListForCustomElementLists() {
+        // Given...
+        ContextThatFindsByNested mockContext = mock(ContextThatFindsByNested.class);
+        Locator mockLocator = mock(Locator.class);
+
+        List<Element> backingList = new ArrayList<>();
+        backingList.add(new AlwaysDisplayedLabel());
+        backingList.add(new AlwaysDisplayedLabel());
+        when(mockLocator.findAll(Element.class, mockContext)).thenReturn(backingList);
+
+        DefaultElementSelection selection = new DefaultElementSelection(mockContext);
+
+        // When...
+        List<FakeCustomElement> elements = selection.elementsOfType(FakeCustomElement::new, mockLocator);
+
+        // Should not yet have actually found the elements
+        verify(mockLocator, never()).findAll(any(Class.class), any(Context.class));
+
+        // Until we try to do something with the list..
+        elements.isEmpty();
+
+        verify(mockLocator).findAll(Element.class, mockContext);
+    }
+
+    @Test
+    public void shouldBackCustomElementListWithEachElementFoundViaLocator() {
+        ElementContext mockContext = mock(ElementContext.class);
+        Locator mockLocator = mock(Locator.class);
+
+        List<Element> backingList = new ArrayList<>(2);
+        Element element1 = new AlwaysDisplayedLabel();
+        Element element2 = new AlwaysDisplayedLabel();
+        backingList.add(element1);
+        backingList.add(element2);
+
+        when(mockLocator.findAll(Element.class, mockContext)).thenReturn(backingList);
+
+        DefaultElementSelection selection = new DefaultElementSelection(mockContext);
+        List<FakeCustomElement> elements = selection.elementsOfType(FakeCustomElement::new, mockLocator);
+
+        List<Element> parentElements = elements
+                .stream()
+                .map(FakeCustomElement::getParentElement)
+                .collect(Collectors.toList());
+
+        assertThat(parentElements, containsInAnyOrder(element1, element2));
+    }
 
     /**
      * Contexts must find by chained in order to lookup a single custom element.

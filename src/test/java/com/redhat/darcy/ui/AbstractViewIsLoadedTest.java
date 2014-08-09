@@ -25,6 +25,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 import com.redhat.darcy.ui.annotations.NotRequired;
 import com.redhat.darcy.ui.annotations.Require;
@@ -43,9 +44,11 @@ import org.junit.Test;
 
 @SuppressWarnings("unused")
 public class AbstractViewIsLoadedTest {
-    @Test(expected = NullContextException.class)
-    public void shouldThrowNullContextExceptionIfCalledBeforeSettingAContext() {
-        View testView = new AbstractView() {};
+    @Test(expected = NoRequiredElementsException.class)
+    public void shouldThrowNoRequiredElementsExceptionIfCalledWithoutAnyAnnotatedElements() {
+        View testView = new AbstractView() {
+            Element element = new AlwaysDisplayedLabel();
+        };
         
         testView.isLoaded();
     }
@@ -56,8 +59,6 @@ public class AbstractViewIsLoadedTest {
             @Require
             private Element test = new AlwaysDisplayedLabel();
         };
-        
-        testView.setContext(new NullContext());
         
         assertTrue("isLoaded should return true if all required elements are displayed.", 
                 testView.isLoaded());
@@ -72,9 +73,7 @@ public class AbstractViewIsLoadedTest {
             private Element notDisplayed = new NeverDisplayedElement();
         };
         
-        testView.setContext(new NullContext());
-        
-        assertFalse("isLoaded should return false if not all required elements are displayed.", 
+        assertFalse("isLoaded should return false if not all required elements are displayed.",
                 testView.isLoaded());
     }
     
@@ -87,10 +86,8 @@ public class AbstractViewIsLoadedTest {
         
         View testView = new TestView();
         
-        testView.setContext(new NullContext());
-        
         assertTrue("isLoaded should return true if all required elements are displayed and "
-                + "RequireAll annotation is used.", 
+                        + "RequireAll annotation is used.",
                 testView.isLoaded());
     }
     
@@ -103,10 +100,8 @@ public class AbstractViewIsLoadedTest {
         
         View testView = new TestView();
         
-        testView.setContext(new NullContext());
-        
         assertFalse("isLoaded should return false if not all required elements are displayed and "
-                + "RequireAll annotation is used.", 
+                        + "RequireAll annotation is used.",
                 testView.isLoaded());
     }
     
@@ -120,10 +115,8 @@ public class AbstractViewIsLoadedTest {
         
         View testView = new TestView();
         
-        testView.setContext(new NullContext());
-        
         assertTrue("isLoaded should return true if only element not displayed is not required when "
-                + "RequireAll annotation is used.", 
+                        + "RequireAll annotation is used.",
                 testView.isLoaded());
     }
     
@@ -137,112 +130,33 @@ public class AbstractViewIsLoadedTest {
         
         View testView = new TestView();
         
-        testView.setContext(new NullContext());
-        
         assertFalse("isLoaded should return false if only element actually displayed is not required"
                 + " when RequireAll annotation is used.", 
                 testView.isLoaded());
     }
     
     @Test
-    public void shouldReturnTrueIfCustomLoadConditionUsedThatIsTrue() {
-        View testView = new AbstractView() {
-            @Override
-            protected Condition<?> loadCondition() {
-                return new AlwaysMetCondition<>();
-            }
-        };
-        
-        testView.setContext(new NullContext());
-        
-        assertTrue("isLoaded should return true if only load condition is provided by override to "
-                + "Callable<Boolean> loadCondition() and the callable returns true.",
-                testView.isLoaded());
-    }
-    
-    @Test
-    public void shouldReturnFalseIfCustomLoadConditionUsedThatIsFalse() {
-        View testView = new AbstractView() {
-            @Override
-            protected Condition<?> loadCondition() {
-                return new NeverMetCondition<>();
-            }
-        };
-        
-        testView.setContext(new NullContext());
-        
-        assertFalse("isLoaded should return false if only load condition is provided by override to "
-                + "Callable<Boolean> loadCondition() and the callable returns false.",
-                testView.isLoaded());
-    }
-    
-    @Test
-    public void shouldReturnTrueIfAllConditionsMetViaLoadConditionAndRequiredAnnotations() {
+    public void shouldAllowBeingOverridden() {
         View testView = new AbstractView() {
             @Require
             private Element displayed = new AlwaysDisplayedLabel();
             
             @Override
-            protected Condition<?> loadCondition() {
-                return new AlwaysMetCondition<>();
+            public boolean isLoaded() {
+                return super.isLoaded();
             }
         };
         
-        testView.setContext(new NullContext());
-        
-        assertTrue("isLoaded should return true if all required elements are displayed and custom "
-                + "load condition is met.",
-                testView.isLoaded());
-    }
-    
-    @Test
-    public void shouldReturnFalseIfRequiredElementIsDisplayedButLoadConditionNotMet() {
-        View testView = new AbstractView() {
-            @Require
-            private Element displayed = new AlwaysDisplayedLabel();
-            
-            @Override
-            protected Condition<?> loadCondition() {
-                return new NeverMetCondition<>();
-            }
-        };
-        
-        testView.setContext(new NullContext());
-        
-        assertFalse("isLoaded should return false if all required elements are displayed but custom "
-                + "load condition is not met.",
-                testView.isLoaded());
-    }
-    
-    @Test
-    public void shouldReturnFalseIfLoadConditionIsMetButRequiredElementIsNotDisplayed() {
-        View testView = new AbstractView() {
-            @Require
-            private Element notDisplayed = new NeverDisplayedElement();
-            
-            @Override
-            protected Condition<?> loadCondition() {
-                return new AlwaysMetCondition<>();
-            }
-        };
-        
-        testView.setContext(new NullContext());
-        
-        assertFalse("isLoaded should return false if load condition is met but not all required "
-                + "elements are displayed.",
-                testView.isLoaded());
+        assertTrue(testView.isLoaded());
     }
     
     @Test(expected = TestException.class)
     public void shouldPropagateUncheckedExceptions() {
+        Element throwsExceptionOnIsDisplayed = mock(Element.class);
+        when(throwsExceptionOnIsDisplayed.isDisplayed()).thenThrow(TestException.class);
+
         View testView = new AbstractView() {
-            @Override
-            protected Condition<?> loadCondition() {
-                return new AbstractCondition<Void>() {
-                    @Override public boolean isMet() { throw new TestException(); }
-                    @Override public Void lastResult() { return null; }
-                };
-            }
+            @Require Element element = throwsExceptionOnIsDisplayed;
         };
         
         testView.setContext(new NullContext());
@@ -258,7 +172,6 @@ public class AbstractViewIsLoadedTest {
             CustomElement element = mockElement;
         };
 
-        testView.setContext(new NullContext());
         testView.isLoaded();
 
         verify(mockElement).isLoaded();
