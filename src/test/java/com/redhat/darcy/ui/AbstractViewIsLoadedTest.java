@@ -32,6 +32,7 @@ import com.redhat.darcy.ui.annotations.Require;
 import com.redhat.darcy.ui.annotations.RequireAll;
 import com.redhat.darcy.ui.api.View;
 import com.redhat.darcy.ui.api.elements.Element;
+import com.redhat.darcy.ui.internal.Analyzer;
 import com.redhat.darcy.ui.testing.doubles.AlwaysDisplayedLabel;
 import com.redhat.darcy.ui.testing.doubles.AlwaysMetCondition;
 import com.redhat.darcy.ui.testing.doubles.NeverDisplayedElement;
@@ -52,7 +53,7 @@ public class AbstractViewIsLoadedTest {
         View testView = new AbstractView() {
             Element element = new AlwaysDisplayedLabel();
         };
-        
+
         testView.isLoaded();
     }
     

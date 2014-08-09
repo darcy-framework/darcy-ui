@@ -45,6 +45,7 @@ import java.util.List;
  * @see com.redhat.darcy.ui.Elements
  * @see #setContext(com.redhat.darcy.ui.api.ElementContext)
  * @see #onSetContext()
+ * @see #isLoaded()
  */
 public abstract class AbstractView implements View {
     /**
@@ -74,14 +75,18 @@ public abstract class AbstractView implements View {
      * Determines whether or not the view is loaded by reading annotations
      * ({@link com.redhat.darcy.ui.annotations.Require},
      * {@link com.redhat.darcy.ui.annotations.RequireAll}, and
-     * {@link com.redhat.darcy.ui.annotations.NotRequired}, and all fields that
+     * {@link com.redhat.darcy.ui.annotations.NotRequired}), and all fields that
      * implement one of {@link com.redhat.darcy.ui.api.View View},
      * {@link com.redhat.darcy.ui.api.elements.Element Element}, or
-     * {@link com.redhat.darcy.ui.api.elements.Findable Findable},
-     * preferring {@link com.redhat.darcy.ui.api.View#isLoaded()} over
+     * {@link com.redhat.darcy.ui.api.elements.Findable Findable}, or
+     * {@link java.util.List} of any of those types (Lists not yet implemented). Each field that is
+     * determined to be required will be queried based on its type, preferring
+     * {@link com.redhat.darcy.ui.api.View#isLoaded()} over
      * {@link com.redhat.darcy.ui.api.elements.Element#isDisplayed() Element.isDisplayed()} over
-     * {@link com.redhat.darcy.ui.api.elements.Findable#isPresent() Findable.isPresent()}, or
-     * {@link java.util.List} of any of those types (Lists not yet implemented).
+     * {@link com.redhat.darcy.ui.api.elements.Findable#isPresent() Findable.isPresent()}, and the
+     * combined success of these queries determines that this view is loaded.
+     *
+     * <p>Lists of those types are queried differently. This is not yet implemented.
      *
      * <p>If no fields are configured to be required that implement one of those interfaces, a
      * {@link com.redhat.darcy.ui.NoRequiredElementsException} will be thrown.
@@ -126,7 +131,7 @@ public abstract class AbstractView implements View {
 
     /**
      * Called after any call to {@link #setContext(ElementContext)}. Useful if you need to set up
-     * some fields that depend on this view having context.
+     * some fields that depend on this view having a context.
      */
     protected void onSetContext() {
 

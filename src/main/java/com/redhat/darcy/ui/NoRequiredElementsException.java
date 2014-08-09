@@ -19,10 +19,8 @@
 
 package com.redhat.darcy.ui;
 
-import com.redhat.darcy.ui.api.View;
-
 public class NoRequiredElementsException extends DarcyException {
-    public NoRequiredElementsException(View view) {
+    public NoRequiredElementsException(Object view) {
         super("No fields that implement View, Element, Findable, or List of those types, were " +
                 "configured to be required. Configure required elements by use of @Require, " +
                 "@RequireAll, and @NotRequired annotations.\n" +

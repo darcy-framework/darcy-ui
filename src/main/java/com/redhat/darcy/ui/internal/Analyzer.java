@@ -40,7 +40,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Analyzer {
-    private final View view;
+    private final Object view;
     private final List<Field> required;
 
     private List<Field> requiredLists;
@@ -50,7 +50,15 @@ public class Analyzer {
     private List<Condition<?>> isDisplayed;
     private List<Condition<?>> isPresent;
 
-    public Analyzer(View view, List<Field> fields) {
+    /**
+     * @param view A view with at least one field that is an
+     * {@link com.redhat.darcy.ui.api.elements.Element}, {@link com.redhat.darcy.ui.api.View},
+     * {@link com.redhat.darcy.ui.api.elements.Findable}, or {@link java.util.List} of those types,
+     * and is annotated as required.
+     * @param fields All of the fields declared for the specified View (including fields in parent
+     * classes}. Fields are expected to be accessible.
+     */
+    public Analyzer(Object view, List<Field> fields) {
         this.view = Objects.requireNonNull(view, "view");
         this.required = filterRequired(Objects.requireNonNull(fields, "fields"));
     }
