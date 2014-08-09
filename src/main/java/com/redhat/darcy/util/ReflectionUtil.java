@@ -42,21 +42,6 @@ public abstract class ReflectionUtil {
         
         return allFields;
     }
-    public static List<Method> getAllDeclaredMethods(Object object) {
-        List<Method> allMethods = new ArrayList<>();
-        Class<?> objClass = object.getClass();
-
-        // Loop through the class hierarchy
-        while (objClass != Object.class) {
-            allMethods.addAll(Arrays.asList(objClass.getDeclaredMethods()));
-
-            objClass = objClass.getSuperclass();
-        }
-
-        allMethods.forEach(m -> m.setAccessible(true)); // TODO: Necessary?
-
-        return allMethods;
-    }
     
     public static List<Class<?>> getAllInterfaces(Object object) {
         List<Class<?>> allInterfaces = new ArrayList<>();
