@@ -70,7 +70,7 @@ public class DefaultElementSelectionTest {
 
     @Test
     public void shouldSetContextWithRootLocatorForCustomElements() {
-        ContextThatFindsByChained mockContext = mock(ContextThatFindsByChained.class);
+        ElementContext mockContext = mock(ElementContext.class);
         Locator mockLocator = mock(Locator.class);
 
         DefaultElementSelection selection = new DefaultElementSelection(mockContext);
@@ -82,7 +82,7 @@ public class DefaultElementSelectionTest {
     @Test
     public void shouldReturnLazyListForCustomElementLists() {
         // Given...
-        ContextThatFindsByNested mockContext = mock(ContextThatFindsByNested.class);
+        ElementContext mockContext = mock(ElementContext.class);
         Locator mockLocator = mock(Locator.class);
 
         List<Element> backingList = new ArrayList<>();
@@ -127,15 +127,4 @@ public class DefaultElementSelectionTest {
 
         assertThat(parentElements, containsInAnyOrder(element1, element2));
     }
-
-    /**
-     * Contexts must find by chained in order to lookup a single custom element.
-     */
-    interface ContextThatFindsByChained extends ElementContext, FindsByChained {}
-
-    /**
-     * Contexts must find by nested in order to lookup many custom elements (to avoid all using the
-     * same root element).
-     */
-    interface ContextThatFindsByNested extends ElementContext, FindsByNested {}
 }
