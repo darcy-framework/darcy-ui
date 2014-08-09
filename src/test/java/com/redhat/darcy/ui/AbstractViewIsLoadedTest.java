@@ -41,8 +41,11 @@ import com.redhat.synq.AbstractCondition;
 import com.redhat.synq.Condition;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 @SuppressWarnings("unused")
+@RunWith(JUnit4.class)
 public class AbstractViewIsLoadedTest {
     @Test(expected = NoRequiredElementsException.class)
     public void shouldThrowNoRequiredElementsExceptionIfCalledWithoutAnyAnnotatedElements() {

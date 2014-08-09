@@ -35,9 +35,12 @@ import com.redhat.synq.Condition;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.util.List;
 
+@RunWith(JUnit4.class)
 public class AbstractViewSetContextTest {
     @Test
     public void shouldSetContextOnFieldsWhosDeclaredTypeImplementsHasElementContext() {
