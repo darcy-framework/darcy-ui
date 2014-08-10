@@ -22,20 +22,17 @@ package com.redhat.darcy.ui;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.redhat.darcy.ui.annotations.Context;
 import com.redhat.darcy.ui.annotations.NotRequired;
 import com.redhat.darcy.ui.annotations.Require;
 import com.redhat.darcy.ui.annotations.RequireAll;
 import com.redhat.darcy.ui.api.Locator;
-import com.redhat.darcy.ui.api.View;
 import com.redhat.darcy.ui.api.ViewElement;
 import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.ui.testing.doubles.AlwaysDisplayedLabel;
 import com.redhat.darcy.ui.testing.doubles.NeverDisplayedElement;
-import com.redhat.darcy.ui.testing.doubles.NullContext;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -91,8 +88,7 @@ public class AbstractViewElementIsDisplayedTest {
         ViewElement testView = new TestViewElement(mock(Locator.class));
 
         assertTrue("isDisplayed should return true if all required elements are displayed and "
-                        + "RequireAll annotation is used.",
-                testView.isDisplayed());
+                + "RequireAll annotation is used.", testView.isDisplayed());
     }
 
     @Test
@@ -108,9 +104,8 @@ public class AbstractViewElementIsDisplayedTest {
 
         ViewElement testView = new TestViewElement(mock(Locator.class));
 
-        assertFalse("isDisplayed should return false if not all required elements are displayed and "
-                        + "RequireAll annotation is used.",
-                testView.isDisplayed());
+        assertFalse("isDisplayed should return false if not all required elements are displayed " +
+                "and RequireAll annotation is used.", testView.isDisplayed());
     }
 
     @Test
@@ -128,8 +123,7 @@ public class AbstractViewElementIsDisplayedTest {
         ViewElement testView = new TestViewElement(mock(Locator.class));
 
         assertTrue("isDisplayed should return true if only element not displayed is not required " +
-                        "when RequireAll annotation is used.",
-                testView.isDisplayed());
+                "when RequireAll annotation is used.", testView.isDisplayed());
     }
 
     @Test
@@ -147,8 +141,7 @@ public class AbstractViewElementIsDisplayedTest {
         ViewElement testView = new TestViewElement(mock(Locator.class));
 
         assertFalse("isDisplayed should return false if only element actually displayed is not " +
-                        "required when RequireAll annotation is used.",
-                testView.isDisplayed());
+                "required when RequireAll annotation is used.", testView.isDisplayed());
     }
 
     @Test
@@ -190,7 +183,7 @@ public class AbstractViewElementIsDisplayedTest {
         };
 
         assertTrue("Expected ViewElement to be displayed due to single required field that is a " +
-                        "displayed view.", testView.isDisplayed());
+                "displayed view.", testView.isDisplayed());
     }
 
     // This scenario doesn't make any sense, but serves to prove we're not looking at isLoaded for
@@ -209,6 +202,21 @@ public class AbstractViewElementIsDisplayedTest {
 
         assertFalse("Expected ViewElement to not be displayed due to single required field that " +
                 "is a not displayed view.", testView.isDisplayed());
+    }
+
+    @Test(expected = NoRequiredElementsException.class)
+    public void shouldIgnoreFieldsAnnotatedWithContext() {
+        @RequireAll class TestViewElement extends AbstractViewElement {
+            @Context
+            Element element = mock(Element.class);
+
+            public TestViewElement() {
+                super(mock(Locator.class));
+            }
+        };
+
+        TestViewElement testView = new TestViewElement();
+        testView.isDisplayed();
     }
 
     class TestException extends RuntimeException {}

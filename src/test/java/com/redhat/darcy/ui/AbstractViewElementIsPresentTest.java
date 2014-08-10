@@ -24,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.redhat.darcy.ui.annotations.Context;
 import com.redhat.darcy.ui.annotations.NotRequired;
 import com.redhat.darcy.ui.annotations.Require;
 import com.redhat.darcy.ui.annotations.RequireAll;
@@ -231,6 +232,21 @@ public class AbstractViewElementIsPresentTest {
 
         assertFalse("Expected ViewElement to not be present due to single required field that is a " +
                 "non-present findable.", testView.isPresent());
+    }
+
+    @Test(expected = NoRequiredElementsException.class)
+    public void shouldIgnoreFieldsAnnotatedWithContext() {
+        @RequireAll class TestViewElement extends AbstractViewElement {
+            @Context
+            Findable findable = mock(Findable.class);
+
+            public TestViewElement() {
+                super(mock(Locator.class));
+            }
+        };
+
+        TestViewElement testView = new TestViewElement();
+        testView.isPresent();
     }
 
     class TestException extends RuntimeException {}

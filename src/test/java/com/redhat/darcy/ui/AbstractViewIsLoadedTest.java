@@ -25,9 +25,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.redhat.darcy.ui.annotations.Context;
 import com.redhat.darcy.ui.annotations.NotRequired;
 import com.redhat.darcy.ui.annotations.Require;
 import com.redhat.darcy.ui.annotations.RequireAll;
+import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.View;
 import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.ui.api.elements.Findable;
@@ -215,6 +217,21 @@ public class AbstractViewIsLoadedTest {
 
         assertFalse("isLoaded should check Findable fields for isPresent if they do not implement" +
                 "View or Element.", testView.isLoaded());
+    }
+
+    @Test(expected = NoRequiredElementsException.class)
+    public void shouldIgnoreFieldsAnnotatedWithContext() {
+        @RequireAll class TestViewElement extends AbstractViewElement {
+            @Context
+            Element element = mock(Element.class);
+
+            public TestViewElement() {
+                super(mock(Locator.class));
+            }
+        };
+
+        TestViewElement testView = new TestViewElement();
+        testView.isLoaded();
     }
 
     class TestException extends RuntimeException {}
