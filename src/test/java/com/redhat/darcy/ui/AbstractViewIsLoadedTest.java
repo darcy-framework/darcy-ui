@@ -29,16 +29,18 @@ import com.redhat.darcy.ui.annotations.Context;
 import com.redhat.darcy.ui.annotations.NotRequired;
 import com.redhat.darcy.ui.annotations.Require;
 import com.redhat.darcy.ui.annotations.RequireAll;
-import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.View;
 import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.ui.api.elements.Findable;
 import com.redhat.darcy.ui.testing.doubles.AlwaysDisplayedLabel;
 import com.redhat.darcy.ui.testing.doubles.NeverDisplayedElement;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+
+import java.util.List;
 
 @SuppressWarnings("unused")
 @RunWith(JUnit4.class)
@@ -86,8 +88,7 @@ public class AbstractViewIsLoadedTest {
         View testView = new TestView();
         
         assertTrue("isLoaded should return true if all required elements are displayed and "
-                        + "RequireAll annotation is used.",
-                testView.isLoaded());
+                + "RequireAll annotation is used.", testView.isLoaded());
     }
     
     @Test
@@ -100,8 +101,7 @@ public class AbstractViewIsLoadedTest {
         View testView = new TestView();
         
         assertFalse("isLoaded should return false if not all required elements are displayed and "
-                        + "RequireAll annotation is used.",
-                testView.isLoaded());
+                + "RequireAll annotation is used.", testView.isLoaded());
     }
     
     @Test
@@ -115,8 +115,7 @@ public class AbstractViewIsLoadedTest {
         View testView = new TestView();
         
         assertTrue("isLoaded should return true if only element not displayed is not required when "
-                        + "RequireAll annotation is used.",
-                testView.isLoaded());
+                + "RequireAll annotation is used.", testView.isLoaded());
     }
     
     @Test
@@ -130,8 +129,7 @@ public class AbstractViewIsLoadedTest {
         View testView = new TestView();
         
         assertFalse("isLoaded should return false if only element actually displayed is not required"
-                + " when RequireAll annotation is used.", 
-                testView.isLoaded());
+                + " when RequireAll annotation is used.", testView.isLoaded());
     }
     
     @Test
@@ -221,16 +219,35 @@ public class AbstractViewIsLoadedTest {
 
     @Test(expected = NoRequiredElementsException.class)
     public void shouldIgnoreFieldsAnnotatedWithContext() {
-        @RequireAll class TestViewElement extends AbstractViewElement {
+        @RequireAll class TestView extends AbstractView {
             @Context
             Element element = mock(Element.class);
-
-            public TestViewElement() {
-                super(mock(Locator.class));
-            }
         };
 
-        TestViewElement testView = new TestViewElement();
+        TestView testView = new TestView();
+        testView.isLoaded();
+    }
+
+    @Test(expected = NoRequiredElementsException.class)
+    public void shouldNotConsiderIrrelevantFieldsAsAbleToBeRequired() {
+        @RequireAll class TestView extends AbstractView {
+            String aString;
+        }
+
+        TestView testView = new TestView();
+
+        testView.isLoaded();
+    }
+
+    @Ignore("Broken until requiring Lists is implemented, see " +
+            "https://github.com/darcy-framework/darcy-ui/issues/13")
+    @Test(expected = NoRequiredElementsException.class)
+    public void shouldReconsiderEmptyConditionsListIfFieldIsAmbiguous() {
+        @RequireAll class TestView extends AbstractView {
+            List<String> stringList;
+        };
+
+        TestView testView = new TestView();
         testView.isLoaded();
     }
 

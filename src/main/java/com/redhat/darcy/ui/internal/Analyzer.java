@@ -76,6 +76,10 @@ public class Analyzer {
                     .collect(Collectors.toList()));
 
             // TODO: Lists
+
+            if(isLoaded.isEmpty()) {
+                throw new NoRequiredElementsException(this);
+            }
         }
 
         return isLoaded;
@@ -93,6 +97,10 @@ public class Analyzer {
                     .collect(Collectors.toList()));
 
             // TODO: Lists
+
+            if(isDisplayed.isEmpty()) {
+                throw new NoRequiredElementsException(this);
+            }
         }
 
         return isDisplayed;
@@ -110,6 +118,10 @@ public class Analyzer {
                     .collect(Collectors.toList()));
 
             // TODO: Lists
+
+            if(isPresent.isEmpty()) {
+                throw new NoRequiredElementsException(this);
+            }
         }
 
         return isPresent;
@@ -146,11 +158,9 @@ public class Analyzer {
 
     private List<Field> filterRequired(List<Field> fields) {
         return fields.stream()
-                .filter(f -> f.getAnnotation(Context.class) == null
-                        && (f.getAnnotation(Require.class) != null
-                        // Use the field's declaring class for RequireAll; may be a super class
-                        || (f.getDeclaringClass().getAnnotation(RequireAll.class) != null
-                        && f.getAnnotation(NotRequired.class) == null)))
+                .filter(this::isViewElementFindableOrList)
+                .filter(this::isNotAnnotatedWithContext)
+                .filter(this::isRequired)
                 .collect(Collectors.toList());
     }
 
@@ -203,5 +213,34 @@ public class Analyzer {
         }
 
         return null;
+    }
+
+    /**
+     * Those are only supported types which make sense to look at.
+     */
+    private boolean isViewElementFindableOrList(Field field) {
+        Class<?> fieldType = field.getType();
+        return View.class.isAssignableFrom(fieldType)
+                || Element.class.isAssignableFrom(fieldType)
+                || Findable.class.isAssignableFrom(fieldType)
+                || List.class.isAssignableFrom(fieldType);
+    }
+
+    /**
+     * Contexts must be implicitly present if anything in this view is is to be present.
+     */
+    private boolean isNotAnnotatedWithContext(Field field) {
+        return field.getAnnotation(Context.class) == null;
+    }
+
+    /**
+     * Determines whether a field is required or not based on combination of Require, RequireAll,
+     * and NotRequired annotations.
+     */
+    private boolean isRequired(Field field) {
+        return field.getAnnotation(Require.class) != null
+                // Use the field's declaring class for RequireAll; may be a super class
+                || (field.getDeclaringClass().getAnnotation(RequireAll.class) != null
+                && field.getAnnotation(NotRequired.class) == null);
     }
 }

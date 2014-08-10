@@ -31,12 +31,15 @@ import com.redhat.darcy.ui.annotations.RequireAll;
 import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.ViewElement;
 import com.redhat.darcy.ui.api.elements.Element;
+import com.redhat.darcy.ui.api.elements.Findable;
 import com.redhat.darcy.ui.testing.doubles.AlwaysDisplayedLabel;
 import com.redhat.darcy.ui.testing.doubles.NeverDisplayedElement;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+
+import java.util.List;
 
 @RunWith(JUnit4.class)
 public class AbstractViewElementIsDisplayedTest {
@@ -209,6 +212,34 @@ public class AbstractViewElementIsDisplayedTest {
         @RequireAll class TestViewElement extends AbstractViewElement {
             @Context
             Element element = mock(Element.class);
+
+            public TestViewElement() {
+                super(mock(Locator.class));
+            }
+        };
+
+        TestViewElement testView = new TestViewElement();
+        testView.isDisplayed();
+    }
+
+    @Test(expected = NoRequiredElementsException.class)
+    public void shouldNotConsiderIrrelevantFieldsAsAbleToBeRequired() {
+        @RequireAll class TestViewElement extends AbstractViewElement {
+            String aString;
+
+            public TestViewElement() {
+                super(mock(Locator.class));
+            }
+        };
+
+        TestViewElement testView = new TestViewElement();
+        testView.isDisplayed();
+    }
+
+    @Test(expected = NoRequiredElementsException.class)
+    public void shouldReconsiderEmptyConditionsListIfNoRequiredFieldIsDisplayable() {
+        @RequireAll class TestViewElement extends AbstractViewElement {
+            Findable findable;
 
             public TestViewElement() {
                 super(mock(Locator.class));

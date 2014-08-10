@@ -35,9 +35,12 @@ import com.redhat.darcy.ui.api.elements.Findable;
 import com.redhat.darcy.ui.testing.doubles.NeverDisplayedElement;
 import com.redhat.darcy.ui.testing.doubles.NeverFoundElement;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+
+import java.util.List;
 
 @RunWith(JUnit4.class)
 public class AbstractViewElementIsPresentTest {
@@ -230,7 +233,8 @@ public class AbstractViewElementIsPresentTest {
             Findable findable = mockFindable;
         };
 
-        assertFalse("Expected ViewElement to not be present due to single required field that is a " +
+        assertFalse("Expected ViewElement to not be present due to single required field that is " +
+                "a " +
                 "non-present findable.", testView.isPresent());
     }
 
@@ -239,6 +243,36 @@ public class AbstractViewElementIsPresentTest {
         @RequireAll class TestViewElement extends AbstractViewElement {
             @Context
             Findable findable = mock(Findable.class);
+
+            public TestViewElement() {
+                super(mock(Locator.class));
+            }
+        };
+
+        TestViewElement testView = new TestViewElement();
+        testView.isPresent();
+    }
+
+    @Test(expected = NoRequiredElementsException.class)
+    public void shouldNotConsiderIrrelevantFieldsAsAbleToBeRequired() {
+        @RequireAll class TestViewElement extends AbstractViewElement {
+            String aString;
+
+            public TestViewElement() {
+                super(mock(Locator.class));
+            }
+        };
+
+        TestViewElement testView = new TestViewElement();
+        testView.isPresent();
+    }
+
+    @Ignore("Broken until requiring Lists is implemented, see " +
+            "https://github.com/darcy-framework/darcy-ui/issues/13")
+    @Test(expected = NoRequiredElementsException.class)
+    public void shouldReconsiderEmptyConditionsListIfFieldIsAmbiguous() {
+        @RequireAll class TestViewElement extends AbstractViewElement {
+            List<String> stringList;
 
             public TestViewElement() {
                 super(mock(Locator.class));
