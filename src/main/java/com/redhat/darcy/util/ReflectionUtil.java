@@ -27,6 +27,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 public abstract class ReflectionUtil {
+    /**
+     * Returns all fields of any scope, throughout the class hierarchy of the object, excluding
+     * synthetic fields (like references to outer classes). All returned fields have accessibility
+     * override flag set.
+     */
     public static List<Field> getAllDeclaredFields(Object object) {
         List<Field> allFields = new ArrayList<>();
         Class<?> objClass = object.getClass();
@@ -37,7 +42,8 @@ public abstract class ReflectionUtil {
             
             objClass = objClass.getSuperclass();
         }
-        
+
+        allFields.removeIf(Field::isSynthetic);
         allFields.forEach(f -> f.setAccessible(true));
         
         return allFields;
