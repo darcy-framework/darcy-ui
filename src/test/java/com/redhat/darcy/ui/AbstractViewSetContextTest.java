@@ -20,11 +20,13 @@
 package com.redhat.darcy.ui;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 import com.redhat.darcy.ui.annotations.Require;
+import com.redhat.darcy.ui.api.ElementContext;
 import com.redhat.darcy.ui.api.HasElementContext;
 import com.redhat.darcy.ui.api.View;
 import com.redhat.darcy.ui.api.elements.Element;
@@ -42,6 +44,16 @@ import java.util.List;
 
 @RunWith(JUnit4.class)
 public class AbstractViewSetContextTest {
+    @Test
+    public void shouldSetContext() {
+        ElementContext mockContext = mock(ElementContext.class);
+        View testView = new AbstractView() {};
+
+        testView.setContext(mockContext);
+
+        assertSame(mockContext, testView.getContext());
+    }
+
     @Test
     public void shouldSetContextOnFieldsWhosDeclaredTypeImplementsHasElementContext() {
         DummyContext dummyContext = new DummyContext();
