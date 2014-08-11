@@ -142,6 +142,10 @@ public abstract class AbstractView implements View {
      * @see ElementContext#transition()
      */
     protected Transition transition() {
+        if (context == null) {
+            throw new NullContextException();
+        }
+
         return context.transition();
     }
 }
