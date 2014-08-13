@@ -27,14 +27,15 @@ import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.View;
 import com.redhat.synq.DefaultPollEvent;
 import com.redhat.synq.ForwardingPollEvent;
+import com.redhat.synq.Synq;
 
 public class NestedContextTransitionEvent<T extends View> extends ForwardingPollEvent<T> {
     
     public NestedContextTransitionEvent(T destination, ElementContext context,
             Locator nestedContextLocator) {
-        super(new DefaultPollEvent<>(match(
-                destination,
-                isLoadedInContext(((FindsByChained) context).withRootLocator(nestedContextLocator)))));
+        super(Synq.expect(destination,
+                isLoadedInContext(((FindsByChained) context)
+                        .withRootLocator(nestedContextLocator))));
     }
     
 }

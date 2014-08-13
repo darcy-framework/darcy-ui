@@ -31,13 +31,14 @@ import com.redhat.darcy.ui.api.View;
 import com.redhat.synq.DefaultPollEvent;
 import com.redhat.synq.Event;
 import com.redhat.synq.ForwardingPollEvent;
+import com.redhat.synq.Synq;
 
 public class SimpleTransitionEvent<T extends View> extends ForwardingPollEvent<T> implements TransitionEvent<T> {
     private final T destination;
     private final ElementContext context;
     
     public SimpleTransitionEvent(T destination, ElementContext context) {
-        super(new DefaultPollEvent<>(match(destination, isLoadedInContext(context))));
+        super(Synq.expect(destination, isLoadedInContext(context)));
         
         this.destination = destination;
         this.context = context;
