@@ -19,8 +19,6 @@
 
 package com.redhat.darcy.ui.annotations;
 
-import com.redhat.darcy.ui.AbstractView;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -31,8 +29,8 @@ import java.lang.annotation.Target;
  * will not be considered loaded until all elements marked as required are present.
  * <P>
  * It is best to annotate as many elements as possible or write a specific load condition via
- * overriding {@link AbstractView#loadCondition()} to ensure that every View's load condition is
- * unique.
+ * overriding {@link com.redhat.darcy.ui.api.View#isLoaded()} to ensure that every View's load
+ * condition is unique.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)

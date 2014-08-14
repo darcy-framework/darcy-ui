@@ -100,6 +100,17 @@ public abstract class By {
                 throw new LocatorNotSupportedException(this);
             }
         }
+
+        @Override
+        public boolean equals(Object object) {
+            if (!(object instanceof ById)) {
+                return false;
+            }
+
+            ById other = (ById) object;
+
+            return id.equals(other.id);
+        }
     }
     
     public static class ByName implements Locator {

@@ -19,8 +19,8 @@
 
 package com.redhat.darcy.ui;
 
+import com.redhat.darcy.ui.api.HasElementContext;
 import com.redhat.darcy.ui.api.Locator;
-import com.redhat.darcy.ui.api.View;
 import com.redhat.darcy.ui.api.elements.Button;
 import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.ui.api.elements.Label;
@@ -29,21 +29,20 @@ import com.redhat.darcy.ui.api.elements.Select;
 import com.redhat.darcy.ui.api.elements.TextInput;
 import com.redhat.darcy.ui.internal.ElementHandler;
 import com.redhat.darcy.ui.internal.ElementListHandler;
-import com.redhat.darcy.ui.internal.LazyElement;
-import com.redhat.darcy.ui.internal.ViewElementHandler;
-import com.redhat.darcy.ui.internal.ViewElementListHandler;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.List;
-import java.util.function.Supplier;
 
 /**
  * Static factories for the fundamental UI elements. Specifically, these return proxy instances of
- * those elements, so that they may be defined statically and loaded lazily.
- * 
- * @see {@link com.redhat.darcy.ui.internal.LazyElement}
- * @see {@link com.redhat.darcy.ui.internal.ElementHandler}
+ * those elements, so that they may be defined as instance fields in a View that may not yet have
+ * a context with which to retrieve element references. This elements can be assigned a context
+ * after instantiation.
+ *
+ * @see com.redhat.darcy.ui.AbstractView
+ * @see com.redhat.darcy.ui.api.HasElementContext
+ * @see com.redhat.darcy.ui.internal.ElementHandler
  *
  */
 public abstract class Elements {
@@ -60,7 +59,7 @@ public abstract class Elements {
         InvocationHandler invocationHandler = new ElementHandler(type, locator);
         
         return (T) Proxy.newProxyInstance(Elements.class.getClassLoader(), 
-                new Class[] { type, LazyElement.class },
+                new Class[] { type, HasElementContext.class },
                 invocationHandler);
     }
     /**
@@ -76,65 +75,7 @@ public abstract class Elements {
         InvocationHandler invocationHandler = new ElementListHandler(type, locator);
         
         return (List<T>) Proxy.newProxyInstance(Elements.class.getClassLoader(), 
-                new Class[] { List.class, LazyElement.class },
-                invocationHandler);
-    }
-    
-    /**
-     * Wraps an element implementation in a proxy so that it may be assigned to a parent View 
-     * lazily, like elements.
-     * <P>
-     * The provided implementation must, itself, be a View. If you want to override fundamental UI
-     * elements, this is done at the automation-library wrapper level and specific to that 
-     * ViewContext implementation.
-     */
-    @SuppressWarnings("unchecked")
-    public static <T extends Element> T element(Class<T> type, Locator locator,
-            T implementation) {
-        if (!type.isInterface()) {
-            throw new IllegalArgumentException("Element type must be an interface, was: " + type);
-        }
-
-        if (!View.class.isAssignableFrom(implementation.getClass())) {
-            throw new IllegalArgumentException("Implementation must be a View. If you wish to " +
-                    "override fundamental Element types, this must be done at the automation " +
-                    "library level.");
-        }
-
-        InvocationHandler invocationHandler = new ViewElementHandler((View) implementation, locator);
-
-        return (T) Proxy.newProxyInstance(Elements.class.getClassLoader(),
-                new Class[] { type, LazyElement.class },
-                invocationHandler);
-    }
-
-    /**
-     * Wraps an element implementation in a proxy so that it may be assigned to a parent View
-     * lazily, like elements.
-     * <P>
-     * The provided implementation must, itself, be a View. If you want to override fundamental UI
-     * elements, this is done at the automation-library wrapper level and specific to that
-     * ViewContext implementation.
-     */
-    // The Class<T> type param is not really necessary but it makes the API consistent with creating
-    // a single ViewElement field, and allows the returned list type to be of a parent interface.
-    @SuppressWarnings("unchecked")
-    public static <T extends Element> List<T> elements(@SuppressWarnings("unused") Class<T> type,
-            Locator locator, Supplier<? extends T> implementation) {
-        Supplier<View> viewSupplier = () -> {
-            try {
-                return (View) implementation.get();
-            } catch (ClassCastException e) {
-                throw new IllegalArgumentException("Implementation must be a View. If you wish to " +
-                        "override fundamental Element types, this must be done at the automation " +
-                        "library level.");
-            }
-        };
-
-        InvocationHandler invocationHandler = new ViewElementListHandler(viewSupplier, locator);
-
-        return (List<T>) Proxy.newProxyInstance(Elements.class.getClassLoader(),
-                new Class[] { List.class, LazyElement.class },
+                new Class[] { List.class, HasElementContext.class },
                 invocationHandler);
     }
     

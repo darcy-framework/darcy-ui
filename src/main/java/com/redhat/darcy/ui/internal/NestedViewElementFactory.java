@@ -1,7 +1,7 @@
 /*
  Copyright 2014 Red Hat, Inc. and/or its affiliates.
 
- This file is part of darcy.
+ This file is part of darcy-ui.
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -19,20 +19,9 @@
 
 package com.redhat.darcy.ui.internal;
 
-import com.redhat.darcy.ui.api.ElementContext;
-import com.redhat.darcy.ui.api.Locator;
+import com.redhat.darcy.ui.api.View;
+import com.redhat.darcy.ui.api.elements.Element;
 
-import java.util.List;
-
-public interface FindsByChained {
-    <T> List<T> findAllByChained(Class<T> type, Locator... locators);
-    <T> T findByChained(Class<T> type, Locator... locators);
-
-    /**
-     * Returns this context where all look ups will start from the specified root locator,
-     * essentially transforming every locator on this context with a unary operator:
-     * L -> By.chained(root, L)
-     */
-    @Deprecated
-    ElementContext withRootLocator(Locator root);
+public interface NestedViewElementFactory<T extends Element & View> {
+    T newElement(Element parent);
 }

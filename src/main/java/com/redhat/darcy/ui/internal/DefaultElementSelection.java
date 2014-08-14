@@ -24,11 +24,8 @@ import com.redhat.darcy.ui.api.ElementSelection;
 import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.View;
 import com.redhat.darcy.ui.api.elements.Element;
-import com.redhat.darcy.util.LazyList;
 
 import java.util.List;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 public class DefaultElementSelection implements ElementSelection {
     private final ElementContext context;
@@ -48,32 +45,20 @@ public class DefaultElementSelection implements ElementSelection {
     }
 
     @Override
-    public <T extends Element & View> T elementOfType(T implementation, Locator locator) {
-        if (!(context instanceof FindsByChained)) {
-            throw new UnsupportedOperationException("Context must support chaining locators in " +
-                    "order to find a custom element.");
-        }
+    public <T extends Element & View> T elementOfType(ChainedViewElementFactory<T> elementCtor,
+            Locator locator) {
+        T element = elementCtor.newElement(locator);
+        element.setContext(context);
 
-        implementation.setContext(((FindsByChained) context).withRootLocator(locator));
-
-        return implementation;
+        return element;
     }
 
     @Override
-    public <T extends Element & View> List<T> elementsOfType(Supplier<T> implementation,
+    public <T extends Element & View> List<T> elementsOfType(NestedViewElementFactory<T> elementCtor,
             Locator locator) {
-        if (!(context instanceof FindsByNested)) {
-            throw new UnsupportedOperationException("Context must support finding elements under " +
-                    "another element in order to find a list of custom elements.");
-        }
+        ViewElementList<T> elementList = new ViewElementList<>(elementCtor, locator);
+        elementList.setContext(context);
 
-        return new LazyList<T>(() -> locator.findAll(Element.class, context)
-                .stream()
-                .map(e -> {
-                    T view = implementation.get();
-                    view.setContext(((FindsByNested) context).withRootElement(e));
-                    return view;
-                })
-                .collect(Collectors.toList()));
+        return elementList;
     }
 }

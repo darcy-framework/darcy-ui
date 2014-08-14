@@ -20,13 +20,20 @@
 package com.redhat.darcy.util;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 public abstract class ReflectionUtil {
+    /**
+     * Returns all fields of any scope, throughout the class hierarchy of the object, excluding
+     * synthetic fields (like references to outer classes). All returned fields have accessibility
+     * override flag set.
+     */
     public static List<Field> getAllDeclaredFields(Object object) {
-        List<Field> allFields = new LinkedList<>();
+        List<Field> allFields = new ArrayList<>();
         Class<?> objClass = object.getClass();
         
         // Loop through the class hierarchy
@@ -35,14 +42,15 @@ public abstract class ReflectionUtil {
             
             objClass = objClass.getSuperclass();
         }
-        
+
+        allFields.removeIf(Field::isSynthetic);
         allFields.forEach(f -> f.setAccessible(true));
         
         return allFields;
     }
     
     public static List<Class<?>> getAllInterfaces(Object object) {
-        List<Class<?>> allInterfaces = new LinkedList<>();
+        List<Class<?>> allInterfaces = new ArrayList<>();
         
         Class<?> objClass = object.getClass();
         

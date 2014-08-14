@@ -30,6 +30,6 @@ public class NeverDisplayedElement implements Element {
 
     @Override
     public boolean isPresent() {
-        return false;
+        return true;
     }
 }

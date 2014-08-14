@@ -34,5 +34,6 @@ public interface FindsByNested {
      * essentially transforming every locator on this context with a unary operator:
      * L -> By.nested(root, L)
      */
+    @Deprecated
     ElementContext withRootElement(Element root);
 }

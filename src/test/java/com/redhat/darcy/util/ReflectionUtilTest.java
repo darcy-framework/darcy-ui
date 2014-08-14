@@ -22,6 +22,7 @@ package com.redhat.darcy.util;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasItems;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,8 +34,26 @@ import java.util.stream.Collectors;
 
 @RunWith(JUnit4.class)
 public class ReflectionUtilTest {
+    class TestClass {
+        private final Boolean test1 = false;
+        protected int test2;
+        public String test3;
+    };
+
+    class TestSubClass extends TestClass {
+        protected Object test4;
+        private long test5;
+    }
+
+    interface Interface1 {}
+    interface Interface2 {}
+    interface Interface3 {}
+
+    class TestInterfaces implements Interface1, Interface2 {}
+    class TestSubClassInterfaces extends TestInterfaces implements Interface3 {}
+
     @Test
-    public void shouldRetrieveAllFieldsInAClass() {
+    public void shouldRetrieveAllNonSyntheticFieldsInAClass() {
         TestClass testClass = new TestClass();
 
         List<String> fieldNames = ReflectionUtil.getAllDeclaredFields(testClass)
@@ -42,11 +61,11 @@ public class ReflectionUtilTest {
                 .map(Field::getName)
                 .collect(Collectors.toList());
 
-        assertThat(fieldNames, hasItems("test1", "test2", "test3"));
+        assertThat(fieldNames, containsInAnyOrder("test1", "test2", "test3"));
     }
 
     @Test
-    public void shouldRetrieveAllFieldsInEntireClassHierarchy() {
+    public void shouldRetrieveAllNonSyntheticFieldsInEntireClassHierarchy() {
         TestSubClass testSubClass = new TestSubClass();
 
         List<String> fieldNames = ReflectionUtil.getAllDeclaredFields(testSubClass)
@@ -55,6 +74,15 @@ public class ReflectionUtilTest {
                 .collect(Collectors.toList());
 
         assertThat(fieldNames, hasItems("test1", "test2", "test3", "test4", "test5"));
+    }
+
+    @Test
+    public void shouldReturnFieldsWithAccessibilityFlagSet() {
+        TestClass testClass = new TestClass();
+
+        assertTrue(ReflectionUtil.getAllDeclaredFields(testClass)
+                .stream()
+                .allMatch(Field::isAccessible));
     }
 
     @Test
@@ -69,21 +97,3 @@ public class ReflectionUtilTest {
         assertThat(interfaceNames, containsInAnyOrder("Interface1", "Interface2", "Interface3"));
     }
 }
-
-class TestClass {
-    private final Boolean test1 = false;
-    protected int test2;
-    public String test3;
-};
-
-class TestSubClass extends TestClass {
-    protected Object test4;
-    private long test5;
-}
-
-interface Interface1 {}
-interface Interface2 {}
-interface Interface3 {}
-
-class TestInterfaces implements Interface1, Interface2 {}
-class TestSubClassInterfaces extends TestInterfaces implements Interface3 {}

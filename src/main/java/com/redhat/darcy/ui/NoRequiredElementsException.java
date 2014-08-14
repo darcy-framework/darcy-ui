@@ -1,7 +1,7 @@
 /*
  Copyright 2014 Red Hat, Inc. and/or its affiliates.
 
- This file is part of darcy.
+ This file is part of darcy-ui.
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -19,12 +19,11 @@
 
 package com.redhat.darcy.ui;
 
-import com.redhat.darcy.ui.api.View;
-
-public class MissingLoadConditionException extends DarcyException {
-    private static final long serialVersionUID = 6736051185845550602L;
-    
-    public MissingLoadConditionException(View view) {
-        super(view.toString());
+public class NoRequiredElementsException extends DarcyException {
+    public NoRequiredElementsException(Object view) {
+        super("No fields that implement View, Element, Findable, or List of those types, were " +
+                "configured to be required. Configure required elements by use of @Require, " +
+                "@RequireAll, and @NotRequired annotations.\n" +
+                "View analyzed was: " + view);
     }
 }

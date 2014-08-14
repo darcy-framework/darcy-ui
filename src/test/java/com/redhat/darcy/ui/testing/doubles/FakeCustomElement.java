@@ -19,25 +19,21 @@
 
 package com.redhat.darcy.ui.testing.doubles;
 
-import com.redhat.darcy.ui.AbstractView;
+import com.redhat.darcy.ui.AbstractViewElement;
+import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.elements.Element;
-import com.redhat.synq.Condition;
-import com.redhat.synq.HamcrestCondition;
 
-public class FakeCustomElement extends AbstractView implements Element {
+public class FakeCustomElement extends AbstractViewElement {
 
-    @Override
-    public boolean isDisplayed() {
-        return true;
+    public FakeCustomElement(Locator parent) {
+        super(parent);
     }
 
-    @Override
-    public boolean isPresent() {
-        return true;
+    public FakeCustomElement(Element parent) {
+        super(parent);
     }
 
-    @Override
-    public Condition<?> loadCondition() {
-        return HamcrestCondition.isTrueOrNonNull(() -> true);
+    public Element getParentElement() {
+        return parent;
     }
 }

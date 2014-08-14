@@ -1,7 +1,7 @@
 /*
  Copyright 2014 Red Hat, Inc. and/or its affiliates.
 
- This file is part of darcy.
+ This file is part of darcy-ui.
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -17,22 +17,18 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.redhat.darcy.ui.internal;
+package com.redhat.darcy.ui.testing.doubles;
 
-import com.redhat.darcy.ui.api.ElementContext;
-import com.redhat.darcy.ui.api.Locator;
+import com.redhat.darcy.ui.api.elements.Element;
 
-import java.util.List;
+public class NeverFoundElement implements Element {
+    @Override
+    public boolean isDisplayed() {
+        return false;
+    }
 
-public interface FindsByChained {
-    <T> List<T> findAllByChained(Class<T> type, Locator... locators);
-    <T> T findByChained(Class<T> type, Locator... locators);
-
-    /**
-     * Returns this context where all look ups will start from the specified root locator,
-     * essentially transforming every locator on this context with a unary operator:
-     * L -> By.chained(root, L)
-     */
-    @Deprecated
-    ElementContext withRootLocator(Locator root);
+    @Override
+    public boolean isPresent() {
+        return false;
+    }
 }

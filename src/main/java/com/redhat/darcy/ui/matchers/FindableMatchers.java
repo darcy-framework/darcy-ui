@@ -17,17 +17,14 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.redhat.darcy.ui.internal;
+package com.redhat.darcy.ui.matchers;
 
-import com.redhat.darcy.ui.api.HasElementContext;
+import com.redhat.darcy.ui.api.elements.Findable;
 
-/**
- * Interface for element fields created statically and assigned an ElementContext to look in
- * by {@link com.redhat.darcy.ui.AbstractView}. Real implementations must be found via a locator and
- * a context. A context is associated with a View at runtime, so these element fields, when created,
- * have no context to refer to. Thus, they must be created as proxies, which delay looking up the
- * actual element until the element is used. The context is assigned via this interface and {@code
- * AbstractView}.
- */
-public interface LazyElement extends HasElementContext {
+import org.hamcrest.Matcher;
+
+public class FindableMatchers {
+    public static <T extends Findable> Matcher<T> isPresent() {
+        return new FindableIsPresent<>();
+    }
 }
