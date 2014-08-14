@@ -33,5 +33,6 @@ public interface FindsByChained {
      * essentially transforming every locator on this context with a unary operator:
      * L -> By.chained(root, L)
      */
+    @Deprecated
     ElementContext withRootLocator(Locator root);
 }
