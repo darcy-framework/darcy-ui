@@ -19,5 +19,5 @@
 
 package com.redhat.darcy.ui.api.elements;
 
-public interface Button extends Clickable {
+public interface Button extends Clickable, Element {
 }

@@ -1,5 +1,5 @@
 package com.redhat.darcy.ui.api.elements;
 
-public interface Disableable extends Element {
+public interface Disableable {
     boolean isEnabled();
 }

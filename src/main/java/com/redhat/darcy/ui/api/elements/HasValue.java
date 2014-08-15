@@ -19,6 +19,6 @@
 
 package com.redhat.darcy.ui.api.elements;
 
-public interface HasValue extends Element {
+public interface HasValue {
     String readValue();
 }
