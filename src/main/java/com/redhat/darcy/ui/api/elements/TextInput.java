@@ -19,7 +19,7 @@
 
 package com.redhat.darcy.ui.api.elements;
 
-public interface TextInput extends Clickable, HasValue {
+public interface TextInput extends Clickable, HasValue, Element {
     void clearAndType(String stringToType);
     void sendKeys(CharSequence... keysToSend);
     void clear();

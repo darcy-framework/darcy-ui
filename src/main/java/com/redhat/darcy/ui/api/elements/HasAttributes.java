@@ -1,7 +1,7 @@
 /*
  Copyright 2014 Red Hat, Inc. and/or its affiliates.
 
- This file is part of darcy.
+ This file is part of darcy-ui.
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -19,5 +19,10 @@
 
 package com.redhat.darcy.ui.api.elements;
 
-public interface Button extends Clickable, Element {
+public interface HasAttributes {
+    /**
+     * Simple string-string key-value pair access.
+     * @return null if no attribute is present.
+     */
+    String getAttribute(String attribute);
 }

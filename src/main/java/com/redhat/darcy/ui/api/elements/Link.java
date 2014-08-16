@@ -19,6 +19,6 @@
 
 package com.redhat.darcy.ui.api.elements;
 
-public interface Link extends Clickable {
+public interface Link extends Clickable, Element {
     String getLinkText();
 }
