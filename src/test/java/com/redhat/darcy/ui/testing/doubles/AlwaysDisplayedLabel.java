@@ -34,7 +34,7 @@ public class AlwaysDisplayedLabel implements Label {
     }
 
     @Override
-    public String readText() {
+    public String getText() {
         return "AlwaysDisplayedElement text";
     }
 }
