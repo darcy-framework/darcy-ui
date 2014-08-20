@@ -73,7 +73,7 @@ public abstract class AbstractViewElement extends AbstractView implements ViewEl
      *
      * @see #byInner(com.redhat.darcy.ui.api.Locator)
      */
-    protected AbstractViewElement(Locator parent) {
+    public AbstractViewElement(Locator parent) {
         // How to specify element type? Is this ever going to be needed?
         this(Elements.element(parent), l -> By.chained(parent, l));
     }
@@ -86,7 +86,7 @@ public abstract class AbstractViewElement extends AbstractView implements ViewEl
      *
      * @see #byInner(com.redhat.darcy.ui.api.Locator)
      */
-    protected AbstractViewElement(Element parent) {
+    public AbstractViewElement(Element parent) {
         this(parent, l -> By.nested(parent, l));
     }
 
