@@ -19,11 +19,13 @@
 
 package com.redhat.darcy.ui;
 
+import com.redhat.darcy.Experimental;
 import com.redhat.darcy.ui.api.Context;
 import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.View;
 import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.ui.internal.FindsByChained;
+import com.redhat.darcy.ui.internal.FindsByElement;
 import com.redhat.darcy.ui.internal.FindsById;
 import com.redhat.darcy.ui.internal.FindsByLinkText;
 import com.redhat.darcy.ui.internal.FindsByName;
@@ -33,7 +35,9 @@ import com.redhat.darcy.ui.internal.FindsByTextContent;
 import com.redhat.darcy.ui.internal.FindsByView;
 import com.redhat.darcy.ui.internal.FindsByXPath;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A helper class with static factories for {@link com.redhat.darcy.ui.api.Locator}s, inspired by
@@ -74,6 +78,16 @@ public abstract class By {
     
     public static Locator nested(Element parent, Locator child) {
         return new ByNested(parent, child);
+    }
+
+    @Experimental
+    public static Locator element(Element element) {
+        return new ByElement(element);
+    }
+
+    @Experimental
+    public static Locator elements(List<Element> elements) {
+        return new ByElement(elements);
     }
     
     public static class ById implements Locator {
@@ -319,6 +333,33 @@ public abstract class By {
         public <T> T find(Class<T> type, Context context) {
             try {
                 return ((FindsByNested) context).findByNested(type, parent, child);
+            } catch (ClassCastException cce) {
+                throw new LocatorNotSupportedException(this);
+            }
+        }
+    }
+
+    @Experimental
+    public static class ByElement implements Locator {
+        private final Element element;
+
+        public ByElement(Element element) {
+            this.element = Objects.requireNonNull(element, "element");
+        }
+
+        @Override
+        public <T> List<T> findAll(Class<T> type, Context context) {
+            try {
+                return ((FindsByElement) context).findAllByElement(type, element);
+            } catch (ClassCastException cce) {
+                throw new LocatorNotSupportedException(this);
+            }
+        }
+
+        @Override
+        public <T> T find(Class<T> type, Context context) {
+            try {
+                return ((FindsByElement) context).findByElement(type, element);
             } catch (ClassCastException cce) {
                 throw new LocatorNotSupportedException(this);
             }
