@@ -48,6 +48,7 @@ public class ViewList<T extends View> implements List<T>, HasElementContext {
         backingList = new LazyList<>(() -> locator.findAll(Element.class, elementContext)
                 .stream()
                 .map(e -> (T) element.newElement(e))
+                .peek(v -> v.setContext(elementContext))
                 .collect(Collectors.toList()));
     }
 
