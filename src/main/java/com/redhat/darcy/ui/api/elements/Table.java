@@ -19,15 +19,38 @@
 
 package com.redhat.darcy.ui.api.elements;
 
+import com.redhat.darcy.ui.api.ElementContext;
+import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.ViewElement;
 
 import org.hamcrest.Matcher;
 
+import java.util.Iterator;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public interface Table<T extends Table<T>> extends ViewElement {
+
+    int getRowCount();
+
+    default Iterable<Row<T>> rows() {
+        return () -> new Iterator<Row<T>>() {
+            private int cursor = 0;
+
+            @Override
+            public boolean hasNext() {
+                return cursor + 1 <= getRowCount();
+            }
+
+            @SuppressWarnings("unchecked")
+            @Override
+            public Row<T> next() {
+                return new Row<T>((T) Table.this, cursor);
+            }
+        };
+    }
+
     @SuppressWarnings("unchecked")
     default Row<T> getRow(int row) {
         return new Row<>((T) this, row);
@@ -43,8 +66,6 @@ public interface Table<T extends Table<T>> extends ViewElement {
         return column.getCell((T) this, row);
     }
 
-    Iterable<Row<T>> rows();
-
     default <U> Stream<Row<T>> getRowsWhere(ColumnDefinition<T, U> column, Predicate<? super U> predicate) {
         return StreamSupport.stream(rows().spliterator(), false)
                 .filter(r -> predicate.test(r.getCell(column)));
@@ -54,10 +75,11 @@ public interface Table<T extends Table<T>> extends ViewElement {
         return getRowsWhere(column, matcher::matches);
     }
 
-    /*
-    boolean isEmpty();
-    int getRowCount();
+    default boolean isEmpty() {
+        return getRowCount() == 0;
+    }
 
+    /*
     // interface PaginatedTable
     T toPage(int page);
     T previousPage();
@@ -116,5 +138,9 @@ public interface Table<T extends Table<T>> extends ViewElement {
 
     interface ColumnDefinition<T extends Table<T>, U> {
         U getCell(T table, int row);
+    }
+
+    interface CellDefinition<T> {
+        T getCell(ElementContext context, Locator locator);
     }
 }

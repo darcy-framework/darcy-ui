@@ -84,11 +84,6 @@ public abstract class By {
     public static Locator element(Element element) {
         return new ByElement(element);
     }
-
-    @Experimental
-    public static Locator elements(List<Element> elements) {
-        return new ByElement(elements);
-    }
     
     public static class ById implements Locator {
         private String id;
