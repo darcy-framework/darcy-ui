@@ -84,7 +84,7 @@ public class DefaultElementSelectionTest {
     public void shouldPassLocatorToViewElementConstructor() {
         ElementContext mockContext = mock(ElementContext.class);
         Locator mockLocator = mock(Locator.class);
-        ChainedViewElementFactory mockConstructor = mock(ChainedViewElementFactory.class);
+        ChainedViewFactory mockConstructor = mock(ChainedViewFactory.class);
         when(mockConstructor.newElement(any(Locator.class))).thenReturn(mock(ViewElement.class));
 
         DefaultElementSelection selection = new DefaultElementSelection(mockContext);

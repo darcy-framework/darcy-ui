@@ -19,10 +19,9 @@
 
 package com.redhat.darcy.ui.internal;
 
-import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.View;
 import com.redhat.darcy.ui.api.elements.Element;
 
-public interface ChainedViewElementFactory<T extends Element & View> {
-    T newElement(Locator parent);
+public interface NestedViewFactory<T extends View> {
+    T newElement(Element parent);
 }

@@ -23,6 +23,7 @@ import com.redhat.darcy.ui.NullContextException;
 import com.redhat.darcy.ui.api.ElementContext;
 import com.redhat.darcy.ui.api.HasElementContext;
 import com.redhat.darcy.ui.api.Locator;
+import com.redhat.darcy.ui.api.View;
 import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.util.LazyList;
 
@@ -32,12 +33,12 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.stream.Collectors;
 
-public class ViewElementList<T extends Element> implements List<T>, HasElementContext {
-    private final NestedViewElementFactory<? extends T> element;
+public class ViewList<T extends View> implements List<T>, HasElementContext {
+    private final NestedViewFactory<? extends T> element;
     private final Locator locator;
     private LazyList<T> backingList;
 
-    public ViewElementList(NestedViewElementFactory<? extends T> element, Locator locator) {
+    public ViewList(NestedViewFactory<? extends T> element, Locator locator) {
         this.element = element;
         this.locator = locator;
     }
