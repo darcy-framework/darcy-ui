@@ -45,7 +45,7 @@ public class DefaultElementSelection implements ElementSelection {
     }
 
     @Override
-    public <T extends Element & View> T elementOfType(ChainedViewFactory<T> elementCtor,
+    public <T extends View> T viewOfType(ChainedViewFactory<T> elementCtor,
             Locator locator) {
         T element = elementCtor.newElement(locator);
         element.setContext(context);
@@ -54,7 +54,7 @@ public class DefaultElementSelection implements ElementSelection {
     }
 
     @Override
-    public <T extends Element & View> List<T> elementsOfType(NestedViewFactory<T> elementCtor,
+    public <T extends View> List<T> viewsOfType(NestedViewFactory<T> elementCtor,
             Locator locator) {
         ViewList<T> elementList = new ViewList<>(elementCtor, locator);
         elementList.setContext(context);

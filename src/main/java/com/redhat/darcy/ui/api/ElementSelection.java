@@ -61,11 +61,9 @@ public interface ElementSelection extends Selection {
      */
     <T extends Element> List<T> elementsOfType(Class<T> elementType, Locator locator);
 
-    <T extends Element & View> T elementOfType(ChainedViewFactory<T> elementCtor,
-            Locator locator);
+    <T extends View> T viewOfType(ChainedViewFactory<T> elementCtor, Locator locator);
 
-    <T extends Element & View> List<T> elementsOfType(NestedViewFactory<T> elementCtor,
-            Locator locator);
+    <T extends View> List<T> viewsOfType(NestedViewFactory<T> elementCtor, Locator locator);
 
     default Element element(Locator locator) {
         return elementOfType(Element.class, locator);

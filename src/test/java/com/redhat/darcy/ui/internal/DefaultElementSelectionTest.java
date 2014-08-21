@@ -74,7 +74,7 @@ public class DefaultElementSelectionTest {
         ElementContext mockContext = mock(ElementContext.class);
 
         DefaultElementSelection selection = new DefaultElementSelection(mockContext);
-        FakeCustomElement customElement = selection.elementOfType(FakeCustomElement::new,
+        FakeCustomElement customElement = selection.viewOfType(FakeCustomElement::new,
                 mock(Locator.class));
 
         assertSame(mockContext, customElement.getContext());
@@ -88,7 +88,7 @@ public class DefaultElementSelectionTest {
         when(mockConstructor.newElement(any(Locator.class))).thenReturn(mock(ViewElement.class));
 
         DefaultElementSelection selection = new DefaultElementSelection(mockContext);
-        selection.elementOfType(mockConstructor, mockLocator);
+        selection.viewOfType(mockConstructor, mockLocator);
 
         verify(mockConstructor).newElement(mockLocator);
     }
@@ -107,7 +107,7 @@ public class DefaultElementSelectionTest {
         DefaultElementSelection selection = new DefaultElementSelection(mockContext);
 
         // When...
-        List<FakeCustomElement> elements = selection.elementsOfType(FakeCustomElement::new, mockLocator);
+        List<FakeCustomElement> elements = selection.viewsOfType(FakeCustomElement::new, mockLocator);
 
         // Should not yet have actually found the elements
         verify(mockLocator, never()).findAll(any(Class.class), any(Context.class));
@@ -132,7 +132,7 @@ public class DefaultElementSelectionTest {
         when(mockLocator.findAll(Element.class, mockContext)).thenReturn(backingList);
 
         DefaultElementSelection selection = new DefaultElementSelection(mockContext);
-        List<FakeCustomElement> elements = selection.elementsOfType(FakeCustomElement::new, mockLocator);
+        List<FakeCustomElement> elements = selection.viewsOfType(FakeCustomElement::new, mockLocator);
 
         List<Element> parentElements = elements
                 .stream()
