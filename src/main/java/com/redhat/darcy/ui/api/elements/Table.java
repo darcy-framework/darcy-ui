@@ -19,8 +19,6 @@
 
 package com.redhat.darcy.ui.api.elements;
 
-import com.redhat.darcy.ui.api.ElementContext;
-import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.ViewElement;
 
 import org.hamcrest.Matcher;
@@ -75,30 +73,22 @@ public interface Table<T extends Table<T>> extends ViewElement {
         return getRowsWhere(column, matcher::matches);
     }
 
+    default <U> Stream<U> getCellsWhere(ColumnDefinition<T, U> column, Predicate<? super U> predicate) {
+        return getRowsWhere(column, predicate)
+                .map(r -> r.getCell(column));
+    }
+
+    default <U> Stream<U> getCellsWhere(ColumnDefinition<T, U> column, Matcher<? super U> matcher) {
+        return getCellsWhere(column, matcher::matches);
+    }
+
     default boolean isEmpty() {
         return getRowCount() == 0;
     }
 
-    /*
-    // interface PaginatedTable
-    T toPage(int page);
-    T previousPage();
-    T nextPage();
-    boolean hasNextPage();
-    boolean hasPreviousPage();
-    int getCurrentPage();
-    int getTotalEntries();
-    Iterable<...?> ascendingPages();
-
-    // interface LazyPaginatedTable?
-    Optional<Integer> getMaxPages(); // Actually, let's consider leaving this to a roll interface
-                                     // so a table can have this as non optional if its there and
-                                     // just leave it off the api if not
-
-    // interface SortableTable
-    void sort(column, SortDirection direction);
-    SortDirection getSortDirectionOfHeader(column);
-     */
+    interface ColumnDefinition<T extends Table<T>, U> {
+        U getCell(T table, int row);
+    }
 
     final class Column<T extends ColumnDefinition<U, E>, U extends Table<U>, E> {
         private final U table;
@@ -111,6 +101,10 @@ public interface Table<T extends Table<T>> extends ViewElement {
 
         public E getCell(int row) {
             return column.getCell(table, row);
+        }
+
+        public U getTable() {
+            return table;
         }
     }
 
@@ -134,13 +128,5 @@ public interface Table<T extends Table<T>> extends ViewElement {
         public int getIndex() {
             return index;
         }
-    }
-
-    interface ColumnDefinition<T extends Table<T>, U> {
-        U getCell(T table, int row);
-    }
-
-    interface CellDefinition<T> {
-        T getCell(ElementContext context, Locator locator);
     }
 }
