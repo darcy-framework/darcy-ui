@@ -44,7 +44,7 @@ public interface Table<T extends Table<T>> extends ViewElement {
             @SuppressWarnings("unchecked")
             @Override
             public Row<T> next() {
-                return new Row<T>((T) Table.this, cursor);
+                return new Row<T>((T) Table.this, ++cursor);
             }
         };
     }
