@@ -26,6 +26,7 @@ import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.ui.api.elements.Label;
 import com.redhat.darcy.ui.api.elements.Link;
 import com.redhat.darcy.ui.api.elements.Select;
+import com.redhat.darcy.ui.api.elements.Text;
 import com.redhat.darcy.ui.api.elements.TextInput;
 import com.redhat.darcy.ui.internal.ElementHandler;
 import com.redhat.darcy.ui.internal.ElementListHandler;
@@ -125,5 +126,13 @@ public abstract class Elements {
     
     public static List<Select> selects(Locator locator) {
         return elements(Select.class, locator);
+    }
+
+    public static Text text(Locator locator) {
+        return element(Text.class, locator);
+    }
+
+    public static List<Text> texts(Locator locator) {
+        return elements(Text.class, locator);
     }
 }
