@@ -19,15 +19,64 @@
 
 package com.redhat.darcy.ui.api.elements;
 
+/**
+ * A role interface for tables which show one of many possible pages at a time.
+ */
 public interface PaginatedTable<T extends PaginatedTable<T>> extends Table<T> {
+    /**
+     * @param page The specific page to navigate to, in a range from 1 to {@link #getMaxPages()},
+     * inclusive.
+     * @return this
+     * @throws java.lang.IndexOutOfBoundsException if the page attempting to be navigated to is
+     * greater than {@link #getMaxPages()}.
+     */
     T toPage(int page);
+
+    /**
+     * @throws java.lang.IndexOutOfBoundsException if {@link #hasPreviousPage()} is false.
+     */
     T previousPage();
+
+    /**
+     * @throws java.lang.IndexOutOfBoundsException if {@link #hasNextPage()} is false.
+     */
     T nextPage();
+
     boolean hasNextPage();
+
     boolean hasPreviousPage();
+
     int getCurrentPage();
+
+    /**
+     * Note that not all table implementations will know all of their data at once, and so
+     * calculating the total number of entries may take a considerable amount of time, and may even
+     * require paging through every possible page. Should implementations require this, they must
+     * return to the page that was open before calling this method.
+     */
     int getTotalEntries();
+
+    /**
+     * @return An iterable which will cause the table to navigate to the first page, and every page
+     * thereafter. The iterator returns the table itself, navigated to the next page.
+     */
     Iterable<T> ascendingPages();
+
+    /**
+     * @return An iterable which will cause the table to navigate to the last page, and every page
+     * prior. The iterator returns the table itself, navigated to the previous page. Note that not
+     * all tables will be able to navigate to the last page directly, and some may require first
+     * paging through all of the pages ascending until the last page can be determined.
+     */
     Iterable<T> descendingPages();
+
+    /**
+     * Note that not all table implementations will know all of their data at once, and so
+     * calculating the total number of entries may take a considerable amount of time, and may even
+     * require paging through every possible page. Should implementations require this, they must
+     * return to the page that was open before calling this method.
+     *
+     * <p>Since page numbers start from 1, this is equivalent to the number of the last page.
+     */
     int getMaxPages();
 }

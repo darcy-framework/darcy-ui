@@ -19,6 +19,12 @@
 
 package com.redhat.darcy.ui.api.elements;
 
+/**
+ * A role interface for rich tables which are both paginated, and sortable.
+ *
+ * @see com.redhat.darcy.ui.api.elements.PaginatedTable
+ * @see com.redhat.darcy.ui.api.elements.SortableTable
+ */
 public interface PaginatedSortableTable<T extends PaginatedSortableTable<T>> extends
         PaginatedTable<T>, SortableTable<T> {
 }

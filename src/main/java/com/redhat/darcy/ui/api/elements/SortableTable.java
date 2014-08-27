@@ -21,12 +21,19 @@ package com.redhat.darcy.ui.api.elements;
 
 import javax.annotation.Nullable;
 
+/**
+ * A role interface for tables which allow sorting ascending or descending by column.
+ */
 public interface SortableTable<T extends SortableTable<T>> extends Table<T> {
     void sort(ColumnDefinition<T, ?> column, SortDirection direction);
+
+    /**
+     * @return Null if the column is not used for sorting.
+     */
     @Nullable SortDirection getSortDirection(ColumnDefinition<T, ?> column);
 
     enum SortDirection {
         ASCENDING,
-        DESCENDING;
+        DESCENDING
     }
 }
