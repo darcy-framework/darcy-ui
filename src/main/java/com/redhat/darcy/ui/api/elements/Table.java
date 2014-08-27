@@ -32,6 +32,8 @@ public interface Table<T extends Table<T>> extends ViewElement {
 
     int getRowCount();
 
+    boolean isEmpty();
+
     default Iterable<Row<T>> rows() {
         return () -> new Iterator<Row<T>>() {
             private int cursor = 0;
@@ -80,10 +82,6 @@ public interface Table<T extends Table<T>> extends ViewElement {
 
     default <U> Stream<U> getCellsWhere(ColumnDefinition<T, U> column, Matcher<? super U> matcher) {
         return getCellsWhere(column, matcher::matches);
-    }
-
-    default boolean isEmpty() {
-        return getRowCount() == 0;
     }
 
     interface ColumnDefinition<T extends Table<T>, U> {
