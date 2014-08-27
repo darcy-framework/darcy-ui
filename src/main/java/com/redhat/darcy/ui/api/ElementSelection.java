@@ -24,6 +24,7 @@ import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.ui.api.elements.Label;
 import com.redhat.darcy.ui.api.elements.Link;
 import com.redhat.darcy.ui.api.elements.Select;
+import com.redhat.darcy.ui.api.elements.Text;
 import com.redhat.darcy.ui.api.elements.TextInput;
 import com.redhat.darcy.ui.internal.ChainedViewFactory;
 import com.redhat.darcy.ui.internal.NestedViewFactory;
@@ -111,5 +112,13 @@ public interface ElementSelection extends Selection {
 
     default List<Select> selects(Locator locator) {
         return elementsOfType(Select.class, locator);
+    }
+
+    default Text text(Locator locator) {
+        return elementOfType(Text.class, locator);
+    }
+
+    default List<Text> texts(Locator locator) {
+        return elementsOfType(Text.class, locator);
     }
 }
