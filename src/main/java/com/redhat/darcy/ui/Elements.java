@@ -21,12 +21,7 @@ package com.redhat.darcy.ui;
 
 import com.redhat.darcy.ui.api.HasElementContext;
 import com.redhat.darcy.ui.api.Locator;
-import com.redhat.darcy.ui.api.elements.Button;
-import com.redhat.darcy.ui.api.elements.Element;
-import com.redhat.darcy.ui.api.elements.Label;
-import com.redhat.darcy.ui.api.elements.Link;
-import com.redhat.darcy.ui.api.elements.Select;
-import com.redhat.darcy.ui.api.elements.TextInput;
+import com.redhat.darcy.ui.api.elements.*;
 import com.redhat.darcy.ui.internal.ElementHandler;
 import com.redhat.darcy.ui.internal.ElementListHandler;
 
@@ -125,5 +120,21 @@ public abstract class Elements {
     
     public static List<Select> selects(Locator locator) {
         return elements(Select.class, locator);
+    }
+
+    public static RadioButtonGroup radioButtonGroup(Locator locator) {
+        return element(RadioButtonGroup.class, locator);
+    }
+
+    public static List<RadioButtonGroup> radioButtonGroups(Locator locator) {
+        return elements(RadioButtonGroup.class, locator);
+    }
+
+    public static Checkbox checkbox(Locator locator) {
+        return element(Checkbox.class, locator);
+    }
+
+    public static List<Checkbox> checkboxes(Locator locator) {
+        return elements(Checkbox.class, locator);
     }
 }
