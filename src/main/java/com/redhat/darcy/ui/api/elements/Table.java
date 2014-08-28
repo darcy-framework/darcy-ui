@@ -107,12 +107,32 @@ public interface Table<T extends Table<T>> extends ViewElement {
     }
 
     /**
+     * @return A specific {@link com.redhat.darcy.ui.api.elements.Table.HeadedColumn} for this
+     * table.
+     */
+    @SuppressWarnings("unchecked")
+    default <U, E> HeadedColumn<ColumnWithHeaderDefinition<T, U, E>, T, U, E> getColumn(
+            ColumnWithHeaderDefinition<T, U, E> column) {
+        return new HeadedColumn<>((T) this, column);
+    }
+
+    /**
      * @return A specific cell's contents within this table, as determined by the specified
      * {@link com.redhat.darcy.ui.api.elements.Table.ColumnDefinition} and row index.
      */
     @SuppressWarnings("unchecked")
     default <U> U getCell(ColumnDefinition<T, U> column, int row) {
         return column.getCell((T) this, row);
+    }
+
+    /**
+     * @return header A specific column's header's contents within this table, as determined by the
+     * specified {@link com.redhat.darcy.ui.api.elements.Table.HeaderDefinition}.
+     * @param <U> The type of contents within the header.
+     */
+    @SuppressWarnings("unchecked")
+    default <U> U getHeader(HeaderDefinition<T, U> header) {
+        return header.getHeader((T) this);
     }
 
     /**
@@ -187,6 +207,9 @@ public interface Table<T extends Table<T>> extends ViewElement {
         U getHeader(T table);
     }
 
+    interface ColumnWithHeaderDefinition<T extends Table<T>, U, E> extends ColumnDefinition<T, U>,
+            HeaderDefinition<T, E> {}
+
     /**
      * Represents a concrete column within a specific table instance. Given this and a row index,
      * you will be able to look up the contents of a specific cell.
@@ -202,6 +225,29 @@ public interface Table<T extends Table<T>> extends ViewElement {
         public Column(U table, T column) {
             this.table = table;
             this.column = column;
+        }
+
+        public E getCell(int row) {
+            return column.getCell(table, row);
+        }
+
+        public U getTable() {
+            return table;
+        }
+    }
+
+    final class HeadedColumn<T extends ColumnDefinition<U, E> & HeaderDefinition<U, V>,
+            U extends Table<U>, E, V> {
+        private final U table;
+        private final T column;
+
+        public HeadedColumn(U table, T column) {
+            this.table = table;
+            this.column = column;
+        }
+
+        public V getHeader() {
+            return column.getHeader(table);
         }
 
         public E getCell(int row) {
