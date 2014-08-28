@@ -173,6 +173,21 @@ public interface Table<T extends Table<T>> extends ViewElement {
     }
 
     /**
+     * Like a {@link com.redhat.darcy.ui.api.elements.Table.ColumnDefinition}, but contains the
+     * knowledge for locating the header of a particular column. Typically, a column definition
+     * will implement {@link com.redhat.darcy.ui.api.elements.Table.ColumnDefinition} alone at the
+     * very least, and if that column has a header, additionally implement
+     * {@link com.redhat.darcy.ui.api.elements.Table.HeaderDefinition}.
+     *
+     * @param <T> The class of table with which this header refers to. This will be your specific
+     * table implementation, or one of the common ones provided in implementations of darcy-ui.
+     * @param <U> The class that models the contents within the header for this column.
+     */
+    interface HeaderDefinition<T extends Table<T>, U> {
+        U getHeader(T table);
+    }
+
+    /**
      * Represents a concrete column within a specific table instance. Given this and a row index,
      * you will be able to look up the contents of a specific cell.
      *
