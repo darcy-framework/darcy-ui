@@ -20,5 +20,7 @@
 package com.redhat.darcy.ui.api.elements;
 
 public interface Checkbox extends Clickable, Element {
+    void check();
+    void uncheck();
     boolean isChecked();
 }
