@@ -19,6 +19,8 @@
 
 package com.redhat.darcy.ui.api.elements;
 
+import java.util.Iterator;
+
 /**
  * A role interface for tables which show one of many possible pages at a time.
  */
@@ -60,7 +62,22 @@ public interface PaginatedTable<T extends PaginatedTable<T>> extends Table<T> {
      * @return An iterable which will cause the table to navigate to the first page, and every page
      * thereafter. The iterator returns the table itself, navigated to the next page.
      */
-    Iterable<T> ascendingPages();
+    default Iterable<T> ascendingPages() {
+        return () -> new Iterator<T>() {
+            int cursor = 0;
+
+            @Override
+            public boolean hasNext() {
+                return cursor == 0 || hasNextPage();
+
+            }
+
+            @Override
+            public T next() {
+                return (cursor++ == 0) ? toPage(1) : nextPage();
+            }
+        };
+    }
 
     /**
      * @return An iterable which will cause the table to navigate to the last page, and every page
@@ -68,7 +85,22 @@ public interface PaginatedTable<T extends PaginatedTable<T>> extends Table<T> {
      * all tables will be able to navigate to the last page directly, and some may require first
      * paging through all of the pages ascending until the last page can be determined.
      */
-    Iterable<T> descendingPages();
+    default Iterable<T> descendingPages() {
+        return () -> new Iterator<T>() {
+            int cursor = getMaxPages() + 1;
+
+            @Override
+            public boolean hasNext() {
+                return cursor == getMaxPages() + 1 || hasPreviousPage();
+
+            }
+
+            @Override
+            public T next() {
+                return (cursor-- == getMaxPages() + 1) ? toPage(getMaxPages()) : previousPage();
+            }
+        };
+    }
 
     /**
      * Note that not all table implementations will know all of their data at once, and so
@@ -78,5 +110,13 @@ public interface PaginatedTable<T extends PaginatedTable<T>> extends Table<T> {
      *
      * <p>Since page numbers start from 1, this is equivalent to the number of the last page.
      */
-    int getMaxPages();
+    default int getMaxPages() {
+        if (!hasNextPage()) {
+            return getCurrentPage();
+        }
+
+        // Since getTotalEntries may cause the table to paginate to the last page, perform the
+        // inverse to avoid calculating the total entries before determining the row count.
+        return (int) Math.ceil((double) getRowCount() * (1.0 / (double) getTotalEntries()));
+    }
 }
