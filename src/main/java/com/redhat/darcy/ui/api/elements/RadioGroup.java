@@ -19,13 +19,9 @@
 
 package com.redhat.darcy.ui.api.elements;
 
-import com.redhat.darcy.ui.api.Locator;
-
 import java.util.List;
-import java.util.Optional;
 
-public interface RadioGroup extends Element {
-    void select(Locator locator);
+public interface RadioGroup {
     List<Radio> getOptions();
-    Optional<Radio> getSelectedOption();
+    Radio getCurrentlySelectedOption();
 }
