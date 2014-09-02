@@ -33,6 +33,7 @@ import com.redhat.darcy.ui.internal.FindsByTextContent;
 import com.redhat.darcy.ui.internal.FindsByView;
 import com.redhat.darcy.ui.internal.FindsByXPath;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -294,6 +295,17 @@ public abstract class By {
             } catch (ClassCastException cce) {
                 throw new LocatorNotSupportedException(this);
             }
+        }
+
+        @Override
+        public boolean equals(Object object) {
+            if (!(object instanceof ByChained)) {
+                return false;
+            }
+
+            ByChained other = (ByChained) object;
+
+            return Arrays.equals(locators, other.locators);
         }
     }
     

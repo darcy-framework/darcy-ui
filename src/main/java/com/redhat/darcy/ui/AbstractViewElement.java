@@ -24,6 +24,7 @@ import com.redhat.darcy.ui.api.ViewElement;
 import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.synq.Condition;
 
+import java.util.Objects;
 import java.util.function.UnaryOperator;
 
 /**
@@ -39,8 +40,9 @@ import java.util.function.UnaryOperator;
  * {@link #isPresent()} checks that all required findables are present.
  * {@link #isLoaded()} works just like {@link com.redhat.darcy.ui.AbstractView}.
  *
- * <p>Additionally, AbstractViewElement provides {@link #byInner(com.redhat.darcy.ui.api.Locator)}
- * for conveniently nesting elements underneath some other locator or element. For example:
+ * <p>Additionally, AbstractViewElement provides
+ * {@link #byInner(com.redhat.darcy.ui.api.Locator...)} for conveniently nesting elements underneath
+ * some other locator or element. For example:
  *
  * <code><pre>
  *     public class MyCustomElement extends AbstractViewElement {
@@ -50,7 +52,7 @@ import java.util.function.UnaryOperator;
  *     }
  * </pre></code>
  *
- * @see #byInner(com.redhat.darcy.ui.api.Locator)
+ * @see #byInner(com.redhat.darcy.ui.api.Locator...)
  * @see com.redhat.darcy.ui.AbstractView
  * @see com.redhat.darcy.ui.api.ViewElement
  */
@@ -64,14 +66,14 @@ public abstract class AbstractViewElement extends AbstractView implements ViewEl
     protected final Element parent;
 
     /**
-     * @see #byInner(com.redhat.darcy.ui.api.Locator)
+     * @see #byInner(com.redhat.darcy.ui.api.Locator...)
      */
     private final UnaryOperator<Locator> makeInnerLocator;
 
     /**
      * Creates a nested View underneath some parent Locator.
      *
-     * @see #byInner(com.redhat.darcy.ui.api.Locator)
+     * @see #byInner(com.redhat.darcy.ui.api.Locator...)
      */
     public AbstractViewElement(Locator parent) {
         // How to specify element type? Is this ever going to be needed?
@@ -84,7 +86,7 @@ public abstract class AbstractViewElement extends AbstractView implements ViewEl
      * may correspond to a number of elements, so each unique element found by the same locator is
      * used to construct this ViewElement to ensure each represents a unique element.
      *
-     * @see #byInner(com.redhat.darcy.ui.api.Locator)
+     * @see #byInner(com.redhat.darcy.ui.api.Locator...)
      */
     public AbstractViewElement(Element parent) {
         this(parent, l -> By.nested(parent, l));
@@ -140,10 +142,25 @@ public abstract class AbstractViewElement extends AbstractView implements ViewEl
      * a {@link com.redhat.darcy.ui.By.ByNested} with the parent element passed in the constructor,
      * and the {@code By.id("inside")}.
      *
+     * <p>If you intend to chain many locators together, instead of passing a {@code By.chained}
+     * (for example, {@code byInner(By.chained(locator1, locator2))}), you may pass additional
+     * locator arguments to {@code byInner}, and the locators will be chained for you (for example,
+     * {@code byInner(locator1, locator2)}.
+     *
      * @see #AbstractViewElement(com.redhat.darcy.ui.api.elements.Element)
      * @see #AbstractViewElement(com.redhat.darcy.ui.api.Locator)
      */
-    protected final Locator byInner(Locator locator) {
-        return makeInnerLocator.apply(locator);
+    protected final Locator byInner(Locator... locators) {
+        Objects.requireNonNull(locators, "locators");
+
+        if (locators.length == 0) {
+            throw new IllegalArgumentException("Must pass at least one Locator to byInner.");
+        }
+
+        if (locators.length == 1) {
+            return makeInnerLocator.apply(locators[0]);
+        }
+
+        return makeInnerLocator.apply(By.chained(locators));
     }
 }

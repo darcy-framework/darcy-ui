@@ -59,5 +59,18 @@ public class AbstractViewElementTest {
         verify(mockContext).findByNested(TextInput.class, mockElement, By.id("child"));
     }
 
+    @Test
+    public void shouldCreateChainedInnerLocatorsIfMultipleLocatorsPassedToByInner() {
+        TestElementContext mockContext = mock(TestElementContext.class);
+        Element mockElement = mock(Element.class);
+
+        AbstractViewElement viewElement = new AbstractViewElement(mockElement) {};
+        Locator inner = viewElement.byInner(By.id("child1"), By.id("child2"));
+        inner.find(TextInput.class, mockContext);
+
+        verify(mockContext).findByNested(TextInput.class, mockElement,
+                By.chained(By.id("child1"), By.id("child2")));
+    }
+
     interface TestElementContext extends ElementContext, FindsByChained, FindsByNested {}
 }
