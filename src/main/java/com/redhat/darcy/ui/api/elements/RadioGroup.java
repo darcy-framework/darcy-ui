@@ -20,8 +20,9 @@
 package com.redhat.darcy.ui.api.elements;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RadioGroup {
     List<Radio> getOptions();
-    Radio getCurrentlySelectedOption();
+    Optional<Radio> getSelectedOption();
 }
