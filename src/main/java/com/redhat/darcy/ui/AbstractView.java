@@ -125,7 +125,7 @@ public abstract class AbstractView implements View {
     }
 
     @Override
-    public final ElementContext getContext() {
+    public ElementContext getContext() {
         return context;
     }
 
