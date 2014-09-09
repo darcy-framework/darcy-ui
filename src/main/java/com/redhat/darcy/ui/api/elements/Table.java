@@ -37,7 +37,7 @@ import java.util.stream.StreamSupport;
  * cell".
  *
  * <p>You can see this expressed in the interaction between each interface, specifically
- * {@link com.redhat.darcy.ui.api.elements.Table.ColumnDefinition}, which may also be thought of as
+ * {@link com.redhat.darcy.ui.api.elements.Table.Column}, which may also be thought of as
  * a function which accepts a table and a row index as an argument, and spits out the contents of
  * the cell within this column at the passed row index. The contents of the cells in that column are
  * arbitrary and may be typed whatever is appropriate for that table. Many column definitions will
@@ -99,39 +99,39 @@ public interface Table<T extends Table<T>> extends ViewElement {
     }
 
     /**
-     * @return A specific {@link com.redhat.darcy.ui.api.elements.Table.Column} for this table.
+     * @return A specific {@link com.redhat.darcy.ui.api.elements.Table.TableColumn} for this table.
      */
     @SuppressWarnings("unchecked")
-    default <U> Column<ColumnDefinition<T, U>, T, U> getColumn(ColumnDefinition<T, U> column) {
-        return new Column<>((T) this, column);
+    default <U> TableColumn<Column<T, U>, T, U> getColumn(Column<T, U> column) {
+        return new TableColumn<>((T) this, column);
     }
 
     /**
-     * @return A specific {@link com.redhat.darcy.ui.api.elements.Table.HeadedColumn} for this
+     * @return A specific {@link com.redhat.darcy.ui.api.elements.Table.HeadedTableColumn} for this
      * table.
      */
     @SuppressWarnings("unchecked")
-    default <U, E> HeadedColumn<ColumnWithHeaderDefinition<T, U, E>, T, U, E> getColumn(
-            ColumnWithHeaderDefinition<T, U, E> column) {
-        return new HeadedColumn<>((T) this, column);
+    default <U, E> HeadedTableColumn<ColumnWithHeader<T, U, E>, T, U, E> getColumn(
+            ColumnWithHeader<T, U, E> column) {
+        return new HeadedTableColumn<>((T) this, column);
     }
 
     /**
      * @return A specific cell's contents within this table, as determined by the specified
-     * {@link com.redhat.darcy.ui.api.elements.Table.ColumnDefinition} and row index.
+     * {@link com.redhat.darcy.ui.api.elements.Table.Column} and row index.
      */
     @SuppressWarnings("unchecked")
-    default <U> U getCell(ColumnDefinition<T, U> column, int row) {
+    default <U> U getCell(Column<T, U> column, int row) {
         return column.getCell((T) this, row);
     }
 
     /**
      * @return header A specific column's header's contents within this table, as determined by the
-     * specified {@link com.redhat.darcy.ui.api.elements.Table.HeaderDefinition}.
+     * specified {@link com.redhat.darcy.ui.api.elements.Table.Header}.
      * @param <U> The type of contents within the header.
      */
     @SuppressWarnings("unchecked")
-    default <U> U getHeader(HeaderDefinition<T, U> header) {
+    default <U> U getHeader(Header<T, U> header) {
         return header.getHeader((T) this);
     }
 
@@ -139,7 +139,7 @@ public interface Table<T extends Table<T>> extends ViewElement {
      * @return A filtered {@link java.util.stream.Stream} of the rows in this table where the
      * contents of a particular column match the specified {@link java.util.function.Predicate}.
      */
-    default <U> Stream<Row<T>> getRowsWhere(ColumnDefinition<T, U> column, Predicate<? super U> predicate) {
+    default <U> Stream<Row<T>> getRowsWhere(Column<T, U> column, Predicate<? super U> predicate) {
         return StreamSupport.stream(rows().spliterator(), false)
                 .filter(r -> predicate.test(r.getCell(column)));
     }
@@ -148,32 +148,32 @@ public interface Table<T extends Table<T>> extends ViewElement {
      * @return A filtered {@link java.util.stream.Stream} of the rows in this table where the
      * contents of a particular column match the specified Hamcrest {@link org.hamcrest.Matcher}.
      */
-    default <U> Stream<Row<T>> getRowsWhere(ColumnDefinition<T, U> column, Matcher<? super U> matcher) {
+    default <U> Stream<Row<T>> getRowsWhere(Column<T, U> column, Matcher<? super U> matcher) {
         return getRowsWhere(column, matcher::matches);
     }
 
     /**
      * @return Like
-     * {@link #getRowsWhere(com.redhat.darcy.ui.api.elements.Table.ColumnDefinition, java.util.function.Predicate)},
+     * {@link #getRowsWhere(com.redhat.darcy.ui.api.elements.Table.Column, java.util.function.Predicate)},
      * except instead of returning a stream of rows, returns a stream of the exact cells that
      * matched the specified predicate within the specified column. Useful if you want the contents
      * of cells that match some range of possible values, and you would like to inspect the actual
      * values.
      */
-    default <U> Stream<U> getCellsWhere(ColumnDefinition<T, U> column, Predicate<? super U> predicate) {
+    default <U> Stream<U> getCellsWhere(Column<T, U> column, Predicate<? super U> predicate) {
         return getRowsWhere(column, predicate)
                 .map(r -> r.getCell(column));
     }
 
     /**
      * @return Like
-     * {@link #getRowsWhere(com.redhat.darcy.ui.api.elements.Table.ColumnDefinition, org.hamcrest.Matcher)},
+     * {@link #getRowsWhere(com.redhat.darcy.ui.api.elements.Table.Column, org.hamcrest.Matcher)},
      * except instead of returning a stream of rows, returns a stream of the exact cells that
      * matched the specified matcher within the specified column. Useful if you want the contents
      * of cells that match some range of possible values, and you would like to inspect the actual
      * values.
      */
-    default <U> Stream<U> getCellsWhere(ColumnDefinition<T, U> column, Matcher<? super U> matcher) {
+    default <U> Stream<U> getCellsWhere(Column<T, U> column, Matcher<? super U> matcher) {
         return getCellsWhere(column, matcher::matches);
     }
 
@@ -188,27 +188,27 @@ public interface Table<T extends Table<T>> extends ViewElement {
      * table implementation, or one of the common ones provided in implementations of darcy-ui.
      * @param <U> The class that models the contents within cells of this column.
      */
-    interface ColumnDefinition<T extends Table<T>, U> {
-        U getCell(T table, int row);
+    interface Column<T extends Table<T>, U> {
+        U getCell(T table, int rowIndex);
     }
 
     /**
-     * Like a {@link com.redhat.darcy.ui.api.elements.Table.ColumnDefinition}, but contains the
+     * Like a {@link com.redhat.darcy.ui.api.elements.Table.Column}, but contains the
      * knowledge for locating the header of a particular column. Typically, a column definition
-     * will implement {@link com.redhat.darcy.ui.api.elements.Table.ColumnDefinition} alone at the
+     * will implement {@link com.redhat.darcy.ui.api.elements.Table.Column} alone at the
      * very least, and if that column has a header, additionally implement
-     * {@link com.redhat.darcy.ui.api.elements.Table.HeaderDefinition}.
+     * {@link com.redhat.darcy.ui.api.elements.Table.Header}.
      *
      * @param <T> The class of table with which this header refers to. This will be your specific
      * table implementation, or one of the common ones provided in implementations of darcy-ui.
      * @param <U> The class that models the contents within the header for this column.
      */
-    interface HeaderDefinition<T extends Table<T>, U> {
+    interface Header<T extends Table<T>, U> {
         U getHeader(T table);
     }
 
-    interface ColumnWithHeaderDefinition<T extends Table<T>, U, E> extends ColumnDefinition<T, U>,
-            HeaderDefinition<T, E> {}
+    interface ColumnWithHeader<T extends Table<T>, U, E> extends Column<T, U>,
+            Header<T, E> {}
 
     /**
      * Represents a concrete column within a specific table instance. Given this and a row index,
@@ -218,11 +218,11 @@ public interface Table<T extends Table<T>> extends ViewElement {
      * @param <U> The type of table this column is within.
      * @param <E> The type of the cell content within this column.
      */
-    final class Column<T extends ColumnDefinition<U, E>, U extends Table<U>, E> {
+    final class TableColumn<T extends Column<U, E>, U extends Table<U>, E> {
         private final U table;
         private final T column;
 
-        public Column(U table, T column) {
+        public TableColumn(U table, T column) {
             this.table = table;
             this.column = column;
         }
@@ -236,12 +236,12 @@ public interface Table<T extends Table<T>> extends ViewElement {
         }
     }
 
-    final class HeadedColumn<T extends ColumnDefinition<U, E> & HeaderDefinition<U, V>,
+    final class HeadedTableColumn<T extends Column<U, E> & Header<U, V>,
             U extends Table<U>, E, V> {
         private final U table;
         private final T column;
 
-        public HeadedColumn(U table, T column) {
+        public HeadedTableColumn(U table, T column) {
             this.table = table;
             this.column = column;
         }
@@ -275,7 +275,7 @@ public interface Table<T extends Table<T>> extends ViewElement {
             this.index = index;
         }
 
-        public <U> U getCell(ColumnDefinition<T, U> column) {
+        public <U> U getCell(Column<T, U> column) {
             return column.getCell(getTable(), getIndex());
         }
 

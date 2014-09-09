@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  */
 public interface SortableTable<T extends SortableTable<T>> extends Table<T> {
     @SuppressWarnings("unchecked")
-    default void sort(SortableColumnDefinition<T, ?> column, SortDirection direction) {
+    default void sort(SortableColumn<T, ?> column, SortDirection direction) {
         column.sort((T) this, direction);
     }
 
@@ -34,29 +34,29 @@ public interface SortableTable<T extends SortableTable<T>> extends Table<T> {
      * @return Null if the column is not used for sorting.
      */
     @SuppressWarnings("unchecked")
-    default @Nullable SortDirection getSortDirection(SortableColumnDefinition<T, ?> column) {
+    default @Nullable SortDirection getSortDirection(SortableColumn<T, ?> column) {
         return column.getSortDirection((T) this);
     }
 
     /**
-     * @return A specific {@link com.redhat.darcy.ui.api.elements.Table.Column} for this table.
+     * @return A specific {@link com.redhat.darcy.ui.api.elements.Table.TableColumn} for this table.
      */
     @SuppressWarnings("unchecked")
-    default <U> SortableColumn<ColumnDefinition<T, U>, T, U> getColumn(SortableColumnDefinition<T, U> column) {
-        return new SortableColumn<>((T) this, column);
+    default <U> SortableTableColumn<SortableColumn<T, U>, T, U> getColumn(SortableColumn<T, U> column) {
+        return new SortableTableColumn((T) this, column);
     }
 
     /**
-     * @return A specific {@link com.redhat.darcy.ui.api.elements.Table.HeadedColumn} for this
+     * @return A specific {@link com.redhat.darcy.ui.api.elements.Table.HeadedTableColumn} for this
      * table.
      */
     @SuppressWarnings("unchecked")
-    default <U, E> SortableHeadedColumn<SortableColumnWithHeaderDefinition<T, U, E>, T, U, E> getColumn(
-            SortableColumnWithHeaderDefinition<T, U, E> column) {
-        return new SortableHeadedColumn<>((T) this, column);
+    default <U, E> SortableHeadedTableColumn<SortableColumnWithHeader<T, U, E>, T, U, E> getColumn(
+            SortableColumnWithHeader<T, U, E> column) {
+        return new SortableHeadedTableColumn<>((T) this, column);
     }
 
-    interface SortableColumnDefinition<T extends Table<T>, U> extends ColumnDefinition<T, U> {
+    interface SortableColumn<T extends Table<T>, U> extends Column<T, U> {
         void sort(T table, SortDirection direction);
 
         /**
@@ -65,8 +65,8 @@ public interface SortableTable<T extends SortableTable<T>> extends Table<T> {
         @Nullable SortDirection getSortDirection(T table);
     }
 
-    interface SortableColumnWithHeaderDefinition<T extends Table<T>, U, E>
-            extends ColumnWithHeaderDefinition<T, U, E>, SortableColumnDefinition<T, U> {}
+    interface SortableColumnWithHeader<T extends Table<T>, U, E>
+            extends ColumnWithHeader<T, U, E>, SortableColumn<T, U> {}
 
     /**
      * Represents a concrete column within a specific table instance. Given this and a row index,
@@ -76,11 +76,11 @@ public interface SortableTable<T extends SortableTable<T>> extends Table<T> {
      * @param <U> The type of table this column is within.
      * @param <E> The type of the cell content within this column.
      */
-    final class SortableColumn<T extends ColumnDefinition<U, E>, U extends Table<U>, E> {
+    final class SortableTableColumn<T extends Column<U, E>, U extends Table<U>, E> {
         private final U table;
         private final T column;
 
-        public SortableColumn(U table, T column) {
+        public SortableTableColumn(U table, T column) {
             this.table = table;
             this.column = column;
         }
@@ -94,12 +94,12 @@ public interface SortableTable<T extends SortableTable<T>> extends Table<T> {
         }
     }
 
-    final class SortableHeadedColumn<T extends SortableColumnDefinition<U, E>
-            & HeaderDefinition<U, V>, U extends Table<U>, E, V> {
+    final class SortableHeadedTableColumn<T extends SortableColumn<U, E> & Header<U, V>,
+            U extends Table<U>, E, V> {
         private final U table;
         private final T column;
 
-        public SortableHeadedColumn(U table, T column) {
+        public SortableHeadedTableColumn(U table, T column) {
             this.table = table;
             this.column = column;
         }
