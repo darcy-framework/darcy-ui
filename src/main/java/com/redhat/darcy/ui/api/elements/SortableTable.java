@@ -76,13 +76,21 @@ public interface SortableTable<T extends SortableTable<T>> extends Table<T> {
      * @param <U> The type of table this column is within.
      * @param <E> The type of the cell content within this column.
      */
-    final class SortableTableColumn<T extends Column<U, E>, U extends Table<U>, E> {
+    final class SortableTableColumn<T extends SortableColumn<U, E>, U extends Table<U>, E> {
         private final U table;
         private final T column;
 
         public SortableTableColumn(U table, T column) {
             this.table = table;
             this.column = column;
+        }
+
+        public void sort(SortDirection direction) {
+            column.sort(table, direction);
+        }
+
+        public @Nullable SortDirection getSortDirection() {
+            return column.getSortDirection(table);
         }
 
         public E getCell(int row) {
