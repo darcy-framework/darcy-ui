@@ -93,8 +93,8 @@ public interface SortableTable<T extends SortableTable<T>> extends Table<T> {
             return column.getSortDirection(table);
         }
 
-        public E getCell(int row) {
-            return column.getCell(table, row);
+        public E getCell(int rowIndex) {
+            return column.getCell(table, rowIndex);
         }
 
         public U getTable() {
@@ -124,8 +124,8 @@ public interface SortableTable<T extends SortableTable<T>> extends Table<T> {
             return column.getHeader(table);
         }
 
-        public E getCell(int row) {
-            return column.getCell(table, row);
+        public E getCell(int rowIndex) {
+            return column.getCell(table, rowIndex);
         }
 
         public U getTable() {

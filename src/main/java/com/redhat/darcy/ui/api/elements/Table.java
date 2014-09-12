@@ -104,8 +104,8 @@ public interface Table<T extends Table<T>> extends ViewElement {
      * @return A specific {@link com.redhat.darcy.ui.api.elements.Table.Row} for this table.
      */
     @SuppressWarnings("unchecked")
-    default Row<T> getRow(int row) {
-        return new Row<>((T) this, row);
+    default Row<T> getRow(int rowIndex) {
+        return new Row<>((T) this, rowIndex);
     }
 
     /**
@@ -131,8 +131,8 @@ public interface Table<T extends Table<T>> extends ViewElement {
      * {@link com.redhat.darcy.ui.api.elements.Table.Column} and row index.
      */
     @SuppressWarnings("unchecked")
-    default <U> U getCell(Column<T, U> column, int row) {
-        return column.getCell((T) this, row);
+    default <U> U getCell(Column<T, U> column, int rowIndex) {
+        return column.getCell((T) this, rowIndex);
     }
 
     /**
@@ -237,8 +237,8 @@ public interface Table<T extends Table<T>> extends ViewElement {
             this.column = column;
         }
 
-        public E getCell(int row) {
-            return column.getCell(table, row);
+        public E getCell(int rowIndex) {
+            return column.getCell(table, rowIndex);
         }
 
         public U getTable() {
@@ -270,8 +270,8 @@ public interface Table<T extends Table<T>> extends ViewElement {
             return column.getHeader(table);
         }
 
-        public E getCell(int row) {
-            return column.getCell(table, row);
+        public E getCell(int rowIndex) {
+            return column.getCell(table, rowIndex);
         }
 
         public U getTable() {
