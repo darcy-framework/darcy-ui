@@ -29,19 +29,29 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 /**
- * Tables are constructed of rows and columns. Columns can contain any arbitrary configuration of
- * elements (which could themselves be considered views), and it is assumed that every row in a
- * column has a consistent element configuration (or at least consistent logic to determine what is
- * inside a cell within that column given a particular row). Given this, the general "equation" of
- * this interface and related interfaces is, "table + row index + column definition = content of a
- * cell".
+ * Tables are constructed of rows and columns. Cells can contain any arbitrary configuration of
+ * elements, and it is assumed that every row in a column has a consistent element configuration (or
+ * at least consistent logic to determine what is inside a cell within that column given a
+ * particular row). Given this, the general "equation" of this interface and related interfaces is,
+ * "table + row index + column = content of a cell", which should intuitively make sense.
  *
  * <p>You can see this expressed in the interaction between each interface, specifically
  * {@link com.redhat.darcy.ui.api.elements.Table.Column}, which may also be thought of as
  * a function which accepts a table and a row index as an argument, and spits out the contents of
  * the cell within this column at the passed row index. The contents of the cells in that column are
  * arbitrary and may be typed whatever is appropriate for that table. Many column definitions will
- * return Strings or other element types.
+ * return Strings or other element types, such as Checkboxes or Links.
+ *
+ * <p>Knowledge about how to retrieve particular content is contained with column implementations.
+ * This makes sense: columns are typed by the content of cells in that column. If one column has
+ * only text in it, and another has checkboxes, those are clearly different column implementations.
+ * This means that defining a table within your View is not merely about implementing this
+ * interface, but also necessarily implementing some
+ * {@link com.redhat.darcy.ui.api.elements.Table.Column}s. Otherwise, no content in your table would
+ * actually be retrievable. It is common, then, to implement table (whether directly or by extending
+ * a base class), for each different table that would appear in your view. Then, within that class,
+ * have appropriately visible instances of {@link com.redhat.darcy.ui.api.elements.Table.Column}
+ * that can be used in cooperation with an instance of that table.
  *
  * <p>Your instinct may be to consider a table an element, however tables are really
  * {@link com.redhat.darcy.ui.api.ViewElement ViewElements}&mdash;they may behave as a
@@ -236,6 +246,16 @@ public interface Table<T extends Table<T>> extends ViewElement {
         }
     }
 
+    /**
+     * Represents a concrete column within a specific table instance. Given this and a row index,
+     * you will be able to look up the contents of a specific cell.
+     *
+     * <p>This column also contains a header of some type.
+     *
+     * @param <T> The type of the definition for this column.
+     * @param <U> The type of table this column is within.
+     * @param <E> The type of the cell content within this column.
+     */
     final class HeadedTableColumn<T extends Column<U, E> & Header<U, V>,
             U extends Table<U>, E, V> {
         private final U table;
