@@ -117,6 +117,6 @@ public interface PaginatedTable<T extends PaginatedTable<T>> extends Table<T> {
 
         // Since getTotalEntries may cause the table to paginate to the last page, perform the
         // inverse to avoid calculating the total entries before determining the row count.
-        return (int) Math.ceil((double) getRowCount() * (1.0 / (double) getTotalEntries()));
+        return (int) Math.ceil((double) getTotalEntries() * (1.0 / (double) getRowCount()));
     }
 }
