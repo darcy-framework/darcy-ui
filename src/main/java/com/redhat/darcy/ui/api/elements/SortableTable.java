@@ -20,6 +20,7 @@
 package com.redhat.darcy.ui.api.elements;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 /**
  * A role interface for tables which allow sorting ascending or descending by column.
@@ -81,8 +82,8 @@ public interface SortableTable<T extends SortableTable<T>> extends Table<T> {
         private final T column;
 
         public SortableTableColumn(U table, T column) {
-            this.table = table;
-            this.column = column;
+            this.table = Objects.requireNonNull(table, "table");
+            this.column = Objects.requireNonNull(column, "column");
         }
 
         public void sort(SortDirection direction) {
@@ -100,6 +101,26 @@ public interface SortableTable<T extends SortableTable<T>> extends Table<T> {
         public U getTable() {
             return table;
         }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(table, column);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (o == null) {
+                return false;
+            }
+
+            if (!(o instanceof SortableTableColumn)) {
+                return false;
+            }
+
+            SortableTableColumn other = (SortableTableColumn) o;
+
+            return other.table.equals(table) && other.column.equals(column);
+        }
     }
 
     final class SortableHeadedTableColumn<T extends SortableColumn<U, E> & Header<U, V>,
@@ -108,8 +129,8 @@ public interface SortableTable<T extends SortableTable<T>> extends Table<T> {
         private final T column;
 
         public SortableHeadedTableColumn(U table, T column) {
-            this.table = table;
-            this.column = column;
+            this.table = Objects.requireNonNull(table, "table");
+            this.column = Objects.requireNonNull(column, "column");
         }
 
         public void sort(SortDirection direction) {
@@ -130,6 +151,26 @@ public interface SortableTable<T extends SortableTable<T>> extends Table<T> {
 
         public U getTable() {
             return table;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(table, column);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (o == null) {
+                return false;
+            }
+
+            if (!(o instanceof SortableHeadedTableColumn)) {
+                return false;
+            }
+
+            SortableHeadedTableColumn other = (SortableHeadedTableColumn) o;
+
+            return other.table.equals(table) && other.column.equals(column);
         }
     }
 

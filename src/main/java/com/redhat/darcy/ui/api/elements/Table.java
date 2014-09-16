@@ -242,8 +242,8 @@ public interface Table<T extends Table<T>> extends ViewElement {
         private final T column;
 
         public TableColumn(U table, T column) {
-            this.table = table;
-            this.column = column;
+            this.table = Objects.requireNonNull(table, "table");
+            this.column = Objects.requireNonNull(column, "column");
         }
 
         public E getCell(int rowIndex) {
@@ -252,6 +252,26 @@ public interface Table<T extends Table<T>> extends ViewElement {
 
         public U getTable() {
             return table;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(table, column);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (o == null) {
+                return false;
+            }
+
+            if (!(o instanceof TableColumn)) {
+                return false;
+            }
+
+            TableColumn other = (TableColumn) o;
+
+            return other.table.equals(table) && other.column.equals(column);
         }
     }
 
@@ -271,8 +291,8 @@ public interface Table<T extends Table<T>> extends ViewElement {
         private final T column;
 
         public HeadedTableColumn(U table, T column) {
-            this.table = table;
-            this.column = column;
+            this.table = Objects.requireNonNull(table, "table");
+            this.column = Objects.requireNonNull(column, "column");
         }
 
         public V getHeader() {
@@ -285,6 +305,26 @@ public interface Table<T extends Table<T>> extends ViewElement {
 
         public U getTable() {
             return table;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(table, column);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (o == null) {
+                return false;
+            }
+
+            if (!(o instanceof HeadedTableColumn)) {
+                return false;
+            }
+
+            HeadedTableColumn other = (HeadedTableColumn) o;
+
+            return other.table.equals(table) && other.column.equals(column);
         }
     }
 
@@ -300,8 +340,8 @@ public interface Table<T extends Table<T>> extends ViewElement {
         private final int index;
 
         public Row(T table, int index) {
-            this.table = table;
-            this.index = index;
+            this.table = Objects.requireNonNull(table, "table");
+            this.index = Objects.requireNonNull(index, "index");
         }
 
         public <U> U getCell(Column<T, U> column) {
@@ -321,6 +361,26 @@ public interface Table<T extends Table<T>> extends ViewElement {
             Objects.requireNonNull(o, "o");
 
             return index - o.index;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(table, index);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (o == null) {
+                return false;
+            }
+
+            if (!(o instanceof Row)) {
+                return false;
+            }
+
+            Row other = (Row) o;
+
+            return other.index == index && other.table.equals(table);
         }
     }
 }
