@@ -103,6 +103,11 @@ public interface SortableTable<T extends SortableTable<T>> extends Table<T> {
         }
 
         @Override
+        public String toString() {
+            return "SortableTableColumn: {table: " + table + ", column: " + column + "}";
+        }
+
+        @Override
         public int hashCode() {
             return Objects.hash(table, column);
         }
@@ -151,6 +156,11 @@ public interface SortableTable<T extends SortableTable<T>> extends Table<T> {
 
         public U getTable() {
             return table;
+        }
+
+        @Override
+        public String toString() {
+            return "SortableHeadedTableColumn: {table: " + table + ", column: " + column + "}";
         }
 
         @Override

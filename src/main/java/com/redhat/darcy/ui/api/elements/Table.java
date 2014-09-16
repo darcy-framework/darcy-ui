@@ -255,6 +255,11 @@ public interface Table<T extends Table<T>> extends ViewElement {
         }
 
         @Override
+        public String toString() {
+            return "TableColumn: {table: " + table + ", column: " + column + "}";
+        }
+
+        @Override
         public int hashCode() {
             return Objects.hash(table, column);
         }
@@ -308,6 +313,11 @@ public interface Table<T extends Table<T>> extends ViewElement {
         }
 
         @Override
+        public String toString() {
+            return "HeadedTableColumn: {table: " + table + ", column: " + column + "}";
+        }
+
+        @Override
         public int hashCode() {
             return Objects.hash(table, column);
         }
@@ -354,6 +364,11 @@ public interface Table<T extends Table<T>> extends ViewElement {
 
         public int getIndex() {
             return index;
+        }
+
+        @Override
+        public String toString() {
+            return "Row: {table: " + table + ", index: " + index + "}";
         }
 
         @Override
