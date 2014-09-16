@@ -19,11 +19,18 @@
 
 package com.redhat.darcy.ui.api.elements;
 
+import static java.util.Spliterator.DISTINCT;
+import static java.util.Spliterator.NONNULL;
+import static java.util.Spliterator.ORDERED;
+import static java.util.Spliterator.SORTED;
+
 import com.redhat.darcy.ui.api.ViewElement;
 
 import org.hamcrest.Matcher;
 
 import java.util.Iterator;
+import java.util.Objects;
+import java.util.Spliterators;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -150,7 +157,9 @@ public interface Table<T extends Table<T>> extends ViewElement {
      * contents of a particular column match the specified {@link java.util.function.Predicate}.
      */
     default <U> Stream<Row<T>> getRowsWhere(Column<T, U> column, Predicate<? super U> predicate) {
-        return StreamSupport.stream(rows().spliterator(), false)
+        return StreamSupport.stream(
+                Spliterators.spliterator(rows().iterator(), getRowCount(),
+                        DISTINCT | ORDERED | SORTED | NONNULL), false)
                 .filter(r -> predicate.test(r.getCell(column)));
     }
 
@@ -286,7 +295,7 @@ public interface Table<T extends Table<T>> extends ViewElement {
      *
      * @param <T> The type of table this row is within.
      */
-    final class Row<T extends Table<T>> {
+    final class Row<T extends Table<T>> implements Comparable<Row<T>> {
         private final T table;
         private final int index;
 
@@ -305,6 +314,13 @@ public interface Table<T extends Table<T>> extends ViewElement {
 
         public int getIndex() {
             return index;
+        }
+
+        @Override
+        public int compareTo(Row<T> o) {
+            Objects.requireNonNull(o, "o");
+
+            return index - o.index;
         }
     }
 }
