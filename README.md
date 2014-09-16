@@ -29,7 +29,7 @@ public class MyHomePage extends AbstractView {
   private Button submit = button(By.id("submit"));
 
   @NotRequired
-  private Label errorMsg = label(By.class("error"));
+  private Label errorMsg = label(By.className("error"));
 
   public AccountDetails login(Credentials credentials) {
     login.clearAndType(credentials.login());
