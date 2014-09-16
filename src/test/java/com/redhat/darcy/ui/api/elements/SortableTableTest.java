@@ -77,8 +77,10 @@ public class SortableTableTest {
         assertSame(testTable, column.getTable());
 
         column.getCell(7);
+        column.sort(SortDirection.ASCENDING);
 
         verify(testColumn).getCell(testTable, 7);
+        verify(testColumn).sort(testTable, SortDirection.ASCENDING);
     }
 
     @Test
@@ -93,9 +95,11 @@ public class SortableTableTest {
 
         column.getCell(7);
         column.getHeader();
+        column.sort(SortDirection.DESCENDING);
 
         verify(testColumn).getCell(testTable, 7);
         verify(testColumn).getHeader(testTable);
+        verify(testColumn).sort(testTable, SortDirection.DESCENDING);
     }
 
     interface TestSortableColumn extends SortableColumn<StubSortableTable, String> {}
