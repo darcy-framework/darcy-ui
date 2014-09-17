@@ -33,13 +33,13 @@ import com.redhat.darcy.ui.api.elements.Element;
  * allows ViewElements to be used alongside other element fields and be equally readable. For
  * example:
  *
- * <code><pre>
+ * <pre><code>
  *     public class Widget implements ViewElement {
  *         public static Widget widget(Locator locator) {
  *             return new Widget(locator);
  *         }
  *
- *         public static List<Widget> widgets(Locator locator) {
+ *         public static List{@code<Widget>} widgets(Locator locator) {
  *             return new ViewElementList(Widget::new, locator);
  *         }
  *
@@ -51,7 +51,7 @@ import com.redhat.darcy.ui.api.elements.Element;
  *           // Handle nesting under an element
  *         }
  *     }
- * </pre></code>
+ * </code></pre>
  *
  * <p>To greatly simplify implementations, consider extending
  * {@link com.redhat.darcy.ui.AbstractViewElement}.

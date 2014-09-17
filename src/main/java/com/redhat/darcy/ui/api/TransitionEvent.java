@@ -23,7 +23,8 @@ import com.redhat.synq.Event;
 
 /**
  * A TransitionEvent is some awaitable {@link com.redhat.synq.Event} that marks the completed 
- * transition from one {@link com.redhat.darcy.ui.api.View} to another within the same {@link ViewContext}.
+ * transition from one {@link com.redhat.darcy.ui.api.View} to another within the same
+ * {@link com.redhat.darcy.ui.api.ElementContext}.
  * <P>
  * It can create other, similar Events if we expect this View to be loaded in a different context.
  * @param <T> The type of View to transition to.

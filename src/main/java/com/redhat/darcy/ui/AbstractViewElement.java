@@ -44,13 +44,13 @@ import java.util.function.UnaryOperator;
  * {@link #byInner(com.redhat.darcy.ui.api.Locator...)} for conveniently nesting elements underneath
  * some other locator or element. For example:
  *
- * <code><pre>
+ * <pre><code>
  *     public class MyCustomElement extends AbstractViewElement {
  *         private TextInput input = textInput(byInner(By.id("input"));
  *
  *         // snip
  *     }
- * </pre></code>
+ * </code></pre>
  *
  * @see #byInner(com.redhat.darcy.ui.api.Locator...)
  * @see com.redhat.darcy.ui.AbstractView

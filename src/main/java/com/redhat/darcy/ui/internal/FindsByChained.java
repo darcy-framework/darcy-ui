@@ -31,7 +31,7 @@ public interface FindsByChained {
     /**
      * Returns this context where all look ups will start from the specified root locator,
      * essentially transforming every locator on this context with a unary operator:
-     * L -> By.chained(root, L)
+     * {@code L -> By.chained(root, L)}
      */
     @Deprecated
     ElementContext withRootLocator(Locator root);
