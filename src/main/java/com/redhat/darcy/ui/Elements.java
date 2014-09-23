@@ -26,7 +26,7 @@ import com.redhat.darcy.ui.api.elements.Checkbox;
 import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.ui.api.elements.Label;
 import com.redhat.darcy.ui.api.elements.Link;
-import com.redhat.darcy.ui.api.elements.RadioButtonGroup;
+import com.redhat.darcy.ui.api.elements.Radio;
 import com.redhat.darcy.ui.api.elements.Select;
 import com.redhat.darcy.ui.api.elements.Text;
 import com.redhat.darcy.ui.api.elements.TextInput;
@@ -130,12 +130,12 @@ public abstract class Elements {
         return elements(Select.class, locator);
     }
 
-    public static RadioButtonGroup radioButtonGroup(Locator locator) {
-        return element(RadioButtonGroup.class, locator);
+    public static Radio radio(Locator locator) {
+        return element(Radio.class, locator);
     }
 
-    public static List<RadioButtonGroup> radioButtonGroups(Locator locator) {
-        return elements(RadioButtonGroup.class, locator);
+    public static List<Radio> radios(Locator locator) {
+        return elements(Radio.class, locator);
     }
 
     public static Checkbox checkbox(Locator locator) {
