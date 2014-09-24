@@ -23,6 +23,7 @@ import com.redhat.darcy.ui.api.HasElementContext;
 import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.elements.Button;
 import com.redhat.darcy.ui.api.elements.Element;
+import com.redhat.darcy.ui.api.elements.FileSelect;
 import com.redhat.darcy.ui.api.elements.Label;
 import com.redhat.darcy.ui.api.elements.Link;
 import com.redhat.darcy.ui.api.elements.Select;
@@ -134,5 +135,13 @@ public abstract class Elements {
 
     public static List<Text> texts(Locator locator) {
         return elements(Text.class, locator);
+    }
+
+    public static FileSelect fileSelect(Locator locator) {
+        return element(FileSelect.class, locator);
+    }
+
+    public static List<FileSelect> fileSelects(Locator locator) {
+        return elements(FileSelect.class, locator);
     }
 }
