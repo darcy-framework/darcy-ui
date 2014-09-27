@@ -34,6 +34,7 @@ import com.redhat.darcy.ui.internal.FindsByXPath;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A helper class with static factories for {@link com.redhat.darcy.ui.api.Locator}s, inspired by
@@ -72,8 +73,8 @@ public abstract class By {
         return new ByChained(locators);
     }
     
-    public static Locator nested(Element parent, Locator child) {
-        return new ByNested(parent, child);
+    public static Locator nested(Element parent, Locator child, Locator... additional) {
+        return new ByNested(parent, child, additional);
     }
     
     public static class ById implements Locator {
@@ -312,9 +313,19 @@ public abstract class By {
         private final Element parent;
         private final Locator child;
         
-        public ByNested(Element parent, Locator child) {
+        public ByNested(Element parent, Locator child, Locator... additional) {
+            Objects.requireNonNull(child, "child");
+            Objects.requireNonNull(parent, "parent");
+
+            if (additional != null) {
+                Locator[] locators = new Locator[additional.length + 1];
+                System.arraycopy(additional, 0, locators, 1, additional.length);
+                this.child = By.chained(locators);
+            } else {
+                this.child = child;
+            }
+
             this.parent = parent;
-            this.child = child;
         }
         
         @Override
