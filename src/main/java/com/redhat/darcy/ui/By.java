@@ -23,7 +23,6 @@ import com.redhat.darcy.ui.api.Context;
 import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.View;
 import com.redhat.darcy.ui.api.elements.Element;
-import com.redhat.darcy.ui.internal.FindsByChained;
 import com.redhat.darcy.ui.internal.FindsById;
 import com.redhat.darcy.ui.internal.FindsByLinkText;
 import com.redhat.darcy.ui.internal.FindsByName;
@@ -282,7 +281,7 @@ public abstract class By {
         @Override
         public <T> List<T> findAll(Class<T> type, Context context) {
             try {
-                return ((FindsByChained) context).findAllByChained(type, locators);
+                return ((FindsByNested) context).findAllByChained(type, locators);
             } catch (ClassCastException cce) {
                 throw new LocatorNotSupportedException(this);
             }
@@ -291,7 +290,7 @@ public abstract class By {
         @Override
         public <T> T find(Class<T> type, Context context) {
             try {
-                return ((FindsByChained) context).findByChained(type, locators);
+                return ((FindsByNested) context).findByChained(type, locators);
             } catch (ClassCastException cce) {
                 throw new LocatorNotSupportedException(this);
             }

@@ -27,7 +27,6 @@ import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.elements.Button;
 import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.ui.api.elements.TextInput;
-import com.redhat.darcy.ui.internal.FindsByChained;
 import com.redhat.darcy.ui.internal.FindsByNested;
 
 import org.junit.Test;
@@ -72,5 +71,5 @@ public class AbstractViewElementTest {
                 By.chained(By.id("child1"), By.id("child2")));
     }
 
-    interface TestElementContext extends ElementContext, FindsByChained, FindsByNested {}
+    interface TestElementContext extends ElementContext, FindsByNested {}
 }

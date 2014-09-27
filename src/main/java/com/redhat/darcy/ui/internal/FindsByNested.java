@@ -28,6 +28,8 @@ import java.util.List;
 public interface FindsByNested {
     <T> List<T> findAllByNested(Class<T> type, Element parent, Locator child);
     <T> T findByNested(Class<T> type, Element parent, Locator child);
+    <T> List<T> findAllByChained(Class<T> type, Locator... locators);
+    <T> T findByChained(Class<T> type, Locator... locators);
 
     /**
      * Returns this context where all look ups will start from the specified root element,
@@ -36,4 +38,12 @@ public interface FindsByNested {
      */
     @Deprecated
     ElementContext withRootElement(Element root);
+
+    /**
+     * Returns this context where all look ups will start from the specified root locator,
+     * essentially transforming every locator on this context with a unary operator:
+     * {@code L -> By.chained(root, L)}
+     */
+    @Deprecated
+    ElementContext withRootLocator(Locator root);
 }
