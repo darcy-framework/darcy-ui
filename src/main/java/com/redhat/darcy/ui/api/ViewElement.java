@@ -40,7 +40,7 @@ import com.redhat.darcy.ui.api.elements.Element;
  *         }
  *
  *         public static List{@code<Widget>} widgets(Locator locator) {
- *             return new ViewElementList(Widget::new, locator);
+ *             return new ViewList(Widget::new, locator);
  *         }
  *
  *         public Widget(Locator locator) {
