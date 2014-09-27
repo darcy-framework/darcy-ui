@@ -19,16 +19,6 @@
 
 package com.redhat.darcy.ui;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-
-import com.redhat.darcy.ui.api.ElementContext;
-import com.redhat.darcy.ui.api.Locator;
-import com.redhat.darcy.ui.api.elements.Button;
-import com.redhat.darcy.ui.api.elements.Element;
-import com.redhat.darcy.ui.api.elements.TextInput;
-import com.redhat.darcy.ui.internal.FindsByNested;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -36,40 +26,8 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class AbstractViewElementTest {
     @Test
-    public void shouldConstructChainedInnerLocatorWhenConstructedWithLocator() {
-        TestElementContext mockContext = mock(TestElementContext.class);
-
+    public void shouldAllowSubclassesToReferenceParentElement() {
         AbstractViewElement viewElement = new AbstractViewElement(By.id("parent")) {};
-        Locator inner = viewElement.byInner(By.id("child"));
-        inner.find(Button.class, mockContext);
-
-        verify(mockContext).findByChained(Button.class, By.id("parent"), By.id("child"));
+        viewElement.parent.isPresent();
     }
-
-    @Test
-    public void shouldConstructNestedInnerLocatorWhenConstructedWithElement() {
-        TestElementContext mockContext = mock(TestElementContext.class);
-        Element mockElement = mock(Element.class);
-
-        AbstractViewElement viewElement = new AbstractViewElement(mockElement) {};
-        Locator inner = viewElement.byInner(By.id("child"));
-        inner.find(TextInput.class, mockContext);
-
-        verify(mockContext).findByNested(TextInput.class, mockElement, By.id("child"));
-    }
-
-    @Test
-    public void shouldCreateChainedInnerLocatorsIfMultipleLocatorsPassedToByInner() {
-        TestElementContext mockContext = mock(TestElementContext.class);
-        Element mockElement = mock(Element.class);
-
-        AbstractViewElement viewElement = new AbstractViewElement(mockElement) {};
-        Locator inner = viewElement.byInner(By.id("child1"), By.id("child2"));
-        inner.find(TextInput.class, mockContext);
-
-        verify(mockContext).findByNested(TextInput.class, mockElement,
-                By.chained(By.id("child1"), By.id("child2")));
-    }
-
-    interface TestElementContext extends ElementContext, FindsByNested {}
 }
