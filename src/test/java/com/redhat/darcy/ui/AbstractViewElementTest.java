@@ -19,6 +19,8 @@
 
 package com.redhat.darcy.ui;
 
+import static org.junit.Assert.assertNotNull;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -28,6 +30,6 @@ public class AbstractViewElementTest {
     @Test
     public void shouldAllowSubclassesToReferenceParentElement() {
         AbstractViewElement viewElement = new AbstractViewElement(By.id("parent")) {};
-        viewElement.parent.isPresent();
+        assertNotNull(viewElement.parent);
     }
 }

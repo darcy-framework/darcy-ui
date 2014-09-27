@@ -317,8 +317,9 @@ public abstract class By {
             Objects.requireNonNull(child, "child");
             Objects.requireNonNull(parent, "parent");
 
-            if (additional != null) {
+            if (additional.length > 0) {
                 Locator[] locators = new Locator[additional.length + 1];
+                locators[0] = child;
                 System.arraycopy(additional, 0, locators, 1, additional.length);
                 this.child = By.chained(locators);
             } else {
