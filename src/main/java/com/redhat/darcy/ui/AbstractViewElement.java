@@ -40,18 +40,20 @@ import java.util.function.UnaryOperator;
  * {@link #isPresent()} checks that all required findables are present.
  * {@link #isLoaded()} works just like {@link com.redhat.darcy.ui.AbstractView}.
  *
- * In order to define elements that locate under some parent element, use
- * {@link By#nested(com.redhat.darcy.ui.api.elements.Element, com.redhat.darcy.ui.api.Locator, com.redhat.darcy.ui.api.Locator...)}
- * with {@link #parent}. For example,
+ * <p>Additionally, AbstractViewElement provides
+ * {@link #byInner(com.redhat.darcy.ui.api.Locator, com.redhat.darcy.ui.api.Locator...)} for
+ * conveniently nesting elements underneath some other locator or element. For example:
  *
  * <pre><code>
  *     public class MyCustomElement extends AbstractViewElement {
- *         private TextInput input = textInput(By.nested(parent, By.id("input"));
+ *         private TextInput input = textInput(byInner(By.id("input")));
+ *                 // Equivalent to: textInput(By.nested(parent, By.id("input")));
  *
  *         // snip
  *     }
  * </code></pre>
  *
+ * @see #byInner(com.redhat.darcy.ui.api.Locator, com.redhat.darcy.ui.api.Locator...)
  * @see com.redhat.darcy.ui.AbstractView
  * @see com.redhat.darcy.ui.api.ViewElement
  */
@@ -108,5 +110,14 @@ public abstract class AbstractViewElement extends AbstractView implements ViewEl
     @Override
     public boolean isPresent() {
         return analyzer.getIsPresentConditions().stream().allMatch(Condition::isMet);
+    }
+
+    /**
+     * @return a {@link com.redhat.darcy.ui.api.Locator} that is nested underneath the
+     * {@link #parent} element. This is simply syntactic sugar for
+     * {@code By.nested(parent, locator, additional)}.
+     */
+    protected Locator byInner(Locator locator, Locator... additional) {
+        return By.nested(parent, locator, additional);
     }
 }
