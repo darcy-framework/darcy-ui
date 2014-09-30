@@ -23,6 +23,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 
 import com.redhat.darcy.ui.api.HasElementContext;
+import com.redhat.darcy.ui.api.WrapsElement;
 import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.ui.internal.ElementHandler;
 import com.redhat.darcy.ui.internal.ElementListHandler;
@@ -53,6 +54,13 @@ public class ElementsTest {
         assertThat(elementList, instanceOf(Proxy.class));
         assertThat(elementList, instanceOf(HasElementContext.class));
         assertThat(Proxy.getInvocationHandler(elementList), instanceOf(ElementListHandler.class));
+    }
+
+    @Test
+    public void shouldCreateProxyImplementingWrapsElementForElements() {
+        Element element = Elements.element(By.id("test"));
+
+        assertThat(element, instanceOf(WrapsElement.class));
     }
 
     @Test(expected = IllegalArgumentException.class)

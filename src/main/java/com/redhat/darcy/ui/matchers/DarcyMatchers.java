@@ -19,12 +19,27 @@
 
 package com.redhat.darcy.ui.matchers;
 
+import com.redhat.darcy.ui.api.ElementContext;
+import com.redhat.darcy.ui.api.View;
 import com.redhat.darcy.ui.api.elements.Element;
+import com.redhat.darcy.ui.api.elements.Findable;
 
 import org.hamcrest.Matcher;
 
-public abstract class ElementMatchers {
-    public static <T extends Element> Matcher<T> isDisplayed() {
+public abstract class DarcyMatchers {
+    public static <T extends Element> Matcher<T> displayed() {
         return new ElementIsDisplayed<>();
+    }
+
+    public static <T extends Findable> Matcher<T> present() {
+        return new FindableIsPresent<>();
+    }
+
+    public static <T extends View> Matcher<T> loaded() {
+        return new ViewIsLoaded<T>();
+    }
+
+    public static <T extends View> Matcher<T> loadedInContext(ElementContext context) {
+        return new ViewIsLoadedInContext<T>(context);
     }
 }

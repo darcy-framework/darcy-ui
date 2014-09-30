@@ -32,7 +32,7 @@ public class ViewIsLoaded<T extends View> extends TypeSafeMatcher<T> {
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("a view that is loaded");
+        description.appendText("a View that is loaded");
     }
     
 }

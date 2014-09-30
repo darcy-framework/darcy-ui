@@ -41,7 +41,7 @@ public class ViewIsLoadedInContext<T extends View> extends TypeSafeMatcher<T> {
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("a view that is loaded in context, " + context);
+        description.appendText("a View that is loaded in context, " + context);
     }
     
 }

@@ -2,12 +2,16 @@ package com.redhat.darcy.ui;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.redhat.darcy.ui.api.Context;
 import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.View;
+import com.redhat.darcy.ui.api.WrapsElement;
 import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.ui.internal.*;
+import com.redhat.darcy.ui.testing.doubles.AlwaysDisplayedLabel;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -148,6 +152,32 @@ public class ByTest {
         By.nested(mockElement, mockLocator).findAll(Element.class, mockContext);
 
         verify(mockContext).findAllByNested(Element.class, mockElement, mockLocator);
+    }
+
+    @Test
+    public void shouldUnwrapWrappedElementsInByNested() {
+        Element mockElement = mock(ElementWrapper.class);
+        FindsByAll mockContext = mock(FindsByAll.class);
+
+        Element realElement = new AlwaysDisplayedLabel();
+        when(((WrapsElement) mockElement).getWrappedElement()).thenReturn(realElement);
+
+        new By.ByNested(mockElement, By.id("child")).find(Element.class, mockContext);
+
+        verify(mockContext).findByNested(Element.class, realElement, By.id("child"));
+    }
+
+    @Test
+    public void shouldUnwrapWrappedElementsInByNestedWhenFindingAll() {
+        Element mockElement = mock(ElementWrapper.class);
+        FindsByAll mockContext = mock(FindsByAll.class);
+
+        Element realElement = new AlwaysDisplayedLabel();
+        when(((WrapsElement) mockElement).getWrappedElement()).thenReturn(realElement);
+
+        new By.ByNested(mockElement, By.id("child")).findAll(Element.class, mockContext);
+
+        verify(mockContext).findAllByNested(Element.class, realElement, By.id("child"));
     }
 
     @Test(expected = LocatorNotSupportedException.class)
@@ -321,4 +351,5 @@ public class ByTest {
     interface FindsByAll extends Context, FindsById, FindsByXPath, FindsByName, FindsByNested,
             FindsByLinkText, FindsByPartialTextContent, FindsByTextContent, FindsByView {}
 
+    interface ElementWrapper extends Element, WrapsElement {};
 }

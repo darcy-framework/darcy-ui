@@ -17,14 +17,10 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.redhat.darcy.ui.matchers;
+package com.redhat.darcy.ui.api;
 
-import com.redhat.darcy.ui.api.elements.Findable;
+import com.redhat.darcy.ui.api.elements.Element;
 
-import org.hamcrest.Matcher;
-
-public class FindableMatchers {
-    public static <T extends Findable> Matcher<T> isPresent() {
-        return new FindableIsPresent<>();
-    }
+public interface WrapsElement {
+    Element getWrappedElement();
 }

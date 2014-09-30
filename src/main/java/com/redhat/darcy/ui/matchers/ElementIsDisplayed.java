@@ -32,7 +32,7 @@ public class ElementIsDisplayed<T extends Element> extends TypeSafeMatcher<T> {
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("an element that is displayed");
+        description.appendText("an Element that is displayed");
     }
     
 }
