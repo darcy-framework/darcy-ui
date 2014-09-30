@@ -73,6 +73,10 @@ public class ElementHandler implements InvocationHandler {
             cachedElement = locator.find(type, context);
         }
 
+        if ("getWrappedElement".equals(method.getName())) {
+            return cachedElement;
+        }
+
         try {
             return method.invoke(cachedElement, args);
         } catch (InvocationTargetException e) {

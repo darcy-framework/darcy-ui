@@ -21,6 +21,7 @@ package com.redhat.darcy.ui;
 
 import com.redhat.darcy.ui.api.HasElementContext;
 import com.redhat.darcy.ui.api.Locator;
+import com.redhat.darcy.ui.api.WrapsElement;
 import com.redhat.darcy.ui.api.elements.Button;
 import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.ui.api.elements.FileSelect;
@@ -61,7 +62,7 @@ public abstract class Elements {
         InvocationHandler invocationHandler = new ElementHandler(type, locator);
         
         return (T) Proxy.newProxyInstance(Elements.class.getClassLoader(), 
-                new Class[] { type, HasElementContext.class },
+                new Class[] { type, HasElementContext.class, WrapsElement.class},
                 invocationHandler);
     }
     /**
