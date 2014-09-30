@@ -22,6 +22,7 @@ package com.redhat.darcy.ui;
 import com.redhat.darcy.ui.api.Context;
 import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.View;
+import com.redhat.darcy.ui.api.WrapsElement;
 import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.ui.internal.FindsByChained;
 import com.redhat.darcy.ui.internal.FindsById;
@@ -35,6 +36,7 @@ import com.redhat.darcy.ui.internal.FindsByXPath;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A helper class with static factories for {@link com.redhat.darcy.ui.api.Locator}s, inspired by
@@ -314,7 +316,12 @@ public abstract class By {
         private final Locator child;
         
         public ByNested(Element parent, Locator child) {
-            this.parent = parent;
+            Objects.requireNonNull(parent, "parent");
+            Objects.requireNonNull(child, "child");
+
+            this.parent = (parent instanceof WrapsElement)
+                    ? ((WrapsElement) parent).getWrappedElement()
+                    : parent;
             this.child = child;
         }
         

@@ -19,6 +19,7 @@
 
 package com.redhat.darcy.ui.internal;
 
+import static org.junit.Assert.assertSame;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -30,6 +31,7 @@ import com.redhat.darcy.ui.NullContextException;
 import com.redhat.darcy.ui.api.ElementContext;
 import com.redhat.darcy.ui.api.HasElementContext;
 import com.redhat.darcy.ui.api.Locator;
+import com.redhat.darcy.ui.api.WrapsElement;
 import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.ui.api.elements.Findable;
 import com.redhat.darcy.ui.api.elements.TextInput;
@@ -125,6 +127,16 @@ public class ElementHandlerTest {
     public void shouldThrowNullContextExceptionIfMethodIsCalledWithoutAContextBeingSet() throws
             Throwable {
         handler.invoke(null, Element.class.getMethod("isDisplayed"), new Object[] {});
+    }
+
+    @Test
+    public void shouldImplementWrapsElement() throws Throwable {
+        handler.invoke(null, setContext, new Object[] { mockContext });
+
+        Object element = handler.invoke(null, WrapsElement.class.getMethod("getWrappedElement"),
+                new Object[]{});
+
+        assertSame(mockElement, element);
     }
 
     private class TestException extends RuntimeException {}
