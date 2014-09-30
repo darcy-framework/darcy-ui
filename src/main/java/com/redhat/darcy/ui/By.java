@@ -43,39 +43,39 @@ import java.util.Objects;
  * Selenium's By class.
  */
 public abstract class By {
-    public static Locator id(String id) {
+    public static ById id(String id) {
         return new ById(id);
     }
 
-    public static Locator name(String name) {
+    public static ByName name(String name) {
         return new ByName(name);
     }
     
-    public static Locator linkText(String linkText) {
+    public static ByLinkText linkText(String linkText) {
         return new ByLinkText(linkText);
     }
     
-    public static Locator textContent(String textContent) {
+    public static ByTextContent textContent(String textContent) {
         return new ByTextContent(textContent);
     }
     
-    public static Locator partialTextContent(String partialTextContent) {
+    public static ByPartialTextContent partialTextContent(String partialTextContent) {
         return new ByPartialTextContent(partialTextContent);
     }
     
-    public static Locator xpath(String xpath) {
+    public static ByXPath xpath(String xpath) {
         return new ByXPath(xpath);
     }
     
-    public static Locator view(View view) {
+    public static ByView view(View view) {
         return new ByView(view);
     }
     
-    public static Locator chained(Locator... locators) {
+    public static ByChained chained(Locator... locators) {
         return new ByChained(locators);
     }
     
-    public static Locator nested(Element parent, Locator child) {
+    public static ByNested nested(Element parent, Locator child) {
         return new ByNested(parent, child);
     }
     
