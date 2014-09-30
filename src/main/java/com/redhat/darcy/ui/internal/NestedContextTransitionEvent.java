@@ -33,7 +33,7 @@ public class NestedContextTransitionEvent<T extends View> extends ForwardingPoll
     public NestedContextTransitionEvent(T destination, ElementContext context,
             Locator nestedContextLocator) {
         super(Synq.expect(destination,
-                loadedInContext(((FindsByChained) context)
+                loadedInContext(((FindsByNested) context)
                         .withRootLocator(nestedContextLocator))));
     }
     

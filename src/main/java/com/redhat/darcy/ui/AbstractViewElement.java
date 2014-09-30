@@ -41,43 +41,33 @@ import java.util.function.UnaryOperator;
  * {@link #isLoaded()} works just like {@link com.redhat.darcy.ui.AbstractView}.
  *
  * <p>Additionally, AbstractViewElement provides
- * {@link #byInner(com.redhat.darcy.ui.api.Locator...)} for conveniently nesting elements underneath
- * some other locator or element. For example:
+ * {@link #byInner(com.redhat.darcy.ui.api.Locator, com.redhat.darcy.ui.api.Locator...)} for
+ * conveniently nesting elements underneath some other locator or element. For example:
  *
  * <pre><code>
  *     public class MyCustomElement extends AbstractViewElement {
- *         private TextInput input = textInput(byInner(By.id("input"));
+ *         private TextInput input = textInput(byInner(By.id("input")));
+ *                 // Equivalent to: textInput(By.nested(parent, By.id("input")));
  *
  *         // snip
  *     }
  * </code></pre>
  *
- * @see #byInner(com.redhat.darcy.ui.api.Locator...)
+ * @see #byInner(com.redhat.darcy.ui.api.Locator, com.redhat.darcy.ui.api.Locator...)
  * @see com.redhat.darcy.ui.AbstractView
  * @see com.redhat.darcy.ui.api.ViewElement
  */
 public abstract class AbstractViewElement extends AbstractView implements ViewElement {
     /**
-     * The parent element of this ViewElement, should one be present.
-     *
-     * <p>If your ViewElement is nested under some locator, but there is no specific element at that
-     * locator, then this parent element will never be present.
+     * The parent element of this ViewElement.
      */
     protected final Element parent;
 
     /**
-     * @see #byInner(com.redhat.darcy.ui.api.Locator...)
-     */
-    private final UnaryOperator<Locator> makeInnerLocator;
-
-    /**
      * Creates a nested View underneath some parent Locator.
-     *
-     * @see #byInner(com.redhat.darcy.ui.api.Locator...)
      */
     public AbstractViewElement(Locator parent) {
-        // How to specify element type? Is this ever going to be needed?
-        this(Elements.element(parent), l -> By.chained(parent, l));
+        this(Elements.element(parent));
     }
 
     /**
@@ -85,16 +75,9 @@ public abstract class AbstractViewElement extends AbstractView implements ViewEl
      * of this ViewElement from some {@link com.redhat.darcy.ui.api.Locator}, as the locator itself
      * may correspond to a number of elements, so each unique element found by the same locator is
      * used to construct this ViewElement to ensure each represents a unique element.
-     *
-     * @see #byInner(com.redhat.darcy.ui.api.Locator...)
      */
     public AbstractViewElement(Element parent) {
-        this(parent, l -> By.nested(parent, l));
-    }
-
-    private AbstractViewElement(Element parent, UnaryOperator<Locator> makeInnerLocator) {
         this.parent = parent;
-        this.makeInnerLocator = makeInnerLocator;
     }
 
     /**
@@ -130,37 +113,11 @@ public abstract class AbstractViewElement extends AbstractView implements ViewEl
     }
 
     /**
-     * Transforms a locator to its equivalent but nested under the parent element or chained with
-     * the parent locator for this ViewElement. This will choose whether to chain a locator or nest
-     * under an element reference based on the constructor used.
-     *
-     * <p>For example, if the locator constructor was used with a {@code By.id("parent")}, calling
-     * {@code byInner(By.id("inside"))} would return a
-     * {@link com.redhat.darcy.ui.By.ByChained} with {@code By.id("parent"), By.id("inside")}.
-     *
-     * <p>If the element constructor was used, calling {@code byInner(By.id("inside"))} would return
-     * a {@link com.redhat.darcy.ui.By.ByNested} with the parent element passed in the constructor,
-     * and the {@code By.id("inside")}.
-     *
-     * <p>If you intend to chain many locators together, instead of passing a {@code By.chained}
-     * (for example, {@code byInner(By.chained(locator1, locator2))}), you may pass additional
-     * locator arguments to {@code byInner}, and the locators will be chained for you (for example,
-     * {@code byInner(locator1, locator2)}.
-     *
-     * @see #AbstractViewElement(com.redhat.darcy.ui.api.elements.Element)
-     * @see #AbstractViewElement(com.redhat.darcy.ui.api.Locator)
+     * @return a {@link com.redhat.darcy.ui.api.Locator} that is nested underneath the
+     * {@link #parent} element. This is simply syntactic sugar for
+     * {@code By.nested(parent, locator, additional)}.
      */
-    protected final Locator byInner(Locator... locators) {
-        Objects.requireNonNull(locators, "locators");
-
-        if (locators.length == 0) {
-            throw new IllegalArgumentException("Must pass at least one Locator to byInner.");
-        }
-
-        if (locators.length == 1) {
-            return makeInnerLocator.apply(locators[0]);
-        }
-
-        return makeInnerLocator.apply(By.chained(locators));
+    protected Locator byInner(Locator locator, Locator... additional) {
+        return By.nested(parent, locator, additional);
     }
 }

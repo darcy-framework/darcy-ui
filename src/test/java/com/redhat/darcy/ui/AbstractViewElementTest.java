@@ -19,36 +19,39 @@
 
 package com.redhat.darcy.ui;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import com.redhat.darcy.ui.api.ElementContext;
+import com.redhat.darcy.ui.api.HasElementContext;
 import com.redhat.darcy.ui.api.Locator;
-import com.redhat.darcy.ui.api.elements.Button;
+import com.redhat.darcy.ui.api.WrapsElement;
 import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.ui.api.elements.TextInput;
-import com.redhat.darcy.ui.internal.FindsByChained;
+import com.redhat.darcy.ui.internal.FindsById;
 import com.redhat.darcy.ui.internal.FindsByNested;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import java.lang.reflect.Proxy;
+
 @RunWith(JUnit4.class)
 public class AbstractViewElementTest {
     @Test
-    public void shouldConstructChainedInnerLocatorWhenConstructedWithLocator() {
-        TestElementContext mockContext = mock(TestElementContext.class);
-
+    public void shouldAllowSubclassesToReferenceParentElement() {
         AbstractViewElement viewElement = new AbstractViewElement(By.id("parent")) {};
-        Locator inner = viewElement.byInner(By.id("child"));
-        inner.find(Button.class, mockContext);
-
-        verify(mockContext).findByChained(Button.class, By.id("parent"), By.id("child"));
+        assertNotNull(viewElement.parent);
     }
 
     @Test
-    public void shouldConstructNestedInnerLocatorWhenConstructedWithElement() {
+    public void shouldReturnByNestedUnderParentElementForByInner() {
         TestElementContext mockContext = mock(TestElementContext.class);
         Element mockElement = mock(Element.class);
 
@@ -60,17 +63,19 @@ public class AbstractViewElementTest {
     }
 
     @Test
-    public void shouldCreateChainedInnerLocatorsIfMultipleLocatorsPassedToByInner() {
+    public void shouldAssignParentElementToElementProxyIfConstructedWithLocator() {
         TestElementContext mockContext = mock(TestElementContext.class);
-        Element mockElement = mock(Element.class);
 
-        AbstractViewElement viewElement = new AbstractViewElement(mockElement) {};
-        Locator inner = viewElement.byInner(By.id("child1"), By.id("child2"));
-        inner.find(TextInput.class, mockContext);
+        AbstractViewElement viewElement = new AbstractViewElement(By.id("test")) {};
 
-        verify(mockContext).findByNested(TextInput.class, mockElement,
-                By.chained(By.id("child1"), By.id("child2")));
+        assertThat(viewElement.parent, instanceOf(Proxy.class));
+
+        ((HasElementContext) viewElement.parent).setContext(mockContext);
+        ((WrapsElement) viewElement.parent).getWrappedElement(); // Causes the element reference to
+                                                                 // be looked up.
+
+        verify(mockContext).findById(anyObject(), eq("test"));
     }
 
-    interface TestElementContext extends ElementContext, FindsByChained, FindsByNested {}
+    interface TestElementContext extends ElementContext, FindsByNested, FindsById {}
 }

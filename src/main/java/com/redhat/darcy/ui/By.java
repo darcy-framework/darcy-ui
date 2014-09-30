@@ -24,7 +24,6 @@ import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.View;
 import com.redhat.darcy.ui.api.WrapsElement;
 import com.redhat.darcy.ui.api.elements.Element;
-import com.redhat.darcy.ui.internal.FindsByChained;
 import com.redhat.darcy.ui.internal.FindsById;
 import com.redhat.darcy.ui.internal.FindsByLinkText;
 import com.redhat.darcy.ui.internal.FindsByName;
@@ -75,8 +74,8 @@ public abstract class By {
         return new ByChained(locators);
     }
     
-    public static ByNested nested(Element parent, Locator child) {
-        return new ByNested(parent, child);
+    public static ByNested nested(Element parent, Locator child, Locator... additional) {
+        return new ByNested(parent, child, additional);
     }
     
     public static class ById implements Locator {
@@ -284,7 +283,7 @@ public abstract class By {
         @Override
         public <T> List<T> findAll(Class<T> type, Context context) {
             try {
-                return ((FindsByChained) context).findAllByChained(type, locators);
+                return ((FindsByNested) context).findAllByChained(type, locators);
             } catch (ClassCastException cce) {
                 throw new LocatorNotSupportedException(this);
             }
@@ -293,7 +292,7 @@ public abstract class By {
         @Override
         public <T> T find(Class<T> type, Context context) {
             try {
-                return ((FindsByChained) context).findByChained(type, locators);
+                return ((FindsByNested) context).findByChained(type, locators);
             } catch (ClassCastException cce) {
                 throw new LocatorNotSupportedException(this);
             }
@@ -315,14 +314,22 @@ public abstract class By {
         private final Element parent;
         private final Locator child;
         
-        public ByNested(Element parent, Locator child) {
-            Objects.requireNonNull(parent, "parent");
+        public ByNested(Element parent, Locator child, Locator... additional) {
             Objects.requireNonNull(child, "child");
+            Objects.requireNonNull(parent, "parent");
+
+            if (additional.length > 0) {
+                Locator[] locators = new Locator[additional.length + 1];
+                locators[0] = child;
+                System.arraycopy(additional, 0, locators, 1, additional.length);
+                this.child = By.chained(locators);
+            } else {
+                this.child = child;
+            }
 
             this.parent = (parent instanceof WrapsElement)
                     ? ((WrapsElement) parent).getWrappedElement()
                     : parent;
-            this.child = child;
         }
         
         @Override

@@ -349,8 +349,7 @@ public class ByTest {
     }
 
     interface FindsByAll extends Context, FindsById, FindsByXPath, FindsByName, FindsByNested,
-                                 FindsByChained, FindsByLinkText, FindsByPartialTextContent,
-                                 FindsByTextContent, FindsByView {}
+            FindsByLinkText, FindsByPartialTextContent, FindsByTextContent, FindsByView {}
 
     interface ElementWrapper extends Element, WrapsElement {};
 }
