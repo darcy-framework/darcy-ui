@@ -32,7 +32,6 @@ import com.redhat.darcy.ui.annotations.RequireAll;
 import com.redhat.darcy.ui.api.View;
 import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.ui.api.elements.Findable;
-import com.redhat.darcy.ui.matchers.DarcyMatchers;
 import com.redhat.synq.Condition;
 import com.redhat.synq.HamcrestCondition;
 
