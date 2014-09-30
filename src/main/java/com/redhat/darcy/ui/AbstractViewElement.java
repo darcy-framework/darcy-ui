@@ -19,7 +19,6 @@
 
 package com.redhat.darcy.ui;
 
-import com.redhat.darcy.ui.annotations.Require;
 import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.ViewElement;
 import com.redhat.darcy.ui.api.elements.Element;
@@ -60,7 +59,6 @@ public abstract class AbstractViewElement extends AbstractView implements ViewEl
     /**
      * The parent element of this ViewElement.
      */
-    @Require
     protected final Element parent;
 
     /**
