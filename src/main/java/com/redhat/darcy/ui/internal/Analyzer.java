@@ -19,6 +19,10 @@
 
 package com.redhat.darcy.ui.internal;
 
+import static com.redhat.darcy.ui.matchers.DarcyMatchers.displayed;
+import static com.redhat.darcy.ui.matchers.DarcyMatchers.loaded;
+import static com.redhat.darcy.ui.matchers.DarcyMatchers.present;
+
 import com.redhat.darcy.ui.DarcyException;
 import com.redhat.darcy.ui.NoRequiredElementsException;
 import com.redhat.darcy.ui.annotations.Context;
@@ -28,9 +32,7 @@ import com.redhat.darcy.ui.annotations.RequireAll;
 import com.redhat.darcy.ui.api.View;
 import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.ui.api.elements.Findable;
-import com.redhat.darcy.ui.matchers.ElementMatchers;
-import com.redhat.darcy.ui.matchers.FindableMatchers;
-import com.redhat.darcy.ui.matchers.ViewMatchers;
+import com.redhat.darcy.ui.matchers.DarcyMatchers;
 import com.redhat.synq.Condition;
 import com.redhat.synq.HamcrestCondition;
 
@@ -93,7 +95,7 @@ public class Analyzer {
 
             isDisplayed.addAll(requiredObjects.stream()
                     .filter(o -> o instanceof Element) // Should check instance or field type?
-                    .map(e -> HamcrestCondition.match((Element) e, ElementMatchers.isDisplayed()))
+                    .map(e -> HamcrestCondition.match((Element) e, displayed()))
                     .collect(Collectors.toList()));
 
             // TODO: Lists
@@ -114,7 +116,7 @@ public class Analyzer {
 
             isPresent.addAll(requiredObjects.stream()
                     .filter(o -> o instanceof Findable) // Should check instance or field type?
-                    .map(f -> HamcrestCondition.match((Findable) f, FindableMatchers.isPresent()))
+                    .map(f -> HamcrestCondition.match((Findable) f, present()))
                     .collect(Collectors.toList()));
 
             // TODO: Lists
@@ -205,11 +207,11 @@ public class Analyzer {
      */
     private Condition<?> objectToLoadCondition(Object fieldObject) {
         if (fieldObject instanceof View) {
-            return HamcrestCondition.match((View) fieldObject, ViewMatchers.isLoaded());
+            return HamcrestCondition.match((View) fieldObject, loaded());
         } else if (fieldObject instanceof Element) {
-            return HamcrestCondition.match((Element) fieldObject, ElementMatchers.isDisplayed());
+            return HamcrestCondition.match((Element) fieldObject, displayed());
         } else if (fieldObject instanceof Findable) {
-            return HamcrestCondition.match((Findable) fieldObject, FindableMatchers.isPresent());
+            return HamcrestCondition.match((Findable) fieldObject, present());
         }
 
         return null;

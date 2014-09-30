@@ -32,7 +32,7 @@ public class FindableIsPresent<T extends Findable> extends TypeSafeMatcher<T> {
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("a UI object that is present");
+        description.appendText("a Findable that is present");
     }
     
 }
