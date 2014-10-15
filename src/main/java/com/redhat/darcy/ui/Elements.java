@@ -23,10 +23,14 @@ import com.redhat.darcy.ui.api.HasElementContext;
 import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.WrapsElement;
 import com.redhat.darcy.ui.api.elements.Button;
+import com.redhat.darcy.ui.api.elements.Checkbox;
+import com.redhat.darcy.ui.api.elements.DateInput;
 import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.ui.api.elements.FileSelect;
 import com.redhat.darcy.ui.api.elements.Label;
 import com.redhat.darcy.ui.api.elements.Link;
+import com.redhat.darcy.ui.api.elements.MultiSelect;
+import com.redhat.darcy.ui.api.elements.Radio;
 import com.redhat.darcy.ui.api.elements.Select;
 import com.redhat.darcy.ui.api.elements.Text;
 import com.redhat.darcy.ui.api.elements.TextInput;
@@ -130,6 +134,22 @@ public abstract class Elements {
         return elements(Select.class, locator);
     }
 
+    public static Radio radio(Locator locator) {
+        return element(Radio.class, locator);
+    }
+
+    public static List<Radio> radios(Locator locator) {
+        return elements(Radio.class, locator);
+    }
+
+    public static Checkbox checkbox(Locator locator) {
+        return element(Checkbox.class, locator);
+    }
+
+    public static List<Checkbox> checkboxes(Locator locator) {
+        return elements(Checkbox.class, locator);
+    }
+
     public static Text text(Locator locator) {
         return element(Text.class, locator);
     }
@@ -144,5 +164,21 @@ public abstract class Elements {
 
     public static List<FileSelect> fileSelects(Locator locator) {
         return elements(FileSelect.class, locator);
+    }
+
+    public static DateInput dateInput(Locator locator) {
+        return element(DateInput.class, locator);
+    }
+
+    public static List<DateInput> dateInputs(Locator locator) {
+        return elements(DateInput.class, locator);
+    }
+
+    public static MultiSelect multiSelect(Locator locator) {
+        return element(MultiSelect.class, locator);
+    }
+
+    public static List<MultiSelect> multiSelects(Locator locator) {
+        return elements(MultiSelect.class, locator);
     }
 }
