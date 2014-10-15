@@ -23,7 +23,7 @@ import com.redhat.darcy.ui.api.HasElementContext;
 import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.elements.Button;
 import com.redhat.darcy.ui.api.elements.Checkbox;
-import com.redhat.darcy.ui.api.elements.DateSelect;
+import com.redhat.darcy.ui.api.elements.DateInput;
 import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.ui.api.elements.Label;
 import com.redhat.darcy.ui.api.elements.Link;
@@ -156,12 +156,12 @@ public abstract class Elements {
         return elements(Text.class, locator);
     }
 
-    public static DateSelect dateSelect(Locator locator) {
-        return element(DateSelect.class, locator);
+    public static DateInput dateInput(Locator locator) {
+        return element(DateInput.class, locator);
     }
 
-    public static List<DateSelect> dateSelects(Locator locator) {
-        return elements(DateSelect.class, locator);
+    public static List<DateInput> dateInputs(Locator locator) {
+        return elements(DateInput.class, locator);
     }
 
     public static MultiSelect multiSelect(Locator locator) {
