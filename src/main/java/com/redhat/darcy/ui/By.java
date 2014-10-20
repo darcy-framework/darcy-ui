@@ -82,7 +82,7 @@ public abstract class By {
         private String id;
         
         public ById(String id) {
-            this.id = id;
+            this.id = Objects.requireNonNull(id, "id");
         }
         
         @Override
@@ -104,6 +104,11 @@ public abstract class By {
         }
 
         @Override
+        public int hashCode() {
+            return Objects.hash(id);
+        }
+
+        @Override
         public boolean equals(Object object) {
             if (!(object instanceof ById)) {
                 return false;
@@ -113,13 +118,20 @@ public abstract class By {
 
             return id.equals(other.id);
         }
+
+        @Override
+        public String toString() {
+            return "ById: {" +
+                    "id='" + id + '\'' +
+                    '}';
+        }
     }
     
     public static class ByName implements Locator {
         private String name;
         
         public ByName(String name) {
-            this.name = name;
+            this.name = Objects.requireNonNull(name, "name");
         }
         
         @Override
@@ -139,13 +151,39 @@ public abstract class By {
                 throw new LocatorNotSupportedException(this);
             }
         }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(name);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            ByName byName = (ByName) o;
+
+            return name.equals(byName.name);
+        }
+
+        @Override
+        public String toString() {
+            return "ByName: {" +
+                    "name='" + name + '\'' +
+                    '}';
+        }
     }
     
     public static class ByLinkText implements Locator {
         private String linkText;
         
         public ByLinkText(String linkText) {
-            this.linkText = linkText;
+            this.linkText = Objects.requireNonNull(linkText, "linkText");
         }
         
         @Override
@@ -165,13 +203,40 @@ public abstract class By {
                 throw new LocatorNotSupportedException(this);
             }
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            ByLinkText that = (ByLinkText) o;
+
+            return linkText.equals(that.linkText);
+
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(linkText);
+        }
+
+        @Override
+        public String toString() {
+            return "ByLinkText: {" +
+                    "linkText='" + linkText + '\'' +
+                    '}';
+        }
     }
     
     public static class ByTextContent implements Locator {
         private String textContent;
         
         public ByTextContent(String textContent) {
-            this.textContent = textContent;
+            this.textContent = Objects.requireNonNull(textContent, "textContent");
         }
         
         @Override
@@ -191,13 +256,41 @@ public abstract class By {
                 throw new LocatorNotSupportedException(this);
             }
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            ByTextContent that = (ByTextContent) o;
+
+            return textContent.equals(that.textContent);
+
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(textContent);
+        }
+
+        @Override
+        public String toString() {
+            return "ByTextContent: {" +
+                    "textContent='" + textContent + '\'' +
+                    '}';
+        }
     }
     
     public static class ByPartialTextContent implements Locator {
         private String partialTextContent;
         
         public ByPartialTextContent(String partialTextContent) {
-            this.partialTextContent = partialTextContent;
+            this.partialTextContent = Objects.requireNonNull(partialTextContent,
+                    "partialTextContent");
         }
         
         @Override
@@ -219,13 +312,40 @@ public abstract class By {
                 throw new LocatorNotSupportedException(this);
             }
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            ByPartialTextContent that = (ByPartialTextContent) o;
+
+            return partialTextContent.equals(that.partialTextContent);
+
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(partialTextContent);
+        }
+
+        @Override
+        public String toString() {
+            return "ByPartialTextContent: {" +
+                    "partialTextContent='" + partialTextContent + '\'' +
+                    '}';
+        }
     }
     
     public static class ByXPath implements Locator {
         private String xpath;
         
         public ByXPath(String xpath) {
-            this.xpath = xpath;
+            this.xpath = Objects.requireNonNull(xpath, "xpath");
         }
         
         @Override
@@ -245,13 +365,40 @@ public abstract class By {
                 throw new LocatorNotSupportedException(this);
             }
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            ByXPath that = (ByXPath) o;
+
+            return xpath.equals(that.xpath);
+
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(xpath);
+        }
+
+        @Override
+        public String toString() {
+            return "ByXPath: {" +
+                    "xpath='" + xpath + '\'' +
+                    '}';
+        }
     }
     
     public static class ByView implements Locator {
-        private View view;
+        private final View view;
         
         public ByView(View view) {
-            this.view = view;
+            this.view = Objects.requireNonNull(view, "view");
         }
         
         @Override
@@ -271,13 +418,44 @@ public abstract class By {
                 throw new LocatorNotSupportedException(this);
             }
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            ByView that = (ByView) o;
+
+            return view.equals(that.view);
+
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(view);
+        }
+
+        @Override
+        public String toString() {
+            return "ByView: {" +
+                    "view='" + view + '\'' +
+                    '}';
+        }
     }
     
     public static class ByChained implements Locator {
         private final Locator[] locators;
         
         public ByChained(Locator... locators) {
-            this.locators = locators;
+            this.locators = Objects.requireNonNull(locators, "locators");
+
+            if (locators.length == 0) {
+                throw new IllegalArgumentException("Cannot chain 0 locators.");
+            }
         }
         
         @Override
@@ -300,13 +478,29 @@ public abstract class By {
 
         @Override
         public boolean equals(Object object) {
-            if (!(object instanceof ByChained)) {
+            if (this == object) {
+                return true;
+            }
+
+            if (object == null || getClass() != object.getClass()) {
                 return false;
             }
 
             ByChained other = (ByChained) object;
 
             return Arrays.equals(locators, other.locators);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(locators);
+        }
+
+        @Override
+        public String toString() {
+            return "ByChained: {" +
+                    "locators='" + Arrays.toString(locators) + '\'' +
+                    '}';
         }
     }
     
@@ -348,6 +542,34 @@ public abstract class By {
             } catch (ClassCastException cce) {
                 throw new LocatorNotSupportedException(this);
             }
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            ByNested byNested = (ByNested) o;
+
+            return child.equals(byNested.child) && parent.equals(byNested.parent);
+
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(parent, child);
+        }
+
+        @Override
+        public String toString() {
+            return "ByNested: {" +
+                    "parent=" + parent +
+                    ", child=" + child +
+                    '}';
         }
     }
 }

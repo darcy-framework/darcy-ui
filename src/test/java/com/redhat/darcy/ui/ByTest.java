@@ -188,6 +188,18 @@ public class ByTest {
         By.chained(mockLocators).find(Element.class, mockContext);
     }
 
+    @Test
+    public void shouldAllowChainingLocatorsInByNested() {
+        Element mockElement = mock(Element.class);
+        FindsByAll mockContext = mock(FindsByAll.class);
+
+        By.ByNested byNested = new By.ByNested(mockElement, By.id("first"), By.id("second"));
+        byNested.find(Element.class, mockContext);
+
+        verify(mockContext).findByNested(Element.class, mockElement,
+                By.chained(By.id("first"), By.id("second")));
+    }
+
     @Test(expected = LocatorNotSupportedException.class)
     public void shouldThrowLocatorNotSupportedExceptionForFindAllByChainedIfContextDoesNotSupportByChained() {
         Context mockContext = mock(Context.class);
