@@ -24,6 +24,7 @@ import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.View;
 import com.redhat.darcy.ui.api.WrapsElement;
 import com.redhat.darcy.ui.api.elements.Element;
+import com.redhat.darcy.ui.internal.FindsByAttribute;
 import com.redhat.darcy.ui.internal.FindsById;
 import com.redhat.darcy.ui.internal.FindsByLinkText;
 import com.redhat.darcy.ui.internal.FindsByName;
@@ -124,6 +125,34 @@ public abstract class By {
             return "ById: {" +
                     "id='" + id + '\'' +
                     '}';
+        }
+    }
+
+    public static class ByAttribute implements Locator {
+        private String attribute;
+        private String value;
+
+        public ByAttribute(String attribute, String value) {
+            this.attribute = Objects.requireNonNull(attribute);
+            this.value = Objects.requireNonNull(value);
+        }
+
+        @Override
+        public <T> List<T> findAll(Class<T> type, Context context) {
+            try {
+                return ((FindsByAttribute) context).findAllByAttribute(type, attribute, value);
+            } catch (ClassCastException cce) {
+                throw new LocatorNotSupportedException(this);
+            }
+        }
+
+        @Override
+        public <T> T find(Class<T> type, Context context) {
+            try {
+                return ((FindsByAttribute) context).findByAttribute(type, attribute, value);
+            } catch (ClassCastException cce) {
+                throw new LocatorNotSupportedException(this);
+            }
         }
     }
     

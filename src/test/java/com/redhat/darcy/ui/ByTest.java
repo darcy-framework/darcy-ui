@@ -360,7 +360,7 @@ public class ByTest {
         verify(mockContext).findAllByView(Element.class, mockView);
     }
 
-    interface FindsByAll extends Context, FindsById, FindsByXPath, FindsByName, FindsByNested,
+    interface FindsByAll extends Context, FindsByAttribute, FindsById, FindsByXPath, FindsByName, FindsByNested,
             FindsByLinkText, FindsByPartialTextContent, FindsByTextContent, FindsByView {}
 
     interface ElementWrapper extends Element, WrapsElement {};
