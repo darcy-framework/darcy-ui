@@ -115,6 +115,38 @@ public class ByTest {
     }
 
     @Test(expected = LocatorNotSupportedException.class)
+    public void shouldThrowLocatorNotSupportedExceptionForFindByIdIfContextDoesNotSupportByAttribute() {
+        Context mockContext = mock(Context.class);
+
+        By.attribute("value", "test").find(Element.class, mockContext);
+    }
+
+    @Test(expected = LocatorNotSupportedException.class)
+    public void shouldThrowLocatorNotSupportedExceptionForFindAllByIdIfContextDoesNotSupportByAttribute() {
+        Context mockContext = mock(Context.class);
+
+        By.attribute("value", "test").findAll(Element.class, mockContext);
+    }
+
+    @Test
+    public void shouldUseFindByAttributeToFindByValueAttribute() {
+        FindsByAll mockContext = mock(FindsByAll.class);
+
+        By.attribute("value", "test").find(Element.class, mockContext);
+
+        verify(mockContext).findByAttribute(Element.class, "value", "test");
+    }
+
+    @Test
+    public void shouldUseFindByIdToFindAllByValueAttribute() {
+        FindsByAll mockContext = mock(FindsByAll.class);
+
+        By.attribute("value", "test").findAll(Element.class, mockContext);
+
+        verify(mockContext).findAllByAttribute(Element.class, "value", "test");
+    }
+
+    @Test(expected = LocatorNotSupportedException.class)
     public void shouldThrowLocatorNotSupportedExceptionForFindByNestedIfContextDoesNotSupportByNested() {
         Context mockContext = mock(Context.class);
         Locator mockLocator = mock(Locator.class);

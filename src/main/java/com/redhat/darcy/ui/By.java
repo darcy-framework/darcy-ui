@@ -78,6 +78,10 @@ public abstract class By {
     public static ByNested nested(Element parent, Locator child, Locator... additional) {
         return new ByNested(parent, child, additional);
     }
+
+    public static ByAttribute attribute(String attribute, String value) {
+        return new ByAttribute(attribute, value);
+    }
     
     public static class ById implements Locator {
         private String id;
@@ -153,6 +157,34 @@ public abstract class By {
             } catch (ClassCastException cce) {
                 throw new LocatorNotSupportedException(this);
             }
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(attribute, value);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            ByAttribute byAttribute = (ByAttribute) o;
+
+            return attribute.equals(byAttribute.attribute)
+                    && value.equals(byAttribute.value);
+        }
+
+        @Override
+        public String toString() {
+            return "ByAttribute: {" +
+                    "attribute='" + attribute + "', " +
+                    "value='" + value + "'" +
+                    '}';
         }
     }
     
