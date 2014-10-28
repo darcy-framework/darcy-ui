@@ -137,24 +137,28 @@ public abstract class By {
         private String value;
 
         public ByAttribute(String attribute, String value) {
-            this.attribute = Objects.requireNonNull(attribute);
-            this.value = Objects.requireNonNull(value);
+            this.attribute = Objects.requireNonNull(attribute, "attribute");
+            this.value = Objects.requireNonNull(value, "value");
         }
 
         @Override
         public <T> List<T> findAll(Class<T> type, Context context) {
-            try {
+            if (context instanceof FindsByAttribute) {
                 return ((FindsByAttribute) context).findAllByAttribute(type, attribute, value);
-            } catch (ClassCastException cce) {
+            } else if (context instanceof FindsByXPath) {
+                return ((FindsByXPath) context).findAllByXPath(type, ".//*[@" + attribute + "='" + value + "']");
+            } else {
                 throw new LocatorNotSupportedException(this);
             }
         }
 
         @Override
         public <T> T find(Class<T> type, Context context) {
-            try {
+            if (context instanceof FindsByAttribute) {
                 return ((FindsByAttribute) context).findByAttribute(type, attribute, value);
-            } catch (ClassCastException cce) {
+            } else if (context instanceof FindsByXPath) {
+                return ((FindsByXPath) context).findByXPath(type, ".//*[@" + attribute + "='" + value + "']");
+            } else {
                 throw new LocatorNotSupportedException(this);
             }
         }

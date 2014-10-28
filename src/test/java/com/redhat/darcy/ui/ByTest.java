@@ -115,21 +115,21 @@ public class ByTest {
     }
 
     @Test(expected = LocatorNotSupportedException.class)
-    public void shouldThrowLocatorNotSupportedExceptionForFindByIdIfContextDoesNotSupportByAttribute() {
+    public void shouldThrowLocatorNotSupportedExceptionForFindByAttributeIfContextDoesNotSupportByAttribute() {
         Context mockContext = mock(Context.class);
 
         By.attribute("value", "test").find(Element.class, mockContext);
     }
 
     @Test(expected = LocatorNotSupportedException.class)
-    public void shouldThrowLocatorNotSupportedExceptionForFindAllByIdIfContextDoesNotSupportByAttribute() {
+    public void shouldThrowLocatorNotSupportedExceptionForFindAllByAttributeIfContextDoesNotSupportByAttribute() {
         Context mockContext = mock(Context.class);
 
         By.attribute("value", "test").findAll(Element.class, mockContext);
     }
 
     @Test
-    public void shouldUseFindByAttributeToFindByValueAttribute() {
+    public void shouldUseFindByAttributeToFindByAttribute() {
         FindsByAll mockContext = mock(FindsByAll.class);
 
         By.attribute("value", "test").find(Element.class, mockContext);
@@ -138,12 +138,30 @@ public class ByTest {
     }
 
     @Test
-    public void shouldUseFindByIdToFindAllByValueAttribute() {
+    public void shouldUseFindByAttributeToFindAllByAttribute() {
         FindsByAll mockContext = mock(FindsByAll.class);
 
         By.attribute("value", "test").findAll(Element.class, mockContext);
 
         verify(mockContext).findAllByAttribute(Element.class, "value", "test");
+    }
+
+    @Test
+    public void shouldUseFindAllByXPathIfContextDoesNotImplementFindsByAttribute() {
+        FindsByAllExceptFindsByAttribute mockContext = mock(FindsByAllExceptFindsByAttribute.class);
+
+        By.attribute("value", "test").findAll(Element.class, mockContext);
+
+        verify(mockContext).findAllByXPath(Element.class, ".//*[@value='test']");
+    }
+
+    @Test
+    public void shouldUseFindByXPathIfContextDoesNotImplementFindsByAttribute() {
+        FindsByAllExceptFindsByAttribute mockContext = mock(FindsByAllExceptFindsByAttribute.class);
+
+        By.attribute("value", "test").find(Element.class, mockContext);
+
+        verify(mockContext).findByXPath(Element.class, ".//*[@value='test']");
     }
 
     @Test(expected = LocatorNotSupportedException.class)
@@ -393,6 +411,9 @@ public class ByTest {
     }
 
     interface FindsByAll extends Context, FindsByAttribute, FindsById, FindsByXPath, FindsByName, FindsByNested,
+            FindsByLinkText, FindsByPartialTextContent, FindsByTextContent, FindsByView {}
+
+    interface FindsByAllExceptFindsByAttribute extends Context, FindsById, FindsByXPath, FindsByName, FindsByNested,
             FindsByLinkText, FindsByPartialTextContent, FindsByTextContent, FindsByView {}
 
     interface ElementWrapper extends Element, WrapsElement {};
