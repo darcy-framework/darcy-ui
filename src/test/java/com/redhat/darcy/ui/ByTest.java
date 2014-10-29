@@ -115,14 +115,14 @@ public class ByTest {
     }
 
     @Test(expected = LocatorNotSupportedException.class)
-    public void shouldThrowLocatorNotSupportedExceptionForFindByAttributeIfContextDoesNotSupportByAttribute() {
+    public void shouldThrowLocatorNotSupportedExceptionForFindByAttributeIfContextDoesNotSupportByAttributeOrByXpath() {
         Context mockContext = mock(Context.class);
 
         By.attribute("value", "test").find(Element.class, mockContext);
     }
 
     @Test(expected = LocatorNotSupportedException.class)
-    public void shouldThrowLocatorNotSupportedExceptionForFindAllByAttributeIfContextDoesNotSupportByAttribute() {
+    public void shouldThrowLocatorNotSupportedExceptionForFindAllByAttributeIfContextDoesNotSupportByAttributeOrByXpath() {
         Context mockContext = mock(Context.class);
 
         By.attribute("value", "test").findAll(Element.class, mockContext);
