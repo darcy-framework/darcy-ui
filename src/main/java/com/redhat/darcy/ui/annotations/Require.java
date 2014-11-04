@@ -35,4 +35,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Require {
+    int atLeast() default 1;
+    int atMost() default Integer.MAX_VALUE;
+    int exactly() default Integer.MAX_VALUE;
 }
