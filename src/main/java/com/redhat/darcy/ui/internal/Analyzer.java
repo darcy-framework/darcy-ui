@@ -35,6 +35,7 @@ import com.redhat.darcy.ui.api.elements.Findable;
 import com.redhat.synq.Condition;
 import com.redhat.synq.HamcrestCondition;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -239,6 +240,10 @@ public class Analyzer {
      * and NotRequired annotations.
      */
     private boolean isRequired(Field field) {
+        Annotation annotation = field.getAnnotation(Require.class);
+        int exactly = ((Require) annotation).exactly();
+        int atLeast= ((Require) annotation).atLeast();
+        int atMost = ((Require) annotation).atMost();
         return field.getAnnotation(Require.class) != null
                 // Use the field's declaring class for RequireAll; may be a super class
                 || (field.getDeclaringClass().getAnnotation(RequireAll.class) != null
