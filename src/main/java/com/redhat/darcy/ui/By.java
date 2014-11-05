@@ -147,9 +147,9 @@ public abstract class By {
                 return ((FindsByAttribute) context).findAllByAttribute(type, attribute, value);
             } else if (context instanceof FindsByXPath) {
                 return ((FindsByXPath) context).findAllByXPath(type, ".//*[@" + attribute + "='" + value + "']");
-            } else {
-                throw new LocatorNotSupportedException(this);
             }
+
+            throw new LocatorNotSupportedException(this);
         }
 
         @Override
@@ -158,9 +158,9 @@ public abstract class By {
                 return ((FindsByAttribute) context).findByAttribute(type, attribute, value);
             } else if (context instanceof FindsByXPath) {
                 return ((FindsByXPath) context).findByXPath(type, ".//*[@" + attribute + "='" + value + "']");
-            } else {
-                throw new LocatorNotSupportedException(this);
             }
+
+            throw new LocatorNotSupportedException(this);
         }
 
         @Override
