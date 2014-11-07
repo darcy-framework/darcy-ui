@@ -129,6 +129,34 @@ public class Analyzer {
         return isPresent;
     }
 
+    @SuppressWarnings("unchecked")
+    private boolean isListLoaded(Field field) {
+
+        Annotation annotation = field.getAnnotation(Require.class);
+
+        if (annotation != null) {
+            List<Object> elementList = (List<Object>)fieldToObject(field);
+            int exactly = ((Require) annotation).exactly();
+            int atLeast= ((Require) annotation).atLeast();
+            int atMost = ((Require) annotation).atMost();
+
+            int count = 0;
+
+            for(Object element : elementList) {
+                if (objectToLoadCondition(element) != null) {
+                    count++;
+                }
+            }
+
+            boolean atLeastMet = count >= atLeast;
+            boolean atMostMet = (atMost == Integer.MAX_VALUE) || (count <= atMost);
+            boolean exactlyMet = (exactly == Integer.MAX_VALUE) || (count == exactly);
+
+            return exactlyMet || (atLeastMet && atMostMet);
+        }
+        return true;
+    }
+
     /**
      * Reflectively examine the view, gathering, filtering, and sorting fields. The results are
      * assigned to {@link #requiredLists} and {@link #requiredObjects}; fields that are collections and
@@ -240,10 +268,12 @@ public class Analyzer {
      * and NotRequired annotations.
      */
     private boolean isRequired(Field field) {
+        /*
         Annotation annotation = field.getAnnotation(Require.class);
         int exactly = ((Require) annotation).exactly();
         int atLeast= ((Require) annotation).atLeast();
         int atMost = ((Require) annotation).atMost();
+        */
         return field.getAnnotation(Require.class) != null
                 // Use the field's declaring class for RequireAll; may be a super class
                 || (field.getDeclaringClass().getAnnotation(RequireAll.class) != null
