@@ -24,6 +24,7 @@ import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.View;
 import com.redhat.darcy.ui.api.WrapsElement;
 import com.redhat.darcy.ui.api.elements.Element;
+import com.redhat.darcy.ui.internal.FindsByAttribute;
 import com.redhat.darcy.ui.internal.FindsById;
 import com.redhat.darcy.ui.internal.FindsByLinkText;
 import com.redhat.darcy.ui.internal.FindsByName;
@@ -77,6 +78,10 @@ public abstract class By {
     public static ByNested nested(Element parent, Locator child, Locator... additional) {
         return new ByNested(parent, child, additional);
     }
+
+    public static ByAttribute attribute(String attribute, String value) {
+        return new ByAttribute(attribute, value);
+    }
     
     public static class ById implements Locator {
         private String id;
@@ -123,6 +128,66 @@ public abstract class By {
         public String toString() {
             return "ById: {" +
                     "id='" + id + '\'' +
+                    '}';
+        }
+    }
+
+    public static class ByAttribute implements Locator {
+        private String attribute;
+        private String value;
+
+        public ByAttribute(String attribute, String value) {
+            this.attribute = Objects.requireNonNull(attribute, "attribute");
+            this.value = Objects.requireNonNull(value, "value");
+        }
+
+        @Override
+        public <T> List<T> findAll(Class<T> type, Context context) {
+            if (context instanceof FindsByAttribute) {
+                return ((FindsByAttribute) context).findAllByAttribute(type, attribute, value);
+            } else if (context instanceof FindsByXPath) {
+                return ((FindsByXPath) context).findAllByXPath(type, ".//*[@" + attribute + "='" + value + "']");
+            }
+
+            throw new LocatorNotSupportedException(this);
+        }
+
+        @Override
+        public <T> T find(Class<T> type, Context context) {
+            if (context instanceof FindsByAttribute) {
+                return ((FindsByAttribute) context).findByAttribute(type, attribute, value);
+            } else if (context instanceof FindsByXPath) {
+                return ((FindsByXPath) context).findByXPath(type, ".//*[@" + attribute + "='" + value + "']");
+            }
+
+            throw new LocatorNotSupportedException(this);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(attribute, value);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            ByAttribute byAttribute = (ByAttribute) o;
+
+            return attribute.equals(byAttribute.attribute)
+                    && value.equals(byAttribute.value);
+        }
+
+        @Override
+        public String toString() {
+            return "ByAttribute: {" +
+                    "attribute='" + attribute + "', " +
+                    "value='" + value + "'" +
                     '}';
         }
     }
