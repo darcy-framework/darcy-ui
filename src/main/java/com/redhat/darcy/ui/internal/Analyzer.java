@@ -79,6 +79,18 @@ public class Analyzer {
 
             // TODO: Lists
 
+            isLoaded.addAll(requiredLists.stream()
+                            .map(this::isListLoaded)
+                            .filter(c -> c != null)
+                            .collect(Collectors.toList()));
+            /*
+            for(Field field : requiredLists) {
+                if (!isListLoaded(field)) {
+                    throw new NoRequiredElementsException(this);
+                }
+            }
+            */
+
             if(isLoaded.isEmpty()) {
                 throw new NoRequiredElementsException(this);
             }
@@ -99,6 +111,7 @@ public class Analyzer {
                     .collect(Collectors.toList()));
 
             // TODO: Lists
+
 
             if(isDisplayed.isEmpty()) {
                 throw new NoRequiredElementsException(this);
@@ -130,31 +143,38 @@ public class Analyzer {
     }
 
     @SuppressWarnings("unchecked")
-    private boolean isListLoaded(Field field) {
+    private Condition<?> isListLoaded(Field field) {
 
         Annotation annotation = field.getAnnotation(Require.class);
 
+        // TODO: Need to follow default behavior if Require is null, because things may be required
+        // TODO: from RequireAll
         if (annotation != null) {
             List<Object> elementList = (List<Object>)fieldToObject(field);
             int exactly = ((Require) annotation).exactly();
             int atLeast= ((Require) annotation).atLeast();
             int atMost = ((Require) annotation).atMost();
 
-            int count = 0;
+            Condition.match(elementList, ( l -> {
+                Long count = l.stream().filter(e -> objectToLoadCondition(e).isMet()).count();
 
+            /*
             for(Object element : elementList) {
                 if (objectToLoadCondition(element) != null) {
                     count++;
                 }
             }
+            */
 
-            boolean atLeastMet = count >= atLeast;
-            boolean atMostMet = (atMost == Integer.MAX_VALUE) || (count <= atMost);
-            boolean exactlyMet = (exactly == Integer.MAX_VALUE) || (count == exactly);
 
-            return exactlyMet || (atLeastMet && atMostMet);
+                boolean atLeastMet = count >= atLeast;
+                boolean atMostMet = (atMost == Integer.MAX_VALUE) || (count <= atMost);
+                boolean exactlyMet = (exactly == Integer.MAX_VALUE) || (count == exactly);
+
+                return exactlyMet || (atLeastMet && atMostMet);
+            }));
         }
-        return true;
+        return null;
     }
 
     /**
@@ -181,7 +201,7 @@ public class Analyzer {
                 .map(this::fieldToObject)
                 .collect(Collectors.toList());
 
-        if (/*requiredLists.isEmpty() &&*/ requiredObjects.isEmpty()) {
+        if (requiredLists.isEmpty() && requiredObjects.isEmpty()) {
             throw new NoRequiredElementsException(view);
         }
     }
