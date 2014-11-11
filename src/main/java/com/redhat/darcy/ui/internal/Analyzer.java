@@ -157,6 +157,8 @@ public class Analyzer {
             int atLeast = annotation.atLeast();
             int atMost  = annotation.atMost();
 
+            boolean useExactly = exactly != Integer.MAX_VALUE;
+
             loaded = Condition.match(elementList, ( l -> {
                 Long count = l.stream().filter(e -> objectToLoadCondition(e).isMet()).count();
 
@@ -164,7 +166,11 @@ public class Analyzer {
                 boolean atMostMet = (atMost == Integer.MAX_VALUE) || (count <= atMost);
                 boolean exactlyMet = (exactly == Integer.MAX_VALUE) || (count == exactly);
 
-                return exactlyMet || (atLeastMet && atMostMet);
+                if (useExactly) {
+                    return exactlyMet;
+                } else {
+                    return atLeastMet && atMostMet;
+                }
             }));
         } else {
             loaded = Condition.match(elementList, ( l -> {
