@@ -20,6 +20,7 @@
 package com.redhat.darcy.ui.api;
 
 import com.redhat.darcy.ui.api.elements.Button;
+import com.redhat.darcy.ui.api.elements.Checkbox;
 import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.ui.api.elements.Label;
 import com.redhat.darcy.ui.api.elements.Link;
@@ -45,7 +46,9 @@ public interface ElementSelection extends Selection {
      * that requires its presence. You can safely determine whether an element was found by calling
      * {@link com.redhat.darcy.ui.api.elements.Element#isDisplayed()}.
      *
-     * @param elementType
+     * @param elementType The type of element reference to retrieve. Whether or not the automation
+     * library enforces the found element actually be of the desired type is implementation
+     * specific.
      * @param locator
      * @return
      */
@@ -56,7 +59,9 @@ public interface ElementSelection extends Selection {
      * only reflect elements found at the moment a method on the list is called, or it may reflect
      * elements found at the time of retrieving the list.
      *
-     * @param elementType
+     * @param elementType The type of element reference to retrieve. Whether or not the automation
+     * library enforces the found element actually be of the desired type is implementation
+     * specific.
      * @param locator
      * @return
      */
@@ -120,5 +125,13 @@ public interface ElementSelection extends Selection {
 
     default List<Text> texts(Locator locator) {
         return elementsOfType(Text.class, locator);
+    }
+
+    default Checkbox checkbox(Locator locator) {
+        return elementOfType(Checkbox.class, locator);
+    }
+
+    default List<Checkbox> checkboxes(Locator locator) {
+        return elementsOfType(Checkbox.class, locator);
     }
 }
