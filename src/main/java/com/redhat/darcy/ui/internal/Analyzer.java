@@ -37,6 +37,7 @@ import com.redhat.synq.HamcrestCondition;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -106,7 +107,7 @@ public class Analyzer {
             // TODO: Lists
 
             isDisplayed.addAll(requiredLists.stream()
-                               .filter(o -> o.getGenericType().getTypeName().equals("Element"))
+                               .filter(this::filterElementTypes)
                                .map(this::isListDisplayed)
                                .collect(Collectors.toList()));
 
@@ -130,11 +131,16 @@ public class Analyzer {
                     .collect(Collectors.toList()));
 
             // TODO: Lists
+            for (Field f : requiredLists) {
+                String type = f.getGenericType().getTypeName();
+                String otherType = Findable.class.getTypeName();
+                type.contains("s");
+            }
 
             isPresent.addAll(requiredLists.stream()
-                             .filter(o -> o.getGenericType().getTypeName().equals("Findable"))
-                             .map(this::isListPresent)
-                             .collect(Collectors.toList()));
+                    .filter(this::filterFindableTypes)
+                    .map(this::isListPresent)
+                    .collect(Collectors.toList()));
 
             if(isPresent.isEmpty()) {
                 throw new NoRequiredElementsException(this);
@@ -142,6 +148,22 @@ public class Analyzer {
         }
 
         return isPresent;
+    }
+
+    private boolean filterFindableTypes(Field field) {
+        ParameterizedType type = (ParameterizedType)field.getGenericType();
+        String containedType = type.getActualTypeArguments()[0].getTypeName();
+        String findableType = Findable.class.getTypeName();
+
+        return findableType.equals(containedType);
+    }
+
+    private boolean filterElementTypes(Field field) {
+        ParameterizedType type = (ParameterizedType)field.getGenericType();
+        String containedType = type.getActualTypeArguments()[0].getTypeName();
+        String elementType = Element.class.getTypeName();
+
+        return elementType.equals(containedType);
     }
 
     @SuppressWarnings("unchecked")
@@ -164,7 +186,7 @@ public class Analyzer {
 
                 boolean atLeastMet = count >= atLeast;
                 boolean atMostMet = (atMost == Integer.MAX_VALUE) || (count <= atMost);
-                boolean exactlyMet = (exactly == Integer.MAX_VALUE) || (count == exactly);
+                boolean exactlyMet = count == exactly;
 
                 if (useExactly) {
                     return exactlyMet;
@@ -193,14 +215,20 @@ public class Analyzer {
             int atLeast = annotation.atLeast();
             int atMost  = annotation.atMost();
 
+            boolean useExactly = exactly != Integer.MAX_VALUE;
+
             displayed = Condition.match(elementList, (l -> {
                 Long count = l.stream().filter(e -> HamcrestCondition.match((Element) e, displayed()).isMet()).count();
 
                 boolean atLeastMet = count >= atLeast;
                 boolean atMostMet = (atMost == Integer.MAX_VALUE) || (count <= atMost);
-                boolean exactlyMet = (exactly == Integer.MAX_VALUE) || (count == exactly);
+                boolean exactlyMet = count == exactly;
 
-                return exactlyMet || (atLeastMet && atMostMet);
+                if (useExactly) {
+                    return exactlyMet;
+                } else {
+                    return atLeastMet && atMostMet;
+                }
             }));
 
         } else {
@@ -225,14 +253,20 @@ public class Analyzer {
             int atLeast = annotation.atLeast();
             int atMost  = annotation.atMost();
 
+            boolean useExactly = exactly != Integer.MAX_VALUE;
+
             present = Condition.match(elementList, (l -> {
                 Long count = l.stream().filter(f -> HamcrestCondition.match((Findable) f, present()).isMet()).count();
 
                 boolean atLeastMet = count >= atLeast;
                 boolean atMostMet = (atMost == Integer.MAX_VALUE) || (count <= atMost);
-                boolean exactlyMet = (exactly == Integer.MAX_VALUE) || (count == exactly);
+                boolean exactlyMet = count == exactly;
 
-                return exactlyMet || (atLeastMet && atMostMet);
+                if (useExactly) {
+                    return exactlyMet;
+                } else {
+                    return atLeastMet && atMostMet;
+                }
             }));
 
         } else {
