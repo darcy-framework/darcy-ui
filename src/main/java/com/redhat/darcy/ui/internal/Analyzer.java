@@ -83,13 +83,6 @@ public class Analyzer {
                             .map(this::isListLoaded)
                             .filter(c -> c != null)
                             .collect(Collectors.toList()));
-            /*
-            for(Field field : requiredLists) {
-                if (!isListLoaded(field)) {
-                    throw new NoRequiredElementsException(this);
-                }
-            }
-            */
 
             if(isLoaded.isEmpty()) {
                 throw new NoRequiredElementsException(this);
@@ -112,6 +105,10 @@ public class Analyzer {
 
             // TODO: Lists
 
+            isDisplayed.addAll(requiredLists.stream()
+                               .filter(o -> o.getGenericType().getTypeName().equals("Element"))
+                               .map(this::isListDisplayed)
+                               .collect(Collectors.toList()));
 
             if(isDisplayed.isEmpty()) {
                 throw new NoRequiredElementsException(this);
@@ -134,6 +131,11 @@ public class Analyzer {
 
             // TODO: Lists
 
+            isPresent.addAll(requiredLists.stream()
+                             .filter(o -> o.getGenericType().getTypeName().equals("Findable"))
+                             .map(this::isListPresent)
+                             .collect(Collectors.toList()));
+
             if(isPresent.isEmpty()) {
                 throw new NoRequiredElementsException(this);
             }
@@ -144,28 +146,19 @@ public class Analyzer {
 
     @SuppressWarnings("unchecked")
     private Condition<?> isListLoaded(Field field) {
-
-        Annotation annotation = field.getAnnotation(Require.class);
+        Condition loaded;
+        Require annotation = field.getAnnotation(Require.class);
+        List<Object> elementList = (List<Object>)fieldToObject(field);
 
         // TODO: Need to follow default behavior if Require is null, because things may be required
         // TODO: from RequireAll
         if (annotation != null) {
-            List<Object> elementList = (List<Object>)fieldToObject(field);
-            int exactly = ((Require) annotation).exactly();
-            int atLeast= ((Require) annotation).atLeast();
-            int atMost = ((Require) annotation).atMost();
+            int exactly = annotation.exactly();
+            int atLeast = annotation.atLeast();
+            int atMost  = annotation.atMost();
 
-            Condition.match(elementList, ( l -> {
+            loaded = Condition.match(elementList, ( l -> {
                 Long count = l.stream().filter(e -> objectToLoadCondition(e).isMet()).count();
-
-            /*
-            for(Object element : elementList) {
-                if (objectToLoadCondition(element) != null) {
-                    count++;
-                }
-            }
-            */
-
 
                 boolean atLeastMet = count >= atLeast;
                 boolean atMostMet = (atMost == Integer.MAX_VALUE) || (count <= atMost);
@@ -173,8 +166,77 @@ public class Analyzer {
 
                 return exactlyMet || (atLeastMet && atMostMet);
             }));
+        } else {
+            loaded = Condition.match(elementList, ( l -> {
+                Long count = l.stream().filter(e -> objectToLoadCondition(e).isMet()).count();
+
+                return count >= 1;
+            }));
         }
-        return null;
+        return loaded;
+    }
+
+    @SuppressWarnings("unchecked")
+    private Condition<?> isListDisplayed(Field field) {
+        Condition displayed;
+        List<Object> elementList = (List<Object>)fieldToObject(field);
+        Require annotation = field.getAnnotation(Require.class);
+
+        if (annotation != null) {
+            int exactly = annotation.exactly();
+            int atLeast = annotation.atLeast();
+            int atMost  = annotation.atMost();
+
+            displayed = Condition.match(elementList, (l -> {
+                Long count = l.stream().filter(e -> HamcrestCondition.match((Element) e, displayed()).isMet()).count();
+
+                boolean atLeastMet = count >= atLeast;
+                boolean atMostMet = (atMost == Integer.MAX_VALUE) || (count <= atMost);
+                boolean exactlyMet = (exactly == Integer.MAX_VALUE) || (count == exactly);
+
+                return exactlyMet || (atLeastMet && atMostMet);
+            }));
+
+        } else {
+            displayed = Condition.match(elementList, (l -> {
+                Long count = l.stream().filter(e -> HamcrestCondition.match((Element) e, displayed()).isMet()).count();
+
+                return count > 1;
+            }));
+        }
+
+        return displayed;
+    }
+
+    @SuppressWarnings("unchecked")
+    private Condition<?> isListPresent(Field field) {
+        Condition present;
+        List<Object> elementList = (List<Object>)fieldToObject(field);
+        Require annotation = field.getAnnotation(Require.class);
+
+        if (annotation != null) {
+            int exactly = annotation.exactly();
+            int atLeast = annotation.atLeast();
+            int atMost  = annotation.atMost();
+
+            present = Condition.match(elementList, (l -> {
+                Long count = l.stream().filter(f -> HamcrestCondition.match((Findable) f, present()).isMet()).count();
+
+                boolean atLeastMet = count >= atLeast;
+                boolean atMostMet = (atMost == Integer.MAX_VALUE) || (count <= atMost);
+                boolean exactlyMet = (exactly == Integer.MAX_VALUE) || (count == exactly);
+
+                return exactlyMet || (atLeastMet && atMostMet);
+            }));
+
+        } else {
+            present = Condition.match(elementList, (l -> {
+                Long count = l.stream().filter(f -> HamcrestCondition.match((Findable) f, present()).isMet()).count();
+
+                return count > 1;
+            }));
+        }
+        return present;
     }
 
     /**
