@@ -135,6 +135,42 @@ public class AbstractViewIsLoadedTest {
     }
 
     @Test
+    public void shouldReturnTrueIfRequireIsSpecifiedForAListWithASingleElementLoaded() {
+        class TestView extends AbstractView {
+            @Require
+            private List<Element> elements;
+
+            public TestView() {
+                elements = new ArrayList<Element>();
+                elements.add(new AlwaysDisplayedLabel());
+            }
+        }
+
+        TestView view = new TestView();
+
+        assertTrue("isLoaded should return true if no specific requirement limit is specified for" +
+                   " for a list that has at least a single element loaded.", view.isLoaded());
+    }
+
+    @Test
+    public void shouldReturnFalseIfRequireIsSpecifiedForAListWithNoElementsLoaded() {
+        class TestView extends AbstractView {
+            @Require
+            private List<Element> elements;
+
+            public TestView() {
+                elements = new ArrayList<Element>();
+            }
+        }
+
+        TestView view = new TestView();
+
+        assertFalse("isLoaded should return false if a list with no elements loaded is specified" +
+                    " required with no requirement limit.", view.isLoaded());
+
+    }
+
+    @Test
     public void shouldReturnTrueIfExactNumberOfElementsSpecifiedInListAreLoaded() {
         class TestView extends AbstractView {
             @Require(exactly = 5)
@@ -190,6 +226,10 @@ public class AbstractViewIsLoadedTest {
                 while (elements.size() < 6) {
                     elements.add(new AlwaysDisplayedLabel());
                 }
+
+                while (elements.size() < 10) {
+                    elements.add(new NeverDisplayedElement());
+                }
             }
         }
 
@@ -211,6 +251,10 @@ public class AbstractViewIsLoadedTest {
                 while (elements.size() < 5) {
                     elements.add(new AlwaysDisplayedLabel());
                 }
+
+                while (elements.size() < 10) {
+                    elements.add(new NeverDisplayedElement());
+                }
             }
         }
 
@@ -231,6 +275,10 @@ public class AbstractViewIsLoadedTest {
 
                 while (elements.size() < 4) {
                     elements.add(new AlwaysDisplayedLabel());
+                }
+
+                while (elements.size() < 10) {
+                    elements.add(new NeverDisplayedElement());
                 }
 
                 elements.add(new NeverDisplayedElement());

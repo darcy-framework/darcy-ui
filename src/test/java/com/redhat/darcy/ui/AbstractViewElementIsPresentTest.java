@@ -285,6 +285,44 @@ public class AbstractViewElementIsPresentTest {
     }
 
     @Test
+    public void shouldReturnTrueIfRequireIsSpecifiedForAListWithASingleElementLoaded() {
+        class TestViewElement extends AbstractViewElement {
+            @Require
+            private List<Findable> findables;
+
+            public TestViewElement() {
+                super(mock(Locator.class));
+                findables = new ArrayList<Findable>();
+                findables.add(new NeverDisplayedElement());
+            }
+        }
+
+        TestViewElement view = new TestViewElement();
+
+        assertTrue("isPresent should return true if no specific requirement limit is specified for" +
+                " for a list that has at least a single element present.", view.isPresent());
+    }
+
+    @Test
+    public void shouldReturnFalseIfRequireIsSpecifiedForAListWithNoElementsLoaded() {
+        class TestViewElement extends AbstractViewElement {
+            @Require
+            private List<Findable> findables;
+
+            public TestViewElement() {
+                super(mock(Locator.class));
+                findables = new ArrayList<Findable>();
+            }
+        }
+
+        TestViewElement view = new TestViewElement();
+
+        assertFalse("isPresent should return false if a list with no elements present is specified" +
+                " required with no requirement limit.", view.isPresent());
+
+    }
+
+    @Test
     public void  shouldReturnTrueIfExactNumberOfRequiredElementsArePresent() {
         class TestViewElement extends AbstractViewElement {
             @Require(exactly = 5)

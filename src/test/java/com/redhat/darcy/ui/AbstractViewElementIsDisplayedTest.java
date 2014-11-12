@@ -251,6 +251,43 @@ public class AbstractViewElementIsDisplayedTest {
         TestViewElement testView = new TestViewElement();
         testView.isDisplayed();
     }
+    @Test
+    public void shouldReturnTrueIfRequireIsSpecifiedForAListWithASingleElementLoaded() {
+        class TestViewElement extends AbstractViewElement {
+            @Require
+            private List<Element> elements;
+
+            public TestViewElement() {
+                super(mock(Locator.class));
+                elements = new ArrayList<Element>();
+                elements.add(new AlwaysDisplayedLabel());
+            }
+        }
+
+        TestViewElement view = new TestViewElement();
+
+        assertTrue("isDisplayed should return true if no specific requirement limit is specified for" +
+                " for a list that has at least a single element displayed.", view.isDisplayed());
+    }
+
+    @Test
+    public void shouldReturnFalseIfRequireIsSpecifiedForAListWithNoElementsLoaded() {
+        class TestViewElement extends AbstractViewElement {
+            @Require
+            private List<Element> elements;
+
+            public TestViewElement() {
+                super(mock(Locator.class));
+                elements = new ArrayList<Element>();
+            }
+        }
+
+        TestViewElement view = new TestViewElement();
+
+        assertFalse("isDisplayed should return false if a list with no elements displayed is specified" +
+                " required with no requirement limit.", view.isDisplayed());
+
+    }
 
     @Test
     public void  shouldReturnTrueIfExactNumberOfRequiredElementsAreDisplayed() {
