@@ -586,15 +586,14 @@ public abstract class By {
                 this.child = child;
             }
 
-            this.parent = (parent instanceof WrapsElement)
-                    ? ((WrapsElement) parent).getWrappedElement()
-                    : parent;
+            this.parent = parent;
         }
         
         @Override
         public <T> List<T> findAll(Class<T> type, Context context) {
             try {
-                return ((FindsByNested) context).findAllByNested(type, parent, child);
+            	
+                return ((FindsByNested) context).findAllByNested(type, parent(), child);
             } catch (ClassCastException cce) {
                 throw new LocatorNotSupportedException(this);
             }
@@ -603,7 +602,7 @@ public abstract class By {
         @Override
         public <T> T find(Class<T> type, Context context) {
             try {
-                return ((FindsByNested) context).findByNested(type, parent, child);
+                return ((FindsByNested) context).findByNested(type, parent(), child);
             } catch (ClassCastException cce) {
                 throw new LocatorNotSupportedException(this);
             }
@@ -635,6 +634,12 @@ public abstract class By {
                     "parent=" + parent +
                     ", child=" + child +
                     '}';
+        }
+        
+        private Element parent() {
+        	return (parent instanceof WrapsElement)
+                    ? ((WrapsElement) parent).getWrappedElement()
+                    : parent;
         }
     }
 }
