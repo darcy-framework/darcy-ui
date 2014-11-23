@@ -21,9 +21,13 @@ package com.redhat.darcy.ui.api;
 
 import com.redhat.darcy.ui.api.elements.Button;
 import com.redhat.darcy.ui.api.elements.Checkbox;
+import com.redhat.darcy.ui.api.elements.DateInput;
 import com.redhat.darcy.ui.api.elements.Element;
+import com.redhat.darcy.ui.api.elements.FileSelect;
 import com.redhat.darcy.ui.api.elements.Label;
 import com.redhat.darcy.ui.api.elements.Link;
+import com.redhat.darcy.ui.api.elements.MultiSelect;
+import com.redhat.darcy.ui.api.elements.Radio;
 import com.redhat.darcy.ui.api.elements.Select;
 import com.redhat.darcy.ui.api.elements.Text;
 import com.redhat.darcy.ui.api.elements.TextInput;
@@ -118,6 +122,14 @@ public interface ElementSelection extends Selection {
     default List<Select> selects(Locator locator) {
         return elementsOfType(Select.class, locator);
     }
+    
+    default Radio radio(Locator locator) {
+        return elementOfType(Radio.class, locator);
+    }
+
+    default List<Radio> radios(Locator locator) {
+        return elementsOfType(Radio.class, locator);
+    }
 
     default Text text(Locator locator) {
         return elementOfType(Text.class, locator);
@@ -125,6 +137,14 @@ public interface ElementSelection extends Selection {
 
     default List<Text> texts(Locator locator) {
         return elementsOfType(Text.class, locator);
+    }
+    
+    default FileSelect fileSelect(Locator locator) {
+        return elementOfType(FileSelect.class, locator);
+    }
+
+    default List<FileSelect> fileSelects(Locator locator) {
+        return elementsOfType(FileSelect.class, locator);
     }
 
     default Checkbox checkbox(Locator locator) {
@@ -134,4 +154,21 @@ public interface ElementSelection extends Selection {
     default List<Checkbox> checkboxes(Locator locator) {
         return elementsOfType(Checkbox.class, locator);
     }
+    
+    default DateInput dateInput(Locator locator) {
+        return elementOfType(DateInput.class, locator);
+    }
+
+    default List<DateInput> dateInputs(Locator locator) {
+        return elementsOfType(DateInput.class, locator);
+    }
+
+    default MultiSelect multiSelect(Locator locator) {
+        return elementOfType(MultiSelect.class, locator);
+    }
+
+    default List<MultiSelect> multiSelects(Locator locator) {
+        return elementsOfType(MultiSelect.class, locator);
+    }
+
 }
