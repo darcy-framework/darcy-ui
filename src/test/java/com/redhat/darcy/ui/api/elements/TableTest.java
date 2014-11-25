@@ -34,6 +34,7 @@ import org.junit.runners.JUnit4;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RunWith(JUnit4.class)
@@ -143,6 +144,23 @@ public class TableTest {
     }
 
     @Test
+    public void shouldGetFirstRowWhereWithPredicateInOrder() {
+        Table.Column<StubTable, Integer> testColumn = (t, r) -> r;
+        StubTable testTable = new StubTable() {
+            @Override
+            public int getRowCount() {
+                return 50;
+            }
+        };
+
+        Optional<Table.Row<StubTable>> row = testTable.getFirstRowWhere(testColumn, i -> i > 10);
+
+        int curRow = 11;
+        assertThat(row.get().getIndex(), equalTo(curRow));
+        assertSame(testTable, row.get().getTable());
+    }
+
+    @Test
     public void shouldGetRowsWhereWithMatcherInOrder() {
         Table.Column<StubTable, Integer> testColumn = (t, r) -> r;
         StubTable testTable = new StubTable() {
@@ -166,6 +184,23 @@ public class TableTest {
         }
 
         assertThat("Did not return all rows that satisfied matcher.", curRow, equalTo(50));
+    }
+
+    @Test
+    public void shouldGetFirstRowWhereWithMatcherInOrder() {
+        Table.Column<StubTable, Integer> testColumn = (t, r) -> r;
+        StubTable testTable = new StubTable() {
+            @Override
+            public int getRowCount() {
+                return 50;
+            }
+        };
+
+        Optional<Table.Row<StubTable>> row = testTable.getFirstRowWhere(testColumn, greaterThan(10));
+
+        int curRow = 11;
+        assertThat(row.get().getIndex(), equalTo(curRow));
+        assertSame(testTable, row.get().getTable());
     }
 
     @Test
