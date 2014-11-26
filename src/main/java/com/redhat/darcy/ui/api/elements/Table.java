@@ -30,6 +30,7 @@ import org.hamcrest.Matcher;
 
 import java.util.Iterator;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Spliterators;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -164,11 +165,27 @@ public interface Table<T extends Table<T>> extends ViewElement {
     }
 
     /**
+     * @return The first filtered {@link java.util.Optional} of the rows in this table where the
+     * contents of a particular column match the specified {@link java.util.function.Predicate}.
+     */
+    default <U> Optional<Row<T>> getFirstRowWhere(Column<T, U> column, Predicate<? super U> predicate) {
+        return getRowsWhere(column, predicate).findFirst();
+    }
+
+    /**
      * @return A filtered {@link java.util.stream.Stream} of the rows in this table where the
      * contents of a particular column match the specified Hamcrest {@link org.hamcrest.Matcher}.
      */
     default <U> Stream<Row<T>> getRowsWhere(Column<T, U> column, Matcher<? super U> matcher) {
         return getRowsWhere(column, matcher::matches);
+    }
+
+    /**
+     * @return The first filtered {@link java.util.Optional} of the rows in this table where the
+     * contents of a particular column match the specified Hamcrest {@link org.hamcrest.Matcher}.
+     */
+    default <U> Optional<Row<T>> getFirstRowWhere(Column<T, U> column, Matcher<? super U> matcher) {
+        return getRowsWhere(column, matcher::matches).findFirst();
     }
 
     /**
