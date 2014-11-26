@@ -29,17 +29,18 @@ import com.redhat.darcy.ui.annotations.Context;
 import com.redhat.darcy.ui.annotations.NotRequired;
 import com.redhat.darcy.ui.annotations.Require;
 import com.redhat.darcy.ui.annotations.RequireAll;
+import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.View;
 import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.ui.api.elements.Findable;
 import com.redhat.darcy.ui.testing.doubles.AlwaysDisplayedLabel;
 import com.redhat.darcy.ui.testing.doubles.NeverDisplayedElement;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("unused")
@@ -131,7 +132,228 @@ public class AbstractViewIsLoadedTest {
         assertFalse("isLoaded should return false if only element actually displayed is not required"
                 + " when RequireAll annotation is used.", testView.isLoaded());
     }
-    
+
+    @Test
+    public void shouldReturnTrueIfRequireIsSpecifiedForAListWithASingleElementLoaded() {
+        class TestView extends AbstractView {
+            @Require
+            private List<Element> elements;
+
+            public TestView() {
+                elements = new ArrayList<Element>();
+                elements.add(new AlwaysDisplayedLabel());
+            }
+        }
+
+        TestView view = new TestView();
+
+        assertTrue("isLoaded should return true if no specific requirement limit is specified for" +
+                   " for a list that has at least a single element loaded.", view.isLoaded());
+    }
+
+    @Test
+    public void shouldReturnFalseIfRequireIsSpecifiedForAListWithNoElementsLoaded() {
+        class TestView extends AbstractView {
+            @Require
+            private List<Element> elements;
+
+            public TestView() {
+                elements = new ArrayList<Element>();
+            }
+        }
+
+        TestView view = new TestView();
+
+        assertFalse("isLoaded should return false if a list with no elements loaded is specified" +
+                    " required with no requirement limit.", view.isLoaded());
+
+    }
+
+    @Test
+    public void shouldReturnTrueIfExactNumberOfElementsSpecifiedInListAreLoaded() {
+        class TestView extends AbstractView {
+            @Require(exactly = 5)
+            private List<Element> elements;
+
+            public TestView() {
+                elements = new ArrayList<Element>();
+
+                while (elements.size() < 5) {
+                    elements.add(new AlwaysDisplayedLabel());
+                }
+            }
+        }
+
+        TestView view = new TestView();
+
+        assertTrue("Should return true if an exact number of elements in a list are loaded.",
+                   view.isLoaded());
+    }
+
+    @Test
+    public void shouldReturnFalseIfExactNumberOfElementsSpecifiedInAListAreNotLoaded() {
+        class TestView extends AbstractView {
+            @Require(exactly = 5)
+            private List<Element> elements;
+
+            public TestView() {
+                elements = new ArrayList<Element>();
+
+                while (elements.size() < 4) {
+                    elements.add(new AlwaysDisplayedLabel());
+                }
+
+                elements.add(new NeverDisplayedElement());
+            }
+        }
+
+        TestView view = new TestView();
+
+        assertFalse("isLoaded should return false if all required elements are not loaded.",
+                view.isLoaded());
+    }
+
+    @Test
+    public void shouldReturnTrueIfAtLeastAsManyElementsNeededAreLoaded() {
+        class TestView extends AbstractView {
+            @Require(atLeast = 5)
+            private List<Element> elements;
+
+            public TestView() {
+                elements = new ArrayList<Element>();
+
+                while (elements.size() < 6) {
+                    elements.add(new AlwaysDisplayedLabel());
+                }
+
+                while (elements.size() < 10) {
+                    elements.add(new NeverDisplayedElement());
+                }
+            }
+        }
+
+        TestView view = new TestView();
+
+        assertTrue("Should return true if at least 5 elements are loaded in the list.",
+                   view.isLoaded());
+    }
+
+    @Test
+    public void shouldReturnTrueIfAsManyElementsNeededAreLoaded() {
+        class TestView extends AbstractView {
+            @Require(atLeast = 5)
+            private List<Element> elements;
+
+            public TestView() {
+                elements = new ArrayList<Element>();
+
+                while (elements.size() < 5) {
+                    elements.add(new AlwaysDisplayedLabel());
+                }
+
+                while (elements.size() < 10) {
+                    elements.add(new NeverDisplayedElement());
+                }
+            }
+        }
+
+        TestView view = new TestView();
+
+        assertTrue("Should return true if at least 5 elements are loaded in the list.",
+                view.isLoaded());
+    }
+
+    @Test
+    public void shouldReturnFalseIfLessElementsThanSpecifiedAreLoaded() {
+        class TestView extends AbstractView {
+            @Require(atLeast = 5)
+            private List<Element> elements;
+
+            public TestView() {
+                elements = new ArrayList<Element>();
+
+                while (elements.size() < 4) {
+                    elements.add(new AlwaysDisplayedLabel());
+                }
+
+                while (elements.size() < 10) {
+                    elements.add(new NeverDisplayedElement());
+                }
+
+                elements.add(new NeverDisplayedElement());
+            }
+        }
+
+        TestView view = new TestView();
+
+        assertFalse("isLoaded should return false if atLeast was specified and not enough elements" +
+                    " are loaded.", view.isLoaded());
+    }
+
+    @Test
+    public void shouldReturnTrueIfAtMostAsManyElementsNeededAreLoaded() {
+        class TestView extends AbstractView {
+            @Require(atMost = 5)
+            private List<Element> elements;
+
+            public TestView() {
+                elements = new ArrayList<Element>();
+
+                while (elements.size() < 4) {
+                    elements.add(new AlwaysDisplayedLabel());
+                }
+            }
+        }
+
+        TestView view = new TestView();
+
+        assertTrue("Should return true if at most 4 elements are loaded in the list.",
+                view.isLoaded());
+    }
+
+    @Test
+    public void shouldReturnTrueIfExactlyAsManyElementsNeededSpecifiedWithAtMostAreLoaded() {
+        class TestView extends AbstractView {
+            @Require(atMost = 5)
+            private List<Element> elements;
+
+            public TestView() {
+                elements = new ArrayList<Element>();
+
+                while (elements.size() < 5) {
+                    elements.add(new AlwaysDisplayedLabel());
+                }
+            }
+        }
+
+        TestView view = new TestView();
+
+        assertTrue("Should return true if at most 5 elements are loaded in the list.",
+                view.isLoaded());
+
+    }
+
+    @Test
+    public void shouldReturnFalseIfMoreElementsThanSpecifiedWithAtMostAreLoaded() {
+        class TestView extends AbstractView {
+            @Require(atMost = 5)
+            private List<Element> elements;
+
+            public TestView() {
+                elements = new ArrayList<Element>();
+
+                while (elements.size() < 6) {
+                    elements.add(new AlwaysDisplayedLabel());
+                }
+            }
+        }
+
+        TestView view = new TestView();
+
+        assertFalse("Should return false if 6 elements are loaded in the list.",
+                view.isLoaded());
+    }
+
     @Test
     public void shouldAllowBeingOverridden() {
         View testView = new AbstractView() {
@@ -239,8 +461,6 @@ public class AbstractViewIsLoadedTest {
         testView.isLoaded();
     }
 
-    @Ignore("Broken until requiring Lists is implemented, see " +
-            "https://github.com/darcy-framework/darcy-ui/issues/13")
     @Test(expected = NoRequiredElementsException.class)
     public void shouldReconsiderEmptyConditionsListIfFieldIsAmbiguous() {
         @RequireAll class TestView extends AbstractView {

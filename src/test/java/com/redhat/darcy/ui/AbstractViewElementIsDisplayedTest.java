@@ -35,9 +35,13 @@ import com.redhat.darcy.ui.api.elements.Findable;
 import com.redhat.darcy.ui.testing.doubles.AlwaysDisplayedLabel;
 import com.redhat.darcy.ui.testing.doubles.NeverDisplayedElement;
 
+import com.redhat.darcy.ui.testing.doubles.NeverFoundElement;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RunWith(JUnit4.class)
 public class AbstractViewElementIsDisplayedTest {
@@ -247,6 +251,253 @@ public class AbstractViewElementIsDisplayedTest {
         TestViewElement testView = new TestViewElement();
         testView.isDisplayed();
     }
+    @Test
+    public void shouldReturnTrueIfRequireIsSpecifiedForAListWithASingleElementLoaded() {
+        class TestViewElement extends AbstractViewElement {
+            @Require
+            private List<Element> elements;
 
+            public TestViewElement() {
+                super(mock(Locator.class));
+                elements = new ArrayList<Element>();
+                elements.add(new AlwaysDisplayedLabel());
+            }
+        }
+
+        TestViewElement view = new TestViewElement();
+
+        assertTrue("isDisplayed should return true if no specific requirement limit is specified for" +
+                " for a list that has at least a single element displayed.", view.isDisplayed());
+    }
+
+    @Test
+    public void shouldReturnFalseIfRequireIsSpecifiedForAListWithNoElementsLoaded() {
+        class TestViewElement extends AbstractViewElement {
+            @Require
+            private List<Element> elements;
+
+            public TestViewElement() {
+                super(mock(Locator.class));
+                elements = new ArrayList<Element>();
+            }
+        }
+
+        TestViewElement view = new TestViewElement();
+
+        assertFalse("isDisplayed should return false if a list with no elements displayed is specified" +
+                " required with no requirement limit.", view.isDisplayed());
+
+    }
+
+    @Test
+    public void  shouldReturnTrueIfExactNumberOfRequiredElementsAreDisplayed() {
+        class TestViewElement extends AbstractViewElement {
+            @Require(exactly = 5)
+            List<Element> elements;
+
+            public TestViewElement() {
+                super(mock(Locator.class));
+
+                elements = new ArrayList<Element>();
+
+                while (elements.size() < 5) {
+                    elements.add(new AlwaysDisplayedLabel());
+                }
+            }
+        }
+
+        TestViewElement element = new TestViewElement();
+
+        assertTrue("isDisplayed should return true if a list with exactly as many elements as specified" +
+                " are displayed.", element.isDisplayed());
+    }
+
+    @Test
+    public void shouldReturnFalseIfExactNumberOfRequiredElementsAreNotDisplayed() {
+        class TestViewElement extends AbstractViewElement {
+            @Require(exactly = 5)
+            List<Element> elements;
+
+            public TestViewElement() {
+                super(mock(Locator.class));
+
+                elements = new ArrayList<Element>();
+
+                while (elements.size() < 4) {
+                    elements.add(new AlwaysDisplayedLabel());
+                }
+
+                elements.add(new NeverDisplayedElement());
+            }
+        }
+
+        TestViewElement element = new TestViewElement();
+
+        assertFalse("isDisplayed should return false if a list with less than exactly as many elements as specified" +
+                " are displayed.", element.isDisplayed());
+
+    }
+
+    @Test
+    public void shouldReturnTrueIfAtLeastAsManyRequiredElementsAreDisplayed() {
+        class TestViewElement extends AbstractViewElement {
+            @Require(atLeast = 5)
+            List<Element> elements;
+
+            public TestViewElement() {
+                super(mock(Locator.class));
+
+                elements = new ArrayList<Element>();
+
+                while (elements.size() < 5) {
+                    elements.add(new AlwaysDisplayedLabel());
+                }
+
+            }
+        }
+
+        TestViewElement element = new TestViewElement();
+
+        assertTrue("isDisplayed should return true if at least a number of elements are displayed as" +
+                " specified to be required.", element.isDisplayed());
+
+    }
+
+    @Test
+    public void shouldReturnTrueIfAtLeastAsManyRequiredElementsAreDisplayedWithUndisplayedElements() {
+        class TestViewElement extends AbstractViewElement {
+            @Require(atLeast = 5)
+            List<Element> elements;
+
+            public TestViewElement() {
+                super(mock(Locator.class));
+
+                elements = new ArrayList<Element>();
+
+                while (elements.size() < 5) {
+                    elements.add(new AlwaysDisplayedLabel());
+                }
+
+                while (elements.size() < 10) {
+                    elements.add(new NeverDisplayedElement());
+                }
+
+            }
+        }
+
+        TestViewElement element = new TestViewElement();
+
+        assertTrue("isDisplayed should return true if at least a number of elements are displayed as" +
+                " specified to be required, with any number of non-displayed elements.", element.isDisplayed());
+    }
+
+    @Test
+    public void shouldReturnFalseIfLessThanTheMinimumRequiredElementsAreDisplayed() {
+        class TestViewElement extends AbstractViewElement {
+            @Require(atLeast = 5)
+            List<Element> elements;
+
+            public TestViewElement() {
+                super(mock(Locator.class));
+
+                elements = new ArrayList<Element>();
+
+                while (elements.size() < 4) {
+                    elements.add(new AlwaysDisplayedLabel());
+                }
+
+                while (elements.size() < 10) {
+                    elements.add(new NeverDisplayedElement());
+                }
+
+            }
+        }
+
+        TestViewElement element = new TestViewElement();
+
+        assertFalse("isDisplayed should return false if a number of elements less than specified " +
+                " as required are displayed.", element.isDisplayed());
+    }
+
+    @Test
+    public void shouldReturnTrueIfAtMostAsManyRequiredElementsAreDisplayed() {
+        class TestViewElement extends AbstractViewElement {
+            @Require(atMost = 5)
+            List<Element> elements;
+
+            public TestViewElement() {
+                super(mock(Locator.class));
+
+                elements = new ArrayList<Element>();
+
+                while (elements.size() < 5) {
+                    elements.add(new AlwaysDisplayedLabel());
+                }
+
+            }
+        }
+
+        TestViewElement element = new TestViewElement();
+
+        assertTrue("isDisplayed should return true if at most a number of elements are displayed as" +
+                " specified to be required.", element.isDisplayed());
+
+    }
+
+    @Test
+    public void shouldReturnTrueIfAtMostAsManyRequiredElementsAreDisplayedWithUndisplayedElements() {
+        class TestViewElement extends AbstractViewElement {
+            @Require(atMost = 5)
+            List<Element> elements;
+
+            public TestViewElement() {
+                super(mock(Locator.class));
+
+                elements = new ArrayList<Element>();
+
+                while (elements.size() < 4) {
+                    elements.add(new AlwaysDisplayedLabel());
+                }
+
+                while (elements.size() < 10) {
+                    elements.add(new NeverDisplayedElement());
+                }
+
+            }
+        }
+
+        TestViewElement element = new TestViewElement();
+
+        assertTrue("isDisplayed should return true if at least a number of elements are displayed as" +
+                " specified to be required, with any number of non-displayed elements.", element.isDisplayed());
+    }
+
+    @Test
+    public void shouldReturnFalseIfMoreThanTheMaximumRequiredElementsAreDisplayed() {
+        class TestViewElement extends AbstractViewElement {
+            @Require(atMost = 5)
+            List<Element> elements;
+
+            public TestViewElement() {
+                super(mock(Locator.class));
+
+                elements = new ArrayList<Element>();
+
+                while (elements.size() < 6) {
+                    elements.add(new AlwaysDisplayedLabel());
+                }
+
+                while (elements.size() < 10) {
+                    elements.add(new NeverDisplayedElement());
+                }
+
+            }
+        }
+
+        TestViewElement element = new TestViewElement();
+
+        assertFalse("isDisplayed should return false if a number of elements less than specified " +
+                " as required are displayed.", element.isDisplayed());
+    }
     class TestException extends RuntimeException {}
 }

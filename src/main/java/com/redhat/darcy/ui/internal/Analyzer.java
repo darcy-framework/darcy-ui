@@ -20,8 +20,8 @@
 package com.redhat.darcy.ui.internal;
 
 import static com.redhat.darcy.ui.matchers.DarcyMatchers.displayed;
-import static com.redhat.darcy.ui.matchers.DarcyMatchers.loaded;
 import static com.redhat.darcy.ui.matchers.DarcyMatchers.present;
+import static com.redhat.darcy.ui.matchers.RequiredListMatcher.hasCorrectNumberOfItemsMatching;
 
 import com.redhat.darcy.ui.DarcyException;
 import com.redhat.darcy.ui.NoRequiredElementsException;
@@ -32,6 +32,7 @@ import com.redhat.darcy.ui.annotations.RequireAll;
 import com.redhat.darcy.ui.api.View;
 import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.ui.api.elements.Findable;
+import com.redhat.darcy.ui.matchers.LoadConditionMatcher;
 import com.redhat.synq.Condition;
 import com.redhat.synq.HamcrestCondition;
 
@@ -45,7 +46,7 @@ public class Analyzer {
     private final Object view;
     private final List<Field> required;
 
-    private List<Field> requiredLists;
+    private List<RequiredList<Object>> requiredLists;
     private List<Object> requiredObjects;
 
     private List<Condition<?>> isLoaded;
@@ -72,11 +73,12 @@ public class Analyzer {
             analyze();
 
             isLoaded.addAll(requiredObjects.stream()
-                    .map(this::objectToLoadCondition)
-                    .filter(c -> c != null)
+                    .map(o -> HamcrestCondition.match(o, new LoadConditionMatcher()))
                     .collect(Collectors.toList()));
 
-            // TODO: Lists
+            isLoaded.addAll(requiredLists.stream()
+                            .map(l -> HamcrestCondition.match(l.list(), hasCorrectNumberOfItemsMatching(l.atLeast(), l.atMost(), new LoadConditionMatcher())))
+                            .collect(Collectors.toList()));
 
             if(isLoaded.isEmpty()) {
                 throw new NoRequiredElementsException(this);
@@ -97,7 +99,10 @@ public class Analyzer {
                     .map(e -> HamcrestCondition.match((Element) e, displayed()))
                     .collect(Collectors.toList()));
 
-            // TODO: Lists
+            isDisplayed.addAll(requiredLists.stream()
+                               .filter(l -> Element.class.isAssignableFrom(l.genericType()))
+                               .map(l -> HamcrestCondition.match(l.list(), hasCorrectNumberOfItemsMatching(l.atLeast(), l.atMost(), displayed())))
+                               .collect(Collectors.toList()));
 
             if(isDisplayed.isEmpty()) {
                 throw new NoRequiredElementsException(this);
@@ -118,7 +123,10 @@ public class Analyzer {
                     .map(f -> HamcrestCondition.match((Findable) f, present()))
                     .collect(Collectors.toList()));
 
-            // TODO: Lists
+            isPresent.addAll(requiredLists.stream()
+                    .filter(l -> Findable.class.isAssignableFrom(l.genericType()))
+                    .map(l -> HamcrestCondition.match(l.list(), hasCorrectNumberOfItemsMatching(l.atLeast(), l.atMost(), present())))
+                    .collect(Collectors.toList()));
 
             if(isPresent.isEmpty()) {
                 throw new NoRequiredElementsException(this);
@@ -145,6 +153,11 @@ public class Analyzer {
 
         requiredLists = required.stream()
                 .filter(this::isList)
+                .map(f -> new RequiredList<>(f, this.view))
+                .filter(l ->
+                        Element.class.isAssignableFrom(l.genericType()) ||
+                        View.class.isAssignableFrom(l.genericType()) ||
+                        Findable.class.isAssignableFrom(l.genericType()))
                 .collect(Collectors.toList());
 
         requiredObjects = required.stream()
@@ -152,7 +165,7 @@ public class Analyzer {
                 .map(this::fieldToObject)
                 .collect(Collectors.toList());
 
-        if (/*requiredLists.isEmpty() &&*/ requiredObjects.isEmpty()) {
+        if (requiredLists.isEmpty() && requiredObjects.isEmpty()) {
             throw new NoRequiredElementsException(view);
         }
     }
@@ -175,45 +188,6 @@ public class Analyzer {
         } catch (IllegalAccessException e) {
             throw new DarcyException("Couldn't analyze required fields.", e);
         }
-    }
-
-    /**
-     * Takes an object, and determines a condition for that object that should satisfy the
-     * containing view is loaded. Different conditions are made depending on the type of object.
-     *
-     * <table>
-     *     <thead>
-     *         <tr>
-     *             <td>Type</td>
-     *             <td>Method</td>
-     *         </tr>
-     *     </thead>
-     *     <tbody>
-     *         <tr>
-     *             <td>{@link com.redhat.darcy.ui.api.View}</td>
-     *             <td>{@link com.redhat.darcy.ui.api.View#isLoaded()}</td>
-     *         </tr>
-     *         <tr>
-     *             <td>{@link com.redhat.darcy.ui.api.elements.Element}</td>
-     *             <td>{@link com.redhat.darcy.ui.api.elements.Element#isDisplayed()}</td>
-     *         </tr>
-     *         <tr>
-     *             <td>{@link com.redhat.darcy.ui.api.elements.Findable}</td>
-     *             <td>{@link com.redhat.darcy.ui.api.elements.Findable#isPresent()}</td>
-     *         </tr>
-     *     </tbody>
-     * </table>
-     */
-    private Condition<?> objectToLoadCondition(Object fieldObject) {
-        if (fieldObject instanceof View) {
-            return HamcrestCondition.match((View) fieldObject, loaded());
-        } else if (fieldObject instanceof Element) {
-            return HamcrestCondition.match((Element) fieldObject, displayed());
-        } else if (fieldObject instanceof Findable) {
-            return HamcrestCondition.match((Findable) fieldObject, present());
-        }
-
-        return null;
     }
 
     /**

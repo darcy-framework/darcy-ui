@@ -35,11 +35,11 @@ import com.redhat.darcy.ui.api.elements.Findable;
 import com.redhat.darcy.ui.testing.doubles.NeverDisplayedElement;
 import com.redhat.darcy.ui.testing.doubles.NeverFoundElement;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(JUnit4.class)
@@ -267,8 +267,6 @@ public class AbstractViewElementIsPresentTest {
         testView.isPresent();
     }
 
-    @Ignore("Broken until requiring Lists is implemented, see " +
-            "https://github.com/darcy-framework/darcy-ui/issues/13")
     @Test(expected = NoRequiredElementsException.class)
     public void shouldReconsiderEmptyConditionsListIfFieldIsAmbiguous() {
         @RequireAll class TestViewElement extends AbstractViewElement {
@@ -283,5 +281,253 @@ public class AbstractViewElementIsPresentTest {
         testView.isPresent();
     }
 
+    @Test
+    public void shouldReturnTrueIfRequireIsSpecifiedForAListWithASingleElementLoaded() {
+        class TestViewElement extends AbstractViewElement {
+            @Require
+            private List<Findable> findables;
+
+            public TestViewElement() {
+                super(mock(Locator.class));
+                findables = new ArrayList<Findable>();
+                findables.add(new NeverDisplayedElement());
+            }
+        }
+
+        TestViewElement view = new TestViewElement();
+
+        assertTrue("isPresent should return true if no specific requirement limit is specified for" +
+                " for a list that has at least a single element present.", view.isPresent());
+    }
+
+    @Test
+    public void shouldReturnFalseIfRequireIsSpecifiedForAListWithNoElementsLoaded() {
+        class TestViewElement extends AbstractViewElement {
+            @Require
+            private List<Findable> findables;
+
+            public TestViewElement() {
+                super(mock(Locator.class));
+                findables = new ArrayList<Findable>();
+            }
+        }
+
+        TestViewElement view = new TestViewElement();
+
+        assertFalse("isPresent should return false if a list with no elements present is specified" +
+                " required with no requirement limit.", view.isPresent());
+
+    }
+
+    @Test
+    public void  shouldReturnTrueIfExactNumberOfRequiredElementsArePresent() {
+        class TestViewElement extends AbstractViewElement {
+            @Require(exactly = 5)
+            List<Findable> findables;
+
+            public TestViewElement() {
+                super(mock(Locator.class));
+
+                findables = new ArrayList<Findable>();
+
+                while (findables.size() < 5) {
+                    findables.add(new NeverDisplayedElement());
+                }
+            }
+        }
+
+        TestViewElement element = new TestViewElement();
+
+        assertTrue("isPresent should return true if a list with exactly as many elements as specified" +
+                " are present.", element.isPresent());
+    }
+
+    @Test
+    public void shouldReturnFalseIfExactNumberOfRequiredElementsAreNotPresent() {
+        class TestViewElement extends AbstractViewElement {
+            @Require(exactly = 5)
+            List<Findable> findables;
+
+            public TestViewElement() {
+                super(mock(Locator.class));
+
+                findables = new ArrayList<Findable>();
+
+                while (findables.size() < 4) {
+                    findables.add(new NeverDisplayedElement());
+                }
+
+                findables.add(new NeverFoundElement());
+            }
+        }
+
+        TestViewElement element = new TestViewElement();
+
+        assertFalse("isPresent should return false if a list with less than exactly as many elements as specified" +
+                " are present.", element.isPresent());
+
+    }
+
+    @Test
+    public void shouldReturnTrueIfAtLeastAsManyRequiredElementsArePresent() {
+        class TestViewElement extends AbstractViewElement {
+            @Require(atLeast = 5)
+            List<Findable> findables;
+
+            public TestViewElement() {
+                super(mock(Locator.class));
+
+                findables = new ArrayList<Findable>();
+
+                while (findables.size() < 5) {
+                    findables.add(new NeverDisplayedElement());
+                }
+
+            }
+        }
+
+        TestViewElement element = new TestViewElement();
+
+        assertTrue("isPresent should return true if at least a number of elements are present as" +
+                   " specified to be required.", element.isPresent());
+
+    }
+
+    @Test
+    public void shouldReturnTrueIfAtLeastAsManyRequiredElementsArePresentWithUnpresentElements() {
+        class TestViewElement extends AbstractViewElement {
+            @Require(atLeast = 5)
+            List<Findable> findables;
+
+            public TestViewElement() {
+                super(mock(Locator.class));
+
+                findables = new ArrayList<Findable>();
+
+                while (findables.size() < 5) {
+                    findables.add(new NeverDisplayedElement());
+                }
+
+                while (findables.size() < 10) {
+                    findables.add(new NeverFoundElement());
+                }
+
+            }
+        }
+
+        TestViewElement element = new TestViewElement();
+
+        assertTrue("isPresent should return true if at least a number of elements are present as" +
+                " specified to be required, with any number of non-present elements.", element.isPresent());
+    }
+
+    @Test
+    public void shouldReturnFalseIfLessThanTheMinimumRequiredElementsArePresent() {
+        class TestViewElement extends AbstractViewElement {
+            @Require(atLeast = 5)
+            List<Findable> findables;
+
+            public TestViewElement() {
+                super(mock(Locator.class));
+
+                findables = new ArrayList<Findable>();
+
+                while (findables.size() < 4) {
+                    findables.add(new NeverDisplayedElement());
+                }
+
+                while (findables.size() < 10) {
+                    findables.add(new NeverFoundElement());
+                }
+
+            }
+        }
+
+        TestViewElement element = new TestViewElement();
+
+        assertFalse("isPresent should return false if a number of elements less than specified " +
+                    " as required are present.", element.isPresent());
+    }
+
+    @Test
+    public void shouldReturnTrueIfAtMostAsManyRequiredElementsArePresent() {
+        class TestViewElement extends AbstractViewElement {
+            @Require(atMost = 5)
+            List<Findable> findables;
+
+            public TestViewElement() {
+                super(mock(Locator.class));
+
+                findables = new ArrayList<Findable>();
+
+                while (findables.size() < 5) {
+                    findables.add(new NeverDisplayedElement());
+                }
+
+            }
+        }
+
+        TestViewElement element = new TestViewElement();
+
+        assertTrue("isPresent should return true if at most a number of elements are present as" +
+                " specified to be required.", element.isPresent());
+
+    }
+
+    @Test
+    public void shouldReturnTrueIfAtMostAsManyRequiredElementsArePresentWithUnpresentElements() {
+        class TestViewElement extends AbstractViewElement {
+            @Require(atMost = 5)
+            List<Findable> findables;
+
+            public TestViewElement() {
+                super(mock(Locator.class));
+
+                findables = new ArrayList<Findable>();
+
+                while (findables.size() < 4) {
+                    findables.add(new NeverDisplayedElement());
+                }
+
+                while (findables.size() < 10) {
+                    findables.add(new NeverFoundElement());
+                }
+
+            }
+        }
+
+        TestViewElement element = new TestViewElement();
+
+        assertTrue("isPresent should return true if at least a number of elements are present as" +
+                " specified to be required, with any number of non-present elements.", element.isPresent());
+    }
+
+    @Test
+    public void shouldReturnFalseIfMoreThanTheMaximumRequiredElementsArePresent() {
+        class TestViewElement extends AbstractViewElement {
+            @Require(atMost = 5)
+            List<Findable> findables;
+
+            public TestViewElement() {
+                super(mock(Locator.class));
+
+                findables = new ArrayList<Findable>();
+
+                while (findables.size() < 6) {
+                    findables.add(new NeverDisplayedElement());
+                }
+
+                while (findables.size() < 10) {
+                    findables.add(new NeverFoundElement());
+                }
+
+            }
+        }
+
+        TestViewElement element = new TestViewElement();
+
+        assertFalse("isPresent should return false if a number of elements less than specified " +
+                " as required are present.", element.isPresent());
+    }
     class TestException extends RuntimeException {}
 }
