@@ -20,8 +20,8 @@
 package com.redhat.darcy.ui.internal;
 
 import static com.redhat.darcy.ui.matchers.DarcyMatchers.displayed;
-import static com.redhat.darcy.ui.matchers.DarcyMatchers.loaded;
 import static com.redhat.darcy.ui.matchers.DarcyMatchers.present;
+import static com.redhat.darcy.ui.matchers.RequiredListMatcher.hasCorrectNumberOfItemsMatching;
 
 import com.redhat.darcy.ui.DarcyException;
 import com.redhat.darcy.ui.NoRequiredElementsException;
@@ -32,12 +32,11 @@ import com.redhat.darcy.ui.annotations.RequireAll;
 import com.redhat.darcy.ui.api.View;
 import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.ui.api.elements.Findable;
+import com.redhat.darcy.ui.matchers.LoadConditionMatcher;
 import com.redhat.synq.Condition;
 import com.redhat.synq.HamcrestCondition;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -47,7 +46,7 @@ public class Analyzer {
     private final Object view;
     private final List<Field> required;
 
-    private List<Field> requiredLists;
+    private List<RequiredList<Object>> requiredLists;
     private List<Object> requiredObjects;
 
     private List<Condition<?>> isLoaded;
@@ -74,15 +73,11 @@ public class Analyzer {
             analyze();
 
             isLoaded.addAll(requiredObjects.stream()
-                    .map(this::objectToLoadCondition)
-                    .filter(c -> c != null)
+                    .map(o -> HamcrestCondition.match(o, new LoadConditionMatcher()))
                     .collect(Collectors.toList()));
 
-            // TODO: Lists
-
             isLoaded.addAll(requiredLists.stream()
-                            .map(this::isListLoaded)
-                            .filter(c -> c != null)
+                            .map(l -> HamcrestCondition.match(l.list(), hasCorrectNumberOfItemsMatching(l.atLeast(), l.atMost(), new LoadConditionMatcher())))
                             .collect(Collectors.toList()));
 
             if(isLoaded.isEmpty()) {
@@ -104,11 +99,9 @@ public class Analyzer {
                     .map(e -> HamcrestCondition.match((Element) e, displayed()))
                     .collect(Collectors.toList()));
 
-            // TODO: Lists
-
             isDisplayed.addAll(requiredLists.stream()
-                               .filter(this::filterElementTypes)
-                               .map(this::isListDisplayed)
+                               .filter(l -> Element.class.isAssignableFrom(l.genericType()))
+                               .map(l -> HamcrestCondition.match(l.list(), hasCorrectNumberOfItemsMatching(l.atLeast(), l.atMost(), displayed())))
                                .collect(Collectors.toList()));
 
             if(isDisplayed.isEmpty()) {
@@ -130,16 +123,9 @@ public class Analyzer {
                     .map(f -> HamcrestCondition.match((Findable) f, present()))
                     .collect(Collectors.toList()));
 
-            // TODO: Lists
-            for (Field f : requiredLists) {
-                String type = f.getGenericType().getTypeName();
-                String otherType = Findable.class.getTypeName();
-                type.contains("s");
-            }
-
             isPresent.addAll(requiredLists.stream()
-                    .filter(this::filterFindableTypes)
-                    .map(this::isListPresent)
+                    .filter(l -> Findable.class.isAssignableFrom(l.genericType()))
+                    .map(l -> HamcrestCondition.match(l.list(), hasCorrectNumberOfItemsMatching(l.atLeast(), l.atMost(), present())))
                     .collect(Collectors.toList()));
 
             if(isPresent.isEmpty()) {
@@ -148,135 +134,6 @@ public class Analyzer {
         }
 
         return isPresent;
-    }
-
-    private boolean filterFindableTypes(Field field) {
-        ParameterizedType type = (ParameterizedType)field.getGenericType();
-        String containedType = type.getActualTypeArguments()[0].getTypeName();
-        String findableType = Findable.class.getTypeName();
-
-        return findableType.equals(containedType);
-    }
-
-    private boolean filterElementTypes(Field field) {
-        ParameterizedType type = (ParameterizedType)field.getGenericType();
-        String containedType = type.getActualTypeArguments()[0].getTypeName();
-        String elementType = Element.class.getTypeName();
-
-        return elementType.equals(containedType);
-    }
-
-    @SuppressWarnings("unchecked")
-    private Condition<?> isListLoaded(Field field) {
-        Condition loaded;
-        Require annotation = field.getAnnotation(Require.class);
-        List<Object> elementList = (List<Object>)fieldToObject(field);
-
-        // TODO: Need to follow default behavior if Require is null, because things may be required
-        // TODO: from RequireAll
-        if (annotation != null) {
-            int exactly = annotation.exactly();
-            int atLeast = annotation.atLeast();
-            int atMost  = annotation.atMost();
-
-            boolean useExactly = exactly != Integer.MAX_VALUE;
-
-            loaded = Condition.match(elementList, ( l -> {
-                Long count = l.stream().filter(e -> objectToLoadCondition(e).isMet()).count();
-
-                boolean atLeastMet = count >= atLeast;
-                boolean atMostMet = (atMost == Integer.MAX_VALUE) || (count <= atMost);
-                boolean exactlyMet = count == exactly;
-
-                if (useExactly) {
-                    return exactlyMet;
-                } else {
-                    return atLeastMet && atMostMet;
-                }
-            }));
-        } else {
-            loaded = Condition.match(elementList, ( l -> {
-                Long count = l.stream().filter(e -> objectToLoadCondition(e).isMet()).count();
-
-                return count >= 1;
-            }));
-        }
-        return loaded;
-    }
-
-    @SuppressWarnings("unchecked")
-    private Condition<?> isListDisplayed(Field field) {
-        Condition displayed;
-        List<Object> elementList = (List<Object>)fieldToObject(field);
-        Require annotation = field.getAnnotation(Require.class);
-
-        if (annotation != null) {
-            int exactly = annotation.exactly();
-            int atLeast = annotation.atLeast();
-            int atMost  = annotation.atMost();
-
-            boolean useExactly = exactly != Integer.MAX_VALUE;
-
-            displayed = Condition.match(elementList, (l -> {
-                Long count = l.stream().filter(e -> HamcrestCondition.match((Element) e, displayed()).isMet()).count();
-
-                boolean atLeastMet = count >= atLeast;
-                boolean atMostMet = (atMost == Integer.MAX_VALUE) || (count <= atMost);
-                boolean exactlyMet = count == exactly;
-
-                if (useExactly) {
-                    return exactlyMet;
-                } else {
-                    return atLeastMet && atMostMet;
-                }
-            }));
-
-        } else {
-            displayed = Condition.match(elementList, (l -> {
-                Long count = l.stream().filter(e -> HamcrestCondition.match((Element) e, displayed()).isMet()).count();
-
-                return count > 1;
-            }));
-        }
-
-        return displayed;
-    }
-
-    @SuppressWarnings("unchecked")
-    private Condition<?> isListPresent(Field field) {
-        Condition present;
-        List<Object> elementList = (List<Object>)fieldToObject(field);
-        Require annotation = field.getAnnotation(Require.class);
-
-        if (annotation != null) {
-            int exactly = annotation.exactly();
-            int atLeast = annotation.atLeast();
-            int atMost  = annotation.atMost();
-
-            boolean useExactly = exactly != Integer.MAX_VALUE;
-
-            present = Condition.match(elementList, (l -> {
-                Long count = l.stream().filter(f -> HamcrestCondition.match((Findable) f, present()).isMet()).count();
-
-                boolean atLeastMet = count >= atLeast;
-                boolean atMostMet = (atMost == Integer.MAX_VALUE) || (count <= atMost);
-                boolean exactlyMet = count == exactly;
-
-                if (useExactly) {
-                    return exactlyMet;
-                } else {
-                    return atLeastMet && atMostMet;
-                }
-            }));
-
-        } else {
-            present = Condition.match(elementList, (l -> {
-                Long count = l.stream().filter(f -> HamcrestCondition.match((Findable) f, present()).isMet()).count();
-
-                return count > 1;
-            }));
-        }
-        return present;
     }
 
     /**
@@ -296,6 +153,11 @@ public class Analyzer {
 
         requiredLists = required.stream()
                 .filter(this::isList)
+                .map(f -> new RequiredList<>(f, this.view))
+                .filter(l ->
+                        Element.class.isAssignableFrom(l.genericType()) ||
+                        View.class.isAssignableFrom(l.genericType()) ||
+                        Findable.class.isAssignableFrom(l.genericType()))
                 .collect(Collectors.toList());
 
         requiredObjects = required.stream()
@@ -329,45 +191,6 @@ public class Analyzer {
     }
 
     /**
-     * Takes an object, and determines a condition for that object that should satisfy the
-     * containing view is loaded. Different conditions are made depending on the type of object.
-     *
-     * <table>
-     *     <thead>
-     *         <tr>
-     *             <td>Type</td>
-     *             <td>Method</td>
-     *         </tr>
-     *     </thead>
-     *     <tbody>
-     *         <tr>
-     *             <td>{@link com.redhat.darcy.ui.api.View}</td>
-     *             <td>{@link com.redhat.darcy.ui.api.View#isLoaded()}</td>
-     *         </tr>
-     *         <tr>
-     *             <td>{@link com.redhat.darcy.ui.api.elements.Element}</td>
-     *             <td>{@link com.redhat.darcy.ui.api.elements.Element#isDisplayed()}</td>
-     *         </tr>
-     *         <tr>
-     *             <td>{@link com.redhat.darcy.ui.api.elements.Findable}</td>
-     *             <td>{@link com.redhat.darcy.ui.api.elements.Findable#isPresent()}</td>
-     *         </tr>
-     *     </tbody>
-     * </table>
-     */
-    private Condition<?> objectToLoadCondition(Object fieldObject) {
-        if (fieldObject instanceof View) {
-            return HamcrestCondition.match((View) fieldObject, loaded());
-        } else if (fieldObject instanceof Element) {
-            return HamcrestCondition.match((Element) fieldObject, displayed());
-        } else if (fieldObject instanceof Findable) {
-            return HamcrestCondition.match((Findable) fieldObject, present());
-        }
-
-        return null;
-    }
-
-    /**
      * Those are only supported types which make sense to look at.
      */
     private boolean isViewElementFindableOrList(Field field) {
@@ -390,12 +213,6 @@ public class Analyzer {
      * and NotRequired annotations.
      */
     private boolean isRequired(Field field) {
-        /*
-        Annotation annotation = field.getAnnotation(Require.class);
-        int exactly = ((Require) annotation).exactly();
-        int atLeast= ((Require) annotation).atLeast();
-        int atMost = ((Require) annotation).atMost();
-        */
         return field.getAnnotation(Require.class) != null
                 // Use the field's declaring class for RequireAll; may be a super class
                 || (field.getDeclaringClass().getAnnotation(RequireAll.class) != null

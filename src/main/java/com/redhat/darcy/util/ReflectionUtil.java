@@ -21,6 +21,8 @@ package com.redhat.darcy.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -62,5 +64,27 @@ public abstract class ReflectionUtil {
         }
         
         return allInterfaces;
+    }
+
+    // TODO: Add unit test
+    public static Class<?> getGenericTypeOfCollectionField(Field field) {
+        Type genericType = field.getGenericType();
+
+        if (!(genericType instanceof ParameterizedType)) {
+            throw new IllegalArgumentException("Field is not a ParameterizedType.");
+        }
+
+        Type[] genericTypes = ((ParameterizedType) genericType).getActualTypeArguments();
+
+
+        if (genericTypes.length != 1) {
+            throw new IllegalArgumentException("Field does not have a single generic type.");
+        }
+
+        if (!(genericTypes[0] instanceof Class)) {
+            throw new IllegalArgumentException("Field's generic type is not a class?");
+        }
+
+        return (Class<?>) genericTypes[0];
     }
 }

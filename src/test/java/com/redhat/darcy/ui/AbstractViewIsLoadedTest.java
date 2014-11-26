@@ -36,7 +36,6 @@ import com.redhat.darcy.ui.api.elements.Findable;
 import com.redhat.darcy.ui.testing.doubles.AlwaysDisplayedLabel;
 import com.redhat.darcy.ui.testing.doubles.NeverDisplayedElement;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -462,8 +461,6 @@ public class AbstractViewIsLoadedTest {
         testView.isLoaded();
     }
 
-    @Ignore("Broken until requiring Lists is implemented, see " +
-            "https://github.com/darcy-framework/darcy-ui/issues/13")
     @Test(expected = NoRequiredElementsException.class)
     public void shouldReconsiderEmptyConditionsListIfFieldIsAmbiguous() {
         @RequireAll class TestView extends AbstractView {
