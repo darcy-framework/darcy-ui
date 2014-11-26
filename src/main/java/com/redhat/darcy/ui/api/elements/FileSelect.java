@@ -19,12 +19,19 @@
 
 package com.redhat.darcy.ui.api.elements;
 
+import java.nio.file.Path;
+
 /**
  * File select inputs often behave differently than normal select inputs -- usually with some OS
  * specific dialog. Specifying a FileSelect element tells the underlying automation library to 
  * anticipate that behavior.
  */
 public interface FileSelect extends HasValue, Disableable, Element {
-    void setFilePath(String path);
-    void clear();
+  void setFilePath(String path);
+
+  default void setFilePath(Path path) {
+   setFilePath(path.toAbsolutePath().toString());
+  }
+
+  void clear();
 }
