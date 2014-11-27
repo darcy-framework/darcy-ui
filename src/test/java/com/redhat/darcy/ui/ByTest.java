@@ -1,5 +1,10 @@
 package com.redhat.darcy.ui;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -15,6 +20,9 @@ import com.redhat.darcy.ui.testing.doubles.AlwaysDisplayedLabel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 @RunWith(JUnit4.class)
 public class ByTest {
@@ -39,6 +47,72 @@ public class ByTest {
         By.id("test").find(Element.class, mockContext);
 
         verify(mockContext).findById(Element.class, "test");
+    }
+
+    @Test
+    public void shouldHaveLocatorsThatHaveEquivalentStringLocators() {
+        Class clazz = By.class;
+        String one = "test", two = "test2";
+        View mockView = mock(View.class);
+        Locator otherLocator = By.view(mockView);
+        String [] classes = {"id", "name", "linkText", "textContent", "partialTextContent", "xpath"};
+        try {
+            for(String className : classes) {
+                Method method = clazz.getMethod(className, String.class);
+                Locator locatorOne = (Locator) method.invoke(null, one);
+                Locator locatorTwo = (Locator) method.invoke(null, two);
+                Locator locatorThree = (Locator) method.invoke(null, one);
+
+                assertThat(locatorOne, not(equalTo(otherLocator)));
+                assertThat(locatorOne, equalTo(locatorOne));
+                assertThat(locatorOne, not(equalTo(locatorTwo)));
+                assertThat(locatorOne, equalTo(locatorThree));
+                assertThat(locatorOne.hashCode(), notNullValue());
+            }
+        } catch (NoSuchMethodException e){
+            e.printStackTrace();
+        } catch (InvocationTargetException e){
+            e.printStackTrace();
+        } catch (IllegalAccessException e){
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void shouldHaveByAttributeEquivalence() {
+        String attributeOne = "attrTest", attributeTwo = "attrTest2";
+        String valueOne = "valueTest", valueTwo = "valueTest2";
+        Locator attrLocatorOne = By.attribute(attributeOne, valueOne);
+        Locator attrLocatorTwo = By.attribute(attributeTwo, valueTwo);
+        Locator attrLocatorThree = By.attribute(attributeOne, valueOne);
+        Locator otherLocator = By.id("test");
+
+        assertThat(attrLocatorOne, not(equalTo(otherLocator)));
+        assertThat(attrLocatorOne, equalTo(attrLocatorOne));
+        assertThat(attrLocatorOne, not(equalTo(attrLocatorTwo)));
+        assertThat(attrLocatorOne, equalTo(attrLocatorThree));
+        assertThat(attrLocatorOne.hashCode(), notNullValue());
+    }
+
+    @Test
+    public void shouldHaveByViewEquivalence() {
+        View view = mock(View.class);
+        View view2 = mock(View.class);
+        Locator viewLocatorOne = By.view(view);
+        Locator viewLocatorTwo = By.view(view2);
+        Locator viewLocatorThree = By.view(view);
+        Locator otherLocator = By.id("test");
+
+        assertThat(viewLocatorOne, not(equalTo(otherLocator)));
+        assertThat(viewLocatorOne, equalTo(viewLocatorOne));
+        assertThat(viewLocatorOne, not(equalTo(viewLocatorTwo)));
+        assertThat(viewLocatorOne, equalTo(viewLocatorThree));
+        assertThat(viewLocatorOne.hashCode(), notNullValue());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowExceptionOnZeroLocators() {
+        Locator locator = By.chained(new Locator[]{});
     }
 
     @Test
