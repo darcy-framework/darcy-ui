@@ -42,130 +42,130 @@ public class ByTest {
 
     @Test
     public void shouldHaveEquivalentByIdLocators() {
-        String one = "test", two = "test2";
+        String test = "test", anotherTest = "anotherTest";
         View mockView = mock(View.class);
-        Locator otherLocator = By.view(mockView);
-        Locator locatorOne = By.id(one);
-        Locator locatorTwo = By.id(two);
-        Locator locatorThree = By.id(one);
+        Locator anotherLocator = By.view(mockView);
+        Locator byIdTest = By.id(test);
+        Locator anotherByIdTest = By.id(anotherTest);
+        Locator sameAsByIdTest = By.id(test);
 
-        assertThat(locatorOne, not(equalTo(otherLocator)));
-        assertThat(locatorOne, equalTo(locatorOne));
-        assertThat(locatorOne, not(equalTo(locatorTwo)));
-        assertThat(locatorOne, equalTo(locatorThree));
-        assertThat(locatorOne.hashCode(), notNullValue());
+        assertThat(byIdTest, not(equalTo(anotherLocator)));
+        assertThat(byIdTest, equalTo(byIdTest));
+        assertThat(byIdTest, not(equalTo(anotherByIdTest)));
+        assertThat(byIdTest, equalTo(sameAsByIdTest));
+        assertThat(byIdTest.hashCode(), not(equalTo(sameAsByIdTest)));
     }
 
     @Test
     public void shouldHaveEquivalentByNameLocators() {
-        String one = "test", two = "test2";
+        String test = "test", anotherTest = "anotherTest";
         View mockView = mock(View.class);
-        Locator otherLocator = By.view(mockView);
-        Locator locatorOne = By.name(one);
-        Locator locatorTwo = By.name(two);
-        Locator locatorThree = By.name(one);
+        Locator anotherLocator = By.view(mockView);
+        Locator byNameTest = By.name(test);
+        Locator anotherByNameTest = By.name(anotherTest);
+        Locator sameAsByNameTest = By.name(test);
 
-        assertThat(locatorOne, not(equalTo(otherLocator)));
-        assertThat(locatorOne, equalTo(locatorOne));
-        assertThat(locatorOne, not(equalTo(locatorTwo)));
-        assertThat(locatorOne, equalTo(locatorThree));
-        assertThat(locatorOne.hashCode(), notNullValue());
+        assertThat(byNameTest, not(equalTo(anotherLocator)));
+        assertThat(byNameTest, equalTo(byNameTest));
+        assertThat(byNameTest, not(equalTo(anotherByNameTest)));
+        assertThat(byNameTest, equalTo(sameAsByNameTest));
+        assertThat(byNameTest.hashCode(), not(equalTo(sameAsByNameTest)));
     }
 
     @Test
     public void shouldHaveEquivalentByLinkTestLocators() {
-        String one = "test", two = "test2";
+        String test = "test", anotherTest = "anotherTest";
         View mockView = mock(View.class);
-        Locator otherLocator = By.view(mockView);
-        Locator locatorOne = By.linkText(one);
-        Locator locatorTwo = By.linkText(two);
-        Locator locatorThree = By.linkText(one);
+        Locator anotherLocator = By.view(mockView);
+        Locator byLinkTextTest = By.linkText(test);
+        Locator anotherByLinkTextTest = By.linkText(anotherTest);
+        Locator sameAsByLinkTextTest = By.linkText(test);
 
-        assertThat(locatorOne, not(equalTo(otherLocator)));
-        assertThat(locatorOne, equalTo(locatorOne));
-        assertThat(locatorOne, not(equalTo(locatorTwo)));
-        assertThat(locatorOne, equalTo(locatorThree));
-        assertThat(locatorOne.hashCode(), notNullValue());
+        assertThat(byLinkTextTest, not(equalTo(anotherLocator)));
+        assertThat(byLinkTextTest, equalTo(byLinkTextTest));
+        assertThat(byLinkTextTest, not(equalTo(anotherByLinkTextTest)));
+        assertThat(byLinkTextTest, equalTo(sameAsByLinkTextTest));
+        assertThat(byLinkTextTest.hashCode(), not(equalTo(sameAsByLinkTextTest)));
     }
 
     @Test
     public void shouldHaveEquivalentByTextContentLocators() {
-        String one = "test", two = "test2";
+        String test = "test", anotherTest = "anotherTest";
         View mockView = mock(View.class);
-        Locator otherLocator = By.view(mockView);
-        Locator locatorOne = By.textContent(one);
-        Locator locatorTwo = By.textContent(two);
-        Locator locatorThree = By.textContent(one);
+        Locator anotherLocator = By.view(mockView);
+        Locator byTextContentTest = By.textContent(test);
+        Locator anotherByTextContentTest = By.textContent(anotherTest);
+        Locator sameAsByTextContentTest = By.textContent(test);
 
-        assertThat(locatorOne, not(equalTo(otherLocator)));
-        assertThat(locatorOne, equalTo(locatorOne));
-        assertThat(locatorOne, not(equalTo(locatorTwo)));
-        assertThat(locatorOne, equalTo(locatorThree));
-        assertThat(locatorOne.hashCode(), notNullValue());
+        assertThat(byTextContentTest, not(equalTo(anotherLocator)));
+        assertThat(byTextContentTest, equalTo(byTextContentTest));
+        assertThat(byTextContentTest, not(equalTo(anotherByTextContentTest)));
+        assertThat(byTextContentTest, equalTo(sameAsByTextContentTest));
+        assertThat(byTextContentTest.hashCode(), not(equalTo(sameAsByTextContentTest)));
     }
 
     @Test
     public void shouldHaveEquivalentByPartialTextContentLocators() {
-        String one = "test", two = "test2";
+        String test = "test", anotherTest = "anotherTest";
         View mockView = mock(View.class);
-        Locator otherLocator = By.view(mockView);
-        Locator locatorOne = By.partialTextContent(one);
-        Locator locatorTwo = By.partialTextContent(two);
-        Locator locatorThree = By.partialTextContent(one);
+        Locator anotherLocator = By.view(mockView);
+        Locator byPartialTextContentTest = By.partialTextContent(test);
+        Locator anotherByPartialTextContentTest = By.partialTextContent(anotherTest);
+        Locator sameAsByPartialTextContentTest = By.partialTextContent(test);
 
-        assertThat(locatorOne, not(equalTo(otherLocator)));
-        assertThat(locatorOne, equalTo(locatorOne));
-        assertThat(locatorOne, not(equalTo(locatorTwo)));
-        assertThat(locatorOne, equalTo(locatorThree));
-        assertThat(locatorOne.hashCode(), notNullValue());
+        assertThat(byPartialTextContentTest, not(equalTo(anotherLocator)));
+        assertThat(byPartialTextContentTest, equalTo(byPartialTextContentTest));
+        assertThat(byPartialTextContentTest, not(equalTo(anotherByPartialTextContentTest)));
+        assertThat(byPartialTextContentTest, equalTo(sameAsByPartialTextContentTest));
+        assertThat(byPartialTextContentTest.hashCode(), not(equalTo(sameAsByPartialTextContentTest)));
     }
 
     @Test
     public void shouldHaveEquivalentByXpathLocators() {
-        String one = "test", two = "test2";
+        String test = "test", anotherTest = "anotherTest";
         View mockView = mock(View.class);
-        Locator otherLocator = By.view(mockView);
-        Locator locatorOne = By.xpath(one);
-        Locator locatorTwo = By.xpath(two);
-        Locator locatorThree = By.xpath(one);
+        Locator anotherLocator = By.view(mockView);
+        Locator byXpathTest = By.xpath(test);
+        Locator anotherByXpathTest = By.xpath(anotherTest);
+        Locator sameAsByXpathTest = By.xpath(test);
 
-        assertThat(locatorOne, not(equalTo(otherLocator)));
-        assertThat(locatorOne, equalTo(locatorOne));
-        assertThat(locatorOne, not(equalTo(locatorTwo)));
-        assertThat(locatorOne, equalTo(locatorThree));
-        assertThat(locatorOne.hashCode(), notNullValue());
+        assertThat(byXpathTest, not(equalTo(anotherLocator)));
+        assertThat(byXpathTest, equalTo(byXpathTest));
+        assertThat(byXpathTest, not(equalTo(anotherByXpathTest)));
+        assertThat(byXpathTest, equalTo(sameAsByXpathTest));
+        assertThat(byXpathTest.hashCode(), not(equalTo(sameAsByXpathTest)));
     }
 
     @Test
     public void shouldHaveByAttributeEquivalence() {
-        String attributeOne = "attrTest", attributeTwo = "attrTest2";
-        String valueOne = "valueTest", valueTwo = "valueTest2";
-        Locator attrLocatorOne = By.attribute(attributeOne, valueOne);
-        Locator attrLocatorTwo = By.attribute(attributeTwo, valueTwo);
-        Locator attrLocatorThree = By.attribute(attributeOne, valueOne);
-        Locator otherLocator = By.id("test");
+        String attributeTest = "attributeTest", anotherAttributeTest = "anotherAttributeTest";
+        String valueTest = "valueTest", anotherValueTest = "anotherValueTest";
+        Locator attributeLocatorTest = By.attribute(attributeTest, valueTest);
+        Locator anotherAttributeLocatorTest = By.attribute(anotherAttributeTest, anotherValueTest);
+        Locator sameAsAttributeLocatorTest = By.attribute(attributeTest, valueTest);
+        Locator anotherLocator = By.id("test");
 
-        assertThat(attrLocatorOne, not(equalTo(otherLocator)));
-        assertThat(attrLocatorOne, equalTo(attrLocatorOne));
-        assertThat(attrLocatorOne, not(equalTo(attrLocatorTwo)));
-        assertThat(attrLocatorOne, equalTo(attrLocatorThree));
-        assertThat(attrLocatorOne.hashCode(), notNullValue());
+        assertThat(attributeLocatorTest, not(equalTo(anotherLocator)));
+        assertThat(attributeLocatorTest, equalTo(attributeLocatorTest));
+        assertThat(attributeLocatorTest, not(equalTo(anotherAttributeLocatorTest)));
+        assertThat(attributeLocatorTest, equalTo(sameAsAttributeLocatorTest));
+        assertThat(attributeLocatorTest.hashCode(), not(equalTo(sameAsAttributeLocatorTest)));
     }
 
     @Test
     public void shouldHaveByViewEquivalence() {
-        View view = mock(View.class);
-        View view2 = mock(View.class);
-        Locator viewLocatorOne = By.view(view);
-        Locator viewLocatorTwo = By.view(view2);
-        Locator viewLocatorThree = By.view(view);
-        Locator otherLocator = By.id("test");
+        View viewTest = mock(View.class);
+        View anotherViewTest = mock(View.class);
+        Locator viewLocatorTest = By.view(viewTest);
+        Locator anotherViewLocatorTest = By.view(anotherViewTest);
+        Locator sameAsViewLocatorTest = By.view(viewTest);
+        Locator anotherLocator = By.id("test");
 
-        assertThat(viewLocatorOne, not(equalTo(otherLocator)));
-        assertThat(viewLocatorOne, equalTo(viewLocatorOne));
-        assertThat(viewLocatorOne, not(equalTo(viewLocatorTwo)));
-        assertThat(viewLocatorOne, equalTo(viewLocatorThree));
-        assertThat(viewLocatorOne.hashCode(), notNullValue());
+        assertThat(viewLocatorTest, not(equalTo(anotherLocator)));
+        assertThat(viewLocatorTest, equalTo(viewLocatorTest));
+        assertThat(viewLocatorTest, not(equalTo(anotherViewLocatorTest)));
+        assertThat(viewLocatorTest, equalTo(sameAsViewLocatorTest));
+        assertThat(viewLocatorTest.hashCode(), not(equalTo(sameAsViewLocatorTest)));
     }
 
     @Test(expected = IllegalArgumentException.class)
