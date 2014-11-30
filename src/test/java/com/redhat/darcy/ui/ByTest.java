@@ -12,7 +12,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.*;
 
 @RunWith(JUnit4.class)
@@ -52,7 +53,7 @@ public class ByTest {
         assertThat(byIdTest, equalTo(byIdTest));
         assertThat(byIdTest, not(equalTo(anotherByIdTest)));
         assertThat(byIdTest, equalTo(sameAsByIdTest));
-        assertThat(byIdTest.hashCode(), not(equalTo(sameAsByIdTest.hashCode())));
+        assertThat(byIdTest.hashCode(), equalTo(sameAsByIdTest.hashCode()));
     }
 
     @Test
@@ -67,7 +68,7 @@ public class ByTest {
         assertThat(byNameTest, equalTo(byNameTest));
         assertThat(byNameTest, not(equalTo(anotherByNameTest)));
         assertThat(byNameTest, equalTo(sameAsByNameTest));
-        assertThat(byNameTest.hashCode(), not(equalTo(sameAsByNameTest.hashCode())));
+        assertThat(byNameTest.hashCode(), equalTo(sameAsByNameTest.hashCode()));
     }
 
     @Test
@@ -82,7 +83,7 @@ public class ByTest {
         assertThat(byLinkTextTest, equalTo(byLinkTextTest));
         assertThat(byLinkTextTest, not(equalTo(anotherByLinkTextTest)));
         assertThat(byLinkTextTest, equalTo(sameAsByLinkTextTest));
-        assertThat(byLinkTextTest.hashCode(), not(equalTo(sameAsByLinkTextTest.hashCode())));
+        assertThat(byLinkTextTest.hashCode(), equalTo(sameAsByLinkTextTest.hashCode()));
     }
 
     @Test
@@ -97,7 +98,7 @@ public class ByTest {
         assertThat(byTextContentTest, equalTo(byTextContentTest));
         assertThat(byTextContentTest, not(equalTo(anotherByTextContentTest)));
         assertThat(byTextContentTest, equalTo(sameAsByTextContentTest));
-        assertThat(byTextContentTest.hashCode(), not(equalTo(sameAsByTextContentTest.hashCode())));
+        assertThat(byTextContentTest.hashCode(), equalTo(sameAsByTextContentTest.hashCode()));
     }
 
     @Test
@@ -112,7 +113,7 @@ public class ByTest {
         assertThat(byPartialTextContentTest, equalTo(byPartialTextContentTest));
         assertThat(byPartialTextContentTest, not(equalTo(anotherByPartialTextContentTest)));
         assertThat(byPartialTextContentTest, equalTo(sameAsByPartialTextContentTest));
-        assertThat(byPartialTextContentTest.hashCode(), not(equalTo(sameAsByPartialTextContentTest.hashCode())));
+        assertThat(byPartialTextContentTest.hashCode(), equalTo(sameAsByPartialTextContentTest.hashCode()));
     }
 
     @Test
@@ -127,7 +128,7 @@ public class ByTest {
         assertThat(byXpathTest, equalTo(byXpathTest));
         assertThat(byXpathTest, not(equalTo(anotherByXpathTest)));
         assertThat(byXpathTest, equalTo(sameAsByXpathTest));
-        assertThat(byXpathTest.hashCode(), not(equalTo(sameAsByXpathTest.hashCode())));
+        assertThat(byXpathTest.hashCode(), equalTo(sameAsByXpathTest.hashCode()));
     }
 
     @Test
@@ -141,7 +142,7 @@ public class ByTest {
         assertThat(attributeLocatorTest, equalTo(attributeLocatorTest));
         assertThat(attributeLocatorTest, not(equalTo(anotherAttributeLocatorTest)));
         assertThat(attributeLocatorTest, equalTo(sameAsAttributeLocatorTest));
-        assertThat(attributeLocatorTest.hashCode(), not(equalTo(sameAsAttributeLocatorTest.hashCode())));
+        assertThat(attributeLocatorTest.hashCode(), equalTo(sameAsAttributeLocatorTest.hashCode()));
     }
 
     @Test
@@ -157,7 +158,7 @@ public class ByTest {
         assertThat(viewLocatorTest, equalTo(viewLocatorTest));
         assertThat(viewLocatorTest, not(equalTo(anotherViewLocatorTest)));
         assertThat(viewLocatorTest, equalTo(sameAsViewLocatorTest));
-        assertThat(viewLocatorTest.hashCode(), not(equalTo(sameAsViewLocatorTest.hashCode())));
+        assertThat(viewLocatorTest.hashCode(), equalTo(sameAsViewLocatorTest.hashCode()));
     }
 
     @Test(expected = IllegalArgumentException.class)
