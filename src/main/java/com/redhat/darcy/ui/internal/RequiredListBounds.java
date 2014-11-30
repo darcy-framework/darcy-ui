@@ -1,4 +1,4 @@
-package com.redhat.darcy.util;
+package com.redhat.darcy.ui.internal;
 
 import com.redhat.darcy.ui.annotations.DefaultRequire;
 import com.redhat.darcy.ui.annotations.Require;
@@ -12,21 +12,21 @@ public class RequiredListBounds {
 
     public RequiredListBounds(Field field) {
         Require annotation = Optional.ofNullable(field.getAnnotation(Require.class))
-                                     .orElse(new DefaultRequire());
+                .orElse(new DefaultRequire());
 
         if (annotation.exactly() >= 0) {
-            this.atLeast = this.atMost = annotation.exactly();
+            atLeast = atMost = annotation.exactly();
         } else {
-            this.atLeast = annotation.atLeast();
-            this.atMost = annotation.atMost();
+            atLeast = annotation.atLeast();
+            atMost = annotation.atMost();
         }
     }
 
     public int atLeast() {
-        return this.atLeast;
+        return atLeast;
     }
 
     public int atMost() {
-        return this.atMost;
+        return atMost;
     }
 }

@@ -22,6 +22,7 @@ package com.redhat.darcy.ui.internal;
 import static com.redhat.darcy.ui.matchers.DarcyMatchers.displayed;
 import static com.redhat.darcy.ui.matchers.DarcyMatchers.present;
 import static com.redhat.darcy.ui.matchers.RequiredListMatcher.hasCorrectNumberOfItemsMatching;
+import static com.redhat.synq.HamcrestCondition.match;
 
 import com.redhat.darcy.ui.DarcyException;
 import com.redhat.darcy.ui.NoRequiredElementsException;
@@ -73,12 +74,14 @@ public class Analyzer {
             analyze();
 
             isLoaded.addAll(requiredObjects.stream()
-                    .map(o -> HamcrestCondition.match(o, new LoadConditionMatcher()))
+                    .map(o -> match(o, new LoadConditionMatcher()))
                     .collect(Collectors.toList()));
 
             isLoaded.addAll(requiredLists.stream()
-                            .map(l -> HamcrestCondition.match(l.list(), hasCorrectNumberOfItemsMatching(l.atLeast(), l.atMost(), new LoadConditionMatcher())))
-                            .collect(Collectors.toList()));
+                    .map(l -> match(l.list(),
+                            hasCorrectNumberOfItemsMatching(l.atLeast(), l.atMost(),
+                            new LoadConditionMatcher())))
+                    .collect(Collectors.toList()));
 
             if(isLoaded.isEmpty()) {
                 throw new NoRequiredElementsException(this);
@@ -96,13 +99,14 @@ public class Analyzer {
 
             isDisplayed.addAll(requiredObjects.stream()
                     .filter(o -> o instanceof Element) // Should check instance or field type?
-                    .map(e -> HamcrestCondition.match((Element) e, displayed()))
+                    .map(e -> match((Element) e, displayed()))
                     .collect(Collectors.toList()));
 
             isDisplayed.addAll(requiredLists.stream()
-                               .filter(l -> Element.class.isAssignableFrom(l.genericType()))
-                               .map(l -> HamcrestCondition.match(l.list(), hasCorrectNumberOfItemsMatching(l.atLeast(), l.atMost(), displayed())))
-                               .collect(Collectors.toList()));
+                    .filter(l -> Element.class.isAssignableFrom(l.genericType()))
+                    .map(l -> match(l.list(),
+                            hasCorrectNumberOfItemsMatching(l.atLeast(), l.atMost(), displayed())))
+                    .collect(Collectors.toList()));
 
             if(isDisplayed.isEmpty()) {
                 throw new NoRequiredElementsException(this);
@@ -120,12 +124,13 @@ public class Analyzer {
 
             isPresent.addAll(requiredObjects.stream()
                     .filter(o -> o instanceof Findable) // Should check instance or field type?
-                    .map(f -> HamcrestCondition.match((Findable) f, present()))
+                    .map(f -> match((Findable) f, present()))
                     .collect(Collectors.toList()));
 
             isPresent.addAll(requiredLists.stream()
                     .filter(l -> Findable.class.isAssignableFrom(l.genericType()))
-                    .map(l -> HamcrestCondition.match(l.list(), hasCorrectNumberOfItemsMatching(l.atLeast(), l.atMost(), present())))
+                    .map(l -> match(l.list(),
+                            hasCorrectNumberOfItemsMatching(l.atLeast(), l.atMost(), present())))
                     .collect(Collectors.toList()));
 
             if(isPresent.isEmpty()) {
@@ -138,9 +143,9 @@ public class Analyzer {
 
     /**
      * Reflectively examine the view, gathering, filtering, and sorting fields. The results are
-     * assigned to {@link #requiredLists} and {@link #requiredObjects}; fields that are collections and
-     * objects of fields that are not collections, respectively. This method is idempotent;
-     * subsequent calls after the first have no effect (fields need only be analyzed once).
+     * assigned to {@link #requiredLists} and {@link #requiredObjects}; fields that are lists and
+     * objects of fields that are not lists, respectively. This method is idempotent; subsequent
+     * calls after the first have no effect (fields need only be analyzed once).
      *
      * <p>Fields cannot be analyzed before they are assigned, which is why this analyze is delayed
      * until needed. This way you can instantiate an Analyzer in a constructor or {@code <init>}
@@ -154,8 +159,7 @@ public class Analyzer {
         requiredLists = required.stream()
                 .filter(this::isList)
                 .map(f -> new RequiredList<>(f, this.view))
-                .filter(l ->
-                        Element.class.isAssignableFrom(l.genericType()) ||
+                .filter(l -> Element.class.isAssignableFrom(l.genericType()) ||
                         View.class.isAssignableFrom(l.genericType()) ||
                         Findable.class.isAssignableFrom(l.genericType()))
                 .collect(Collectors.toList());

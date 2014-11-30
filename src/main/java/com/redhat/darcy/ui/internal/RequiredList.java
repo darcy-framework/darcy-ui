@@ -2,7 +2,6 @@ package com.redhat.darcy.ui.internal;
 
 import com.redhat.darcy.ui.DarcyException;
 import com.redhat.darcy.util.ReflectionUtil;
-import com.redhat.darcy.util.RequiredListBounds;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -15,7 +14,6 @@ public class RequiredList<T> {
     @SuppressWarnings("unchecked")
     public RequiredList(Field field, Object in) {
         this.genericType = ReflectionUtil.getGenericTypeOfCollectionField(field);
-
         this.bounds = new RequiredListBounds(field);
 
         try {
@@ -28,18 +26,18 @@ public class RequiredList<T> {
     }
 
     public List<T> list() {
-        return this.list;
+        return list;
     }
 
     public Class<?> genericType() {
-        return this.genericType;
+        return genericType;
     }
 
     public int atMost() {
-        return this.bounds.atMost();
+        return bounds.atMost();
     }
 
     public int atLeast() {
-        return this.bounds.atLeast();
+        return bounds.atLeast();
     }
 }

@@ -12,8 +12,8 @@ public class RequiredListMatcher extends TypeSafeMatcher<List<?>> {
     private final int atMost;
     private final Matcher<?> matcher;
 
-    public static RequiredListMatcher hasCorrectNumberOfItemsMatching(int atLeast,
-                                                                      int atMost, Matcher<?> matcher) {
+    public static RequiredListMatcher hasCorrectNumberOfItemsMatching(int atLeast, int atMost,
+            Matcher<?> matcher) {
         return new RequiredListMatcher(atLeast, atMost, matcher);
     }
 

@@ -10,6 +10,15 @@ import static com.redhat.darcy.ui.matchers.DarcyMatchers.displayed;
 import static com.redhat.darcy.ui.matchers.DarcyMatchers.loaded;
 import static com.redhat.darcy.ui.matchers.DarcyMatchers.present;
 
+/**
+ * Tests whether a required field's object's state is appropriate for a view with those fields to be
+ * considered loaded. What is required of an object's state is dependent on the type of object.
+ * See {@link #doesItemMatchAppropriateCondition(Object)} for details.
+ * <p>
+ * If the tested object is not a {@link com.redhat.darcy.ui.api.elements.Findable},
+ * {@link com.redhat.darcy.ui.api.elements.Element}, or {@link com.redhat.darcy.ui.api.View}, then
+ * it will never match.
+ */
 public class LoadConditionMatcher extends BaseMatcher<Object> {
     @Override
     public boolean matches(Object item) {
