@@ -84,7 +84,7 @@ public class Analyzer {
                     .collect(Collectors.toList()));
 
             if(isLoaded.isEmpty()) {
-                throw new NoRequiredElementsException(this);
+                throw new NoRequiredElementsException(view);
             }
         }
 
@@ -109,7 +109,7 @@ public class Analyzer {
                     .collect(Collectors.toList()));
 
             if(isDisplayed.isEmpty()) {
-                throw new NoRequiredElementsException(this);
+                throw new NoRequiredElementsException(view);
             }
         }
 
@@ -134,7 +134,7 @@ public class Analyzer {
                     .collect(Collectors.toList()));
 
             if(isPresent.isEmpty()) {
-                throw new NoRequiredElementsException(this);
+                throw new NoRequiredElementsException(view);
             }
         }
 
@@ -158,7 +158,7 @@ public class Analyzer {
 
         requiredLists = required.stream()
                 .filter(this::isList)
-                .map(f -> new RequiredList<>(f, this.view))
+                .map(f -> new RequiredList<>(f, view))
                 .filter(l -> Element.class.isAssignableFrom(l.genericType()) ||
                         View.class.isAssignableFrom(l.genericType()) ||
                         Findable.class.isAssignableFrom(l.genericType()))
