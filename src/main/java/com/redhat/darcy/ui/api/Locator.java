@@ -29,7 +29,7 @@ public interface Locator {
     /**
      * Returns a list of all the elements found by this locator, of the given type, in the given
      * context.
-     * 
+     *
      * @param type
      * @param context
      * @return
@@ -38,7 +38,7 @@ public interface Locator {
     
     /**
      * Returns one element found by this locator, of the given type, in the given context.
-     * 
+     *
      * @param type
      * @param context
      * @return
