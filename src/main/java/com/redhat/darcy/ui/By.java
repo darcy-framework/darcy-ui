@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 
 /**
@@ -674,22 +675,15 @@ public abstract class By {
 
         @Override
         public <T> List<T> findAll(Class<T> type, Context context) {
-            if (!Findable.class.isAssignableFrom(type)) {
-                throw new IllegalArgumentException("BySequence only works with Findables (otherwise"
-                        + " there is no way to determine when to stop adding found things to the "
-                        + "resulting list.)");
-            }
-
             return new LazyList<>(() -> {
                 int i = start;
-                Locator current = sequence.apply(i);
+                Optional<T> current = get(type, context, i);
                 List<T> found = new ArrayList<>();
 
-                // TODO: This cast should not be necessary; Locator should only work with Findables
-                while(((Findable) current.find(type, context)).isPresent()) {
-                    found.add(current.find(type, context));
+                while(current.isPresent()) {
+                    found.add(current.get());
                     i++;
-                    current = sequence.apply(i);
+                    current = get(type, context, i);
                 }
 
                 return found;
@@ -727,6 +721,20 @@ public abstract class By {
                     "sequence=" + sequence +
                     ", start=" + start +
                     '}';
+        }
+
+        private <T> Optional<T> get(Class<T> type, Context context, int index) {
+            try {
+                T it = sequence.apply(index).find(type, context);
+
+                if (it instanceof Findable && !((Findable) it).isPresent()) {
+                    return Optional.empty();
+                }
+
+                return Optional.of(it);
+            } catch (Exception e) {
+                return Optional.empty();
+            }
         }
     }
 }
