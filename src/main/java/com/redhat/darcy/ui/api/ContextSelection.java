@@ -19,6 +19,8 @@
 
 package com.redhat.darcy.ui.api;
 
+import com.redhat.darcy.ui.api.elements.Findable;
+
 import java.util.List;
 
 /**
@@ -29,34 +31,28 @@ public interface ContextSelection extends Selection {
     /**
      * Retrieve a reference to another context found by the current. This context may be a "child"
      * or a "sibling," this is up to the implementation.
-     * @param contextType
-     * @param locator
-     * @return
      */
-    <T extends Context> T contextOfType(Class<T> contextType, Locator locator);
+    <T extends Context & Findable> T contextOfType(Class<T> contextType, Locator locator);
     
     /**
      * Retrieve a reference to a list of other context found by the current. These contexts may be 
      * "children" or "siblings," this is up to the implementation.
-     * @param contextType
-     * @param locator
-     * @return
      */
-    <T extends Context> List<T> contextsOfType(Class<T> contextType, Locator locator);
+    <T extends Context & Findable> List<T> contextsOfType(Class<T> contextType, Locator locator);
 
-    default ElementContext elementContext(Locator locator) {
-        return contextOfType(ElementContext.class, locator);
+    default FindableElementContext elementContext(Locator locator) {
+        return contextOfType(FindableElementContext.class, locator);
     }
 
-    default List<ElementContext> elementContexts(Locator locator) {
-        return contextsOfType(ElementContext.class, locator);
+    default List<FindableElementContext> elementContexts(Locator locator) {
+        return contextsOfType(FindableElementContext.class, locator);
     }
 
-    default ParentContext parentContext(Locator locator) {
-        return contextOfType(ParentContext.class, locator);
+    default FindableParentContext parentContext(Locator locator) {
+        return contextOfType(FindableParentContext.class, locator);
     }
 
-    default List<ParentContext> parentContexts(Locator locator) {
-        return contextsOfType(ParentContext.class, locator);
+    default List<FindableParentContext> parentContexts(Locator locator) {
+        return contextsOfType(FindableParentContext.class, locator);
     }
 }

@@ -108,7 +108,7 @@ public abstract class By {
         }
         
         @Override
-        public <T> List<T> findAll(Class<T> type, Context context) {
+        public <T extends Findable> List<T> findAll(Class<T> type, Context context) {
             try {
                 return ((FindsById) context).findAllById(type, id);
             } catch (ClassCastException cce) {
@@ -117,7 +117,7 @@ public abstract class By {
         }
         
         @Override
-        public <T> T find(Class<T> type, Context context) {
+        public <T extends Findable> T find(Class<T> type, Context context) {
             try {
                 return ((FindsById) context).findById(type, id);
             } catch (ClassCastException cce) {
@@ -159,7 +159,7 @@ public abstract class By {
         }
 
         @Override
-        public <T> List<T> findAll(Class<T> type, Context context) {
+        public <T extends Findable> List<T> findAll(Class<T> type, Context context) {
             if (context instanceof FindsByAttribute) {
                 return ((FindsByAttribute) context).findAllByAttribute(type, attribute, value);
             } else if (context instanceof FindsByXPath) {
@@ -170,7 +170,7 @@ public abstract class By {
         }
 
         @Override
-        public <T> T find(Class<T> type, Context context) {
+        public <T extends Findable> T find(Class<T> type, Context context) {
             if (context instanceof FindsByAttribute) {
                 return ((FindsByAttribute) context).findByAttribute(type, attribute, value);
             } else if (context instanceof FindsByXPath) {
@@ -217,7 +217,7 @@ public abstract class By {
         }
         
         @Override
-        public <T> List<T> findAll(Class<T> type, Context context) {
+        public <T extends Findable> List<T> findAll(Class<T> type, Context context) {
             try {
                 return ((FindsByName) context).findAllByName(type, name);
             } catch (ClassCastException cce) {
@@ -226,7 +226,7 @@ public abstract class By {
         }
 
         @Override
-        public <T> T find(Class<T> type, Context context) {
+        public <T extends Findable> T find(Class<T> type, Context context) {
             try {
                 return ((FindsByName) context).findByName(type, name);
             } catch (ClassCastException cce) {
@@ -269,7 +269,7 @@ public abstract class By {
         }
         
         @Override
-        public <T> List<T> findAll(Class<T> type, Context context) {
+        public <T extends Findable> List<T> findAll(Class<T> type, Context context) {
             try {
                 return ((FindsByLinkText) context).findAllByLinkText(type, linkText);
             } catch (ClassCastException cce) {
@@ -278,7 +278,7 @@ public abstract class By {
         }
 
         @Override
-        public <T> T find(Class<T> type, Context context) {
+        public <T extends Findable> T find(Class<T> type, Context context) {
             try {
                 return ((FindsByLinkText) context).findByLinkText(type, linkText);
             } catch (ClassCastException cce) {
@@ -322,7 +322,7 @@ public abstract class By {
         }
         
         @Override
-        public <T> List<T> findAll(Class<T> type, Context context) {
+        public <T extends Findable> List<T> findAll(Class<T> type, Context context) {
             try {
                 return ((FindsByTextContent) context).findAllByTextContent(type, textContent);
             } catch (ClassCastException cce) {
@@ -331,7 +331,7 @@ public abstract class By {
         }
 
         @Override
-        public <T> T find(Class<T> type, Context context) {
+        public <T extends Findable> T find(Class<T> type, Context context) {
             try {
                 return ((FindsByTextContent) context).findByTextContent(type, textContent);
             } catch (ClassCastException cce) {
@@ -376,7 +376,7 @@ public abstract class By {
         }
         
         @Override
-        public <T> List<T> findAll(Class<T> type, Context context) {
+        public <T extends Findable> List<T> findAll(Class<T> type, Context context) {
             try {
                 return ((FindsByPartialTextContent) context)
                         .findAllByPartialTextContent(type, partialTextContent);
@@ -386,7 +386,7 @@ public abstract class By {
         }
 
         @Override
-        public <T> T find(Class<T> type, Context context) {
+        public <T extends Findable> T find(Class<T> type, Context context) {
             try {
                 return ((FindsByPartialTextContent) context)
                         .findByPartialTextContent(type, partialTextContent);
@@ -431,7 +431,7 @@ public abstract class By {
         }
         
         @Override
-        public <T> List<T> findAll(Class<T> type, Context context) {
+        public <T extends Findable> List<T> findAll(Class<T> type, Context context) {
             try {
                 return ((FindsByXPath) context).findAllByXPath(type, xpath);
             } catch (ClassCastException cce) {
@@ -440,7 +440,7 @@ public abstract class By {
         }
 
         @Override
-        public <T> T find(Class<T> type, Context context) {
+        public <T extends Findable> T find(Class<T> type, Context context) {
             try {
                 return ((FindsByXPath) context).findByXPath(type, xpath);
             } catch (ClassCastException cce) {
@@ -484,7 +484,7 @@ public abstract class By {
         }
         
         @Override
-        public <T> List<T> findAll(Class<T> type, Context context) {
+        public <T extends Findable> List<T> findAll(Class<T> type, Context context) {
             try {
                 return ((FindsByView) context).findAllByView(type, view);
             } catch (ClassCastException cce) {
@@ -493,7 +493,7 @@ public abstract class By {
         }
 
         @Override
-        public <T> T find(Class<T> type, Context context) {
+        public <T extends Findable> T find(Class<T> type, Context context) {
             try {
                 return ((FindsByView) context).findByView(type, view);
             } catch (ClassCastException cce) {
@@ -541,7 +541,7 @@ public abstract class By {
         }
         
         @Override
-        public <T> List<T> findAll(Class<T> type, Context context) {
+        public <T extends Findable> List<T> findAll(Class<T> type, Context context) {
             try {
                 return ((FindsByNested) context).findAllByChained(type, locators);
             } catch (ClassCastException cce) {
@@ -550,7 +550,7 @@ public abstract class By {
         }
 
         @Override
-        public <T> T find(Class<T> type, Context context) {
+        public <T extends Findable> T find(Class<T> type, Context context) {
             try {
                 return ((FindsByNested) context).findByChained(type, locators);
             } catch (ClassCastException cce) {
@@ -607,7 +607,7 @@ public abstract class By {
         }
         
         @Override
-        public <T> List<T> findAll(Class<T> type, Context context) {
+        public <T extends Findable> List<T> findAll(Class<T> type, Context context) {
             try {
 
                 return ((FindsByNested) context).findAllByNested(type, parent(), child);
@@ -617,7 +617,7 @@ public abstract class By {
         }
 
         @Override
-        public <T> T find(Class<T> type, Context context) {
+        public <T extends Findable> T find(Class<T> type, Context context) {
             try {
                 return ((FindsByNested) context).findByNested(type, parent(), child);
             } catch (ClassCastException cce) {
@@ -674,16 +674,16 @@ public abstract class By {
         }
 
         @Override
-        public <T> List<T> findAll(Class<T> type, Context context) {
+        public <T extends Findable> List<T> findAll(Class<T> type, Context context) {
             return new LazyList<>(() -> {
                 int i = start;
-                Optional<T> current = get(type, context, i);
+                T current = sequence.apply(i).find(type, context);
                 List<T> found = new ArrayList<>();
 
                 while(current.isPresent()) {
-                    found.add(current.get());
+                    found.add(current);
                     i++;
-                    current = get(type, context, i);
+                    current = sequence.apply(i).find(type, context);
                 }
 
                 return found;
@@ -691,7 +691,7 @@ public abstract class By {
         }
 
         @Override
-        public <T> T find(Class<T> type, Context context) {
+        public <T extends Findable> T find(Class<T> type, Context context) {
             return sequence.apply(start).find(type, context);
         }
 
@@ -721,20 +721,6 @@ public abstract class By {
                     "sequence=" + sequence +
                     ", start=" + start +
                     '}';
-        }
-
-        private <T> Optional<T> get(Class<T> type, Context context, int index) {
-            try {
-                T it = sequence.apply(index).find(type, context);
-
-                if (it instanceof Findable && !((Findable) it).isPresent()) {
-                    return Optional.empty();
-                }
-
-                return Optional.of(it);
-            } catch (Exception e) {
-                return Optional.empty();
-            }
         }
     }
 }
