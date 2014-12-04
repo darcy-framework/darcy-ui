@@ -24,6 +24,7 @@ import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.View;
 import com.redhat.darcy.ui.api.WrapsElement;
 import com.redhat.darcy.ui.api.elements.Element;
+import com.redhat.darcy.ui.api.elements.Findable;
 import com.redhat.darcy.ui.internal.FindsByAttribute;
 import com.redhat.darcy.ui.internal.FindsById;
 import com.redhat.darcy.ui.internal.FindsByLinkText;
@@ -33,11 +34,13 @@ import com.redhat.darcy.ui.internal.FindsByPartialTextContent;
 import com.redhat.darcy.ui.internal.FindsByTextContent;
 import com.redhat.darcy.ui.internal.FindsByView;
 import com.redhat.darcy.ui.internal.FindsByXPath;
-import com.redhat.darcy.ui.internal.LocatorSequence;
+import com.redhat.darcy.util.LazyList;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 
 /**
@@ -672,7 +675,19 @@ public abstract class By {
 
         @Override
         public <T> List<T> findAll(Class<T> type, Context context) {
-            return new LocatorSequence<>(type, context, sequence, start);
+            return new LazyList<>(() -> {
+                int i = start;
+                Optional<T> current = get(type, context, i);
+                List<T> found = new ArrayList<>();
+
+                while(current.isPresent()) {
+                    found.add(current.get());
+                    i++;
+                    current = get(type, context, i);
+                }
+
+                return found;
+            });
         }
 
         @Override
@@ -706,6 +721,20 @@ public abstract class By {
                     "sequence=" + sequence +
                     ", start=" + start +
                     '}';
+        }
+
+        private <T> Optional<T> get(Class<T> type, Context context, int index) {
+            try {
+                T it = sequence.apply(index).find(type, context);
+
+                if (it instanceof Findable && !((Findable) it).isPresent()) {
+                    return Optional.empty();
+                }
+
+                return Optional.of(it);
+            } catch (Exception e) {
+                return Optional.empty();
+            }
         }
     }
 }
