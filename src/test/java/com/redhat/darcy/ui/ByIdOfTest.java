@@ -52,7 +52,7 @@ public class ByIdOfTest {
 
         // Setup context to find the element by less specific locator
         when(mockContext.findByTextContent(Button.class, "test")).thenReturn(mockButton);
-        when(mockContext.findById(Element.class, "theId")).thenReturn(mockButtonFoundById);
+        when(mockContext.findById(Button.class, "theId")).thenReturn(mockButtonFoundById);
 
         // Configure element to have id and be found; once it is found it's id will be used instead
         when(mockButton.getAttribute("id")).thenReturn("theId");
