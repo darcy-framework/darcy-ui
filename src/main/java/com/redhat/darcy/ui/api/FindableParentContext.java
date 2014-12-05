@@ -21,29 +21,5 @@ package com.redhat.darcy.ui.api;
 
 import com.redhat.darcy.ui.api.elements.Findable;
 
-import java.util.List;
-
-/**
- * A locator is a strategy for finding an instance (or List of instances) that implement some class,
- * given some {@link com.redhat.darcy.ui.api.Context}.
- */
-public interface Locator {
-    /**
-     * Returns a list of all the elements found by this locator, of the given type, in the given
-     * context.
-     *
-     * @param type
-     * @param context
-     * @return
-     */
-    <T extends Findable> List<T> findAll(Class<T> type, Context context);
-    
-    /**
-     * Returns one element found by this locator, of the given type, in the given context.
-     *
-     * @param type
-     * @param context
-     * @return
-     */
-    <T extends Findable> T find(Class<T> type, Context context);
+public interface FindableParentContext extends Findable, ParentContext {
 }

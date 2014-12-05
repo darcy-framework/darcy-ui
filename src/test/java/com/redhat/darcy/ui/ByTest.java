@@ -167,7 +167,7 @@ public class ByTest {
 
     @Test
     public void shouldUseFindAllByXPathIfContextDoesNotImplementFindsByAttribute() {
-        FindsByAllExceptFindsByAttribute mockContext = mock(FindsByAllExceptFindsByAttribute.class);
+        FindsByAllExceptAttribute mockContext = mock(FindsByAllExceptAttribute.class);
 
         By.attribute("value", "test").findAll(Element.class, mockContext);
 
@@ -176,7 +176,7 @@ public class ByTest {
 
     @Test
     public void shouldUseFindByXPathIfContextDoesNotImplementFindsByAttribute() {
-        FindsByAllExceptFindsByAttribute mockContext = mock(FindsByAllExceptFindsByAttribute.class);
+        FindsByAllExceptAttribute mockContext = mock(FindsByAllExceptAttribute.class);
 
         By.attribute("value", "test").find(Element.class, mockContext);
 
@@ -330,17 +330,17 @@ public class ByTest {
     }
 
     @Test(expected = LocatorNotSupportedException.class)
-    public void shouldThrowLocatorNotSupportedExceptionForFindBylTextContentIfContextDoesNotSupportByTextContent() {
+    public void shouldThrowLocatorNotSupportedExceptionForFindByTextContentIfContextDoesNotSupportByTextContent() {
         Context mockContext = mock(Context.class);
 
-        By.textContent("test").find(Locator.class, mockContext);
+        By.textContent("test").find(Element.class, mockContext);
     }
 
     @Test(expected = LocatorNotSupportedException.class)
-    public void shouldThrowLocatorNotSupportedExceptionForFindAllBylTextContentIfContextDoesNotSupportByTextContent() {
+    public void shouldThrowLocatorNotSupportedExceptionForFindAllByTextContentIfContextDoesNotSupportByTextContent() {
         Context mockContext = mock(Context.class);
 
-        By.textContent("test").findAll(Locator.class, mockContext);
+        By.textContent("test").findAll(Element.class, mockContext);
     }
 
     @Test
@@ -365,14 +365,14 @@ public class ByTest {
     public void shouldThrowLocatorNotSupportedExceptionForFindByPartialTextContentIfContextDoesNotSupportByPartialTextContent() {
         Context mockContext = mock(Context.class);
 
-        By.partialTextContent("test").find(Locator.class, mockContext);
+        By.partialTextContent("test").find(Element.class, mockContext);
     }
 
     @Test(expected = LocatorNotSupportedException.class)
     public void shouldThrowLocatorNotSupportedExceptionForFindAllByPartialTextContentIfContextDoesNotSupportByPartialTextContent() {
         Context mockContext = mock(Context.class);
 
-        By.partialTextContent("test").findAll(Locator.class, mockContext);
+        By.partialTextContent("test").findAll(Element.class, mockContext);
     }
 
     @Test
@@ -432,7 +432,7 @@ public class ByTest {
     interface FindsByAll extends Context, FindsByAttribute, FindsById, FindsByXPath, FindsByName, FindsByNested,
             FindsByLinkText, FindsByPartialTextContent, FindsByTextContent, FindsByView {}
 
-    interface FindsByAllExceptFindsByAttribute extends Context, FindsById, FindsByXPath, FindsByName, FindsByNested,
+    interface FindsByAllExceptAttribute extends Context, FindsById, FindsByXPath, FindsByName, FindsByNested,
             FindsByLinkText, FindsByPartialTextContent, FindsByTextContent, FindsByView {}
 
     interface ElementWrapper extends Element, WrapsElement {};
