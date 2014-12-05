@@ -769,20 +769,31 @@ public abstract class By {
                     new IdOfHandler(locator, type, context));
         }
 
-        private String getId(Object reference) {
-            if (!(reference instanceof HasAttributes)) {
-                throw new DarcyException("Cannot use an id locator for an element if it"
-                        + " does not have attributes! Element was " + reference);
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
             }
 
-            String id = ((HasAttributes) reference).getAttribute("id");
-
-            if (id == null || id.isEmpty()) {
-                throw new DarcyException("Cannot use an id locator for an element if it"
-                        + " does not have an id! Element was " + reference);
+            if (o == null || getClass() != o.getClass()) {
+                return false;
             }
 
-            return id;
+            ByIdOf that = (ByIdOf) o;
+
+            return locator.equals(that.locator);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(locator);
+        }
+
+        @Override
+        public String toString() {
+            return "ByIdOf: {" +
+                    "locator=" + locator +
+                    '}';
         }
 
         /**
@@ -820,6 +831,22 @@ public abstract class By {
                 }
 
                 return ids;
+            }
+
+            private String getId(Object reference) {
+                if (!(reference instanceof HasAttributes)) {
+                    throw new DarcyException("Cannot use an id locator for an element if it"
+                            + " does not have attributes! Element was " + reference);
+                }
+
+                String id = ((HasAttributes) reference).getAttribute("id");
+
+                if (id == null || id.isEmpty()) {
+                    throw new DarcyException("Cannot use an id locator for an element if it"
+                            + " does not have an id! Element was " + reference);
+                }
+
+                return id;
             }
         }
     }
