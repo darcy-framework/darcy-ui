@@ -30,7 +30,6 @@ import static org.mockito.Mockito.when;
 
 import com.redhat.darcy.ui.api.WrapsElement;
 import com.redhat.darcy.ui.api.elements.Button;
-import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.ui.api.elements.HasAttributes;
 import com.redhat.darcy.ui.api.elements.Label;
 import com.redhat.darcy.ui.testing.doubles.AlwaysDisplayedLabel;
