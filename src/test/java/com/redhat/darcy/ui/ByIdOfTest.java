@@ -72,9 +72,9 @@ public class ByIdOfTest {
     public void shouldIdsOfListOfElementsForSubsequentLookups() {
         ByTest.FindsByAll mockContext = mock(ByTest.FindsByAll.class);
 
-        Label labelById1 = new LabelWithId("id1");
-        Label labelById2 = new LabelWithId("id2");
-        Label labelById3 = new LabelWithId("id3");
+        Label labelWithId1 = new LabelWithId("id1");
+        Label labelWithId2 = new LabelWithId("id2");
+        Label labelWithId3 = new LabelWithId("id3");
 
         Label labelFoundById1 = new AlwaysDisplayedLabel();
         Label labelFoundById2 = new AlwaysDisplayedLabel();
@@ -82,7 +82,7 @@ public class ByIdOfTest {
 
         // Setup context to find the elements by less specific locator
         when(mockContext.findAllByTextContent(Label.class, "test"))
-                .thenReturn(Arrays.asList(labelById1, labelById2, labelById3));
+                .thenReturn(Arrays.asList(labelWithId1, labelWithId2, labelWithId3));
 
         // Setup context to find the elements by the more specific locator
         when(mockContext.findById(Label.class, "id1")).thenReturn(labelFoundById1);
