@@ -87,7 +87,7 @@ public abstract class By {
 
     /**
      * Example:
-     * <code><pre>private List{@code<Text>} texts = texts(By.sequence(i -> By.id("text" + i)));</pre></code>
+     * <pre><code>private List{@code<Text>} texts = texts(By.sequence(i -> By.id("text" + i)));</code></pre>
      */
     public static BySequence sequence(Function<Integer, Locator> sequence) {
         return new BySequence(sequence);
