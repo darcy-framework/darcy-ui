@@ -35,7 +35,6 @@ import com.redhat.darcy.ui.api.elements.HasAttributes;
 import com.redhat.darcy.ui.api.elements.Label;
 import com.redhat.darcy.ui.testing.doubles.AlwaysDisplayedLabel;
 
-import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
