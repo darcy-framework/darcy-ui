@@ -25,6 +25,7 @@ import com.redhat.darcy.ui.api.View;
 import com.redhat.darcy.ui.api.WrapsElement;
 import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.ui.api.elements.Findable;
+import com.redhat.darcy.ui.api.elements.HasAttributes;
 import com.redhat.darcy.ui.internal.FindsByAttribute;
 import com.redhat.darcy.ui.internal.FindsById;
 import com.redhat.darcy.ui.internal.FindsByLinkText;
@@ -34,14 +35,17 @@ import com.redhat.darcy.ui.internal.FindsByPartialTextContent;
 import com.redhat.darcy.ui.internal.FindsByTextContent;
 import com.redhat.darcy.ui.internal.FindsByView;
 import com.redhat.darcy.ui.internal.FindsByXPath;
+import com.redhat.darcy.ui.internal.IdOfHandler;
 import com.redhat.darcy.util.LazyList;
 
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * A helper class with static factories for {@link com.redhat.darcy.ui.api.Locator}s, inspired by
@@ -99,7 +103,23 @@ public abstract class By {
     public static BySequence sequence(Function<Integer, Locator> sequence, int start) {
         return new BySequence(sequence, start);
     }
-    
+
+    /**
+     * Constructs a locator that will delegate to another locator for first use. After a Findable
+     * is found using the original locator, the id of that Findable (should it have attributes) will
+     * be used for subsequent lookups. This means should an item need to be found again, it will do
+     * so using that item's id from the first time it was found, as opposed to the original locator.
+     *
+     * <p>This is most useful for finding a bunch of objects from an unspecific locator; that is,
+     * if it refers to more than one object, it is unspecific. If those objects have id attributes
+     * however, each individual object found from the less specific locator will now by handled
+     * by its own unique locator. The end result is that, given objects with id attributes, you can
+     * lookup them up by an unspecific locator, and still have specific references.
+     */
+    public static ByIdOf idOf(Locator locator) {
+        return new ByIdOf(locator);
+    }
+
     public static class ById implements Locator {
         private String id;
         
@@ -721,6 +741,112 @@ public abstract class By {
                     "sequence=" + sequence +
                     ", start=" + start +
                     '}';
+        }
+    }
+
+    public static class ByIdOf implements Locator {
+        private final Locator locator;
+
+        /**
+         * @param locator The original locator to use. Will not be used for subsequent lookups of
+         * Findables if those have id's to use instead.
+         */
+        public ByIdOf(Locator locator) {
+            this.locator = locator;
+        }
+
+        @Override
+        public <T extends Findable> List<T> findAll(Class<T> type, Context context) {
+            return new LazyList<>(new IdOfListSupplier<>(locator, type, context));
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public <T extends Findable> T find(Class<T> type, Context context) {
+            return (T) Proxy.newProxyInstance(ByIdOf.class.getClassLoader(),
+                    new Class[]{type, WrapsElement.class},
+                    new IdOfHandler(locator, type, context));
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            ByIdOf that = (ByIdOf) o;
+
+            return locator.equals(that.locator);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(locator);
+        }
+
+        @Override
+        public String toString() {
+            return "ByIdOf: {" +
+                    "locator=" + locator +
+                    '}';
+        }
+
+        /**
+         * Converts from Findables found from one locator, to a list of Findables which each have
+         * their own By.id locator.
+         * @param <T> The type of Findable being found.
+         */
+        private class IdOfListSupplier<T extends Findable> implements Supplier<List<T>> {
+            private final Locator locator;
+            private final Class<T> type;
+            private final Context context;
+
+            private List<ById> ids;
+
+            private IdOfListSupplier(Locator locator, Class<T> type, Context context) {
+                this.locator = locator;
+                this.type = type;
+                this.context = context;
+            }
+
+            @Override
+            public List<T> get() {
+                return ids()
+                        .stream()
+                        .map(l -> l.find(type, context))
+                        .collect(Collectors.toList());
+            }
+
+            private List<ById> ids() {
+                if (ids == null) {
+                    ids = locator.findAll(type, context)
+                            .stream()
+                            .map(f -> By.id(getId(f)))
+                            .collect(Collectors.toList());
+                }
+
+                return ids;
+            }
+
+            private String getId(Object reference) {
+                if (!(reference instanceof HasAttributes)) {
+                    throw new DarcyException("Cannot use an id locator for an element if it"
+                            + " does not have attributes! Element was " + reference);
+                }
+
+                String id = ((HasAttributes) reference).getAttribute("id");
+
+                if (id == null || id.isEmpty()) {
+                    throw new DarcyException("Cannot use an id locator for an element if it"
+                            + " does not have an id! Element was " + reference);
+                }
+
+                return id;
+            }
         }
     }
 }
