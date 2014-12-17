@@ -46,7 +46,6 @@ public class ByTest {
         assertThat(By.id("test"), not(equalTo(By.name("testing"))));
         assertThat(By.id("test"), equalTo(By.id("test")));
         assertThat(By.id("test"), not(equalTo(By.id("anotherTest"))));
-        assertThat(By.id("test"), equalTo(By.id("test")));
         assertThat(By.id("test").hashCode(), equalTo(By.id("test").hashCode()));
     }
 
@@ -55,7 +54,6 @@ public class ByTest {
         assertThat(By.name("test"), not(equalTo(By.id("testing"))));
         assertThat(By.name("test"), equalTo(By.name("test")));
         assertThat(By.name("test"), not(equalTo(By.name("anotherTest"))));
-        assertThat(By.name("test"), equalTo(By.name("test")));
         assertThat(By.name("test").hashCode(), equalTo(By.name("test").hashCode()));
     }
 
@@ -64,7 +62,6 @@ public class ByTest {
         assertThat(By.linkText("test"), not(equalTo(By.name("testing"))));
         assertThat(By.linkText("test"), equalTo(By.linkText("test")));
         assertThat(By.linkText("test"), not(equalTo(By.linkText("anotherTest"))));
-        assertThat(By.linkText("test"), equalTo(By.linkText("test")));
         assertThat(By.linkText("test").hashCode(), equalTo(By.linkText("test").hashCode()));
     }
 
@@ -73,7 +70,6 @@ public class ByTest {
         assertThat(By.textContent("test"), not(equalTo(By.name("testing"))));
         assertThat(By.textContent("test"), equalTo(By.textContent("test")));
         assertThat(By.textContent("test"), not(equalTo(By.textContent("anotherTest"))));
-        assertThat(By.textContent("test"), equalTo(By.textContent("test")));
         assertThat(By.textContent("test").hashCode(), equalTo(By.textContent("test").hashCode()));
     }
 
@@ -82,7 +78,6 @@ public class ByTest {
         assertThat(By.partialTextContent("test"), not(equalTo(By.name("testing"))));
         assertThat(By.partialTextContent("test"), equalTo(By.partialTextContent("test")));
         assertThat(By.partialTextContent("test"), not(equalTo(By.partialTextContent("anotherTest"))));
-        assertThat(By.partialTextContent("test"), equalTo(By.partialTextContent("test")));
         assertThat(By.partialTextContent("test").hashCode(), equalTo(By.partialTextContent("test").hashCode()));
     }
 
@@ -91,7 +86,6 @@ public class ByTest {
         assertThat(By.xpath("test"), not(equalTo(By.name("testing"))));
         assertThat(By.xpath("test"), equalTo(By.xpath("test")));
         assertThat(By.xpath("test"), not(equalTo(By.xpath("anotherTest"))));
-        assertThat(By.xpath("test"), equalTo(By.xpath("test")));
         assertThat(By.xpath("test").hashCode(), equalTo(By.xpath("test").hashCode()));
     }
 
@@ -100,7 +94,6 @@ public class ByTest {
         assertThat(By.attribute("attributeTest", "valueTest"), not(equalTo(By.id("test"))));
         assertThat(By.attribute("attributeTest", "valueTest"), equalTo(By.attribute("attributeTest", "valueTest")));
         assertThat(By.attribute("attributeTest", "valueTest"), not(equalTo(By.attribute("anotherAttributeTest", "anotherValueTest"))));
-        assertThat(By.attribute("attributeTest", "valueTest"), equalTo(By.attribute("attributeTest", "valueTest")));
         assertThat(By.attribute("attributeTest", "valueTest").hashCode(), equalTo(By.attribute("attributeTest", "valueTest").hashCode()));
     }
 
@@ -112,7 +105,6 @@ public class ByTest {
         assertThat(By.view(viewTest), not(equalTo(By.id("test"))));
         assertThat(By.view(viewTest), equalTo(By.view(viewTest)));
         assertThat(By.view(viewTest), not(equalTo(By.view(anotherViewTest))));
-        assertThat(By.view(viewTest), equalTo(By.view(viewTest)));
         assertThat(By.view(viewTest).hashCode(), equalTo(By.view(viewTest).hashCode()));
     }
 
