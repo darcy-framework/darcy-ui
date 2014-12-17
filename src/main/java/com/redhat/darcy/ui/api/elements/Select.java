@@ -24,8 +24,8 @@ import com.redhat.darcy.ui.api.Locator;
 import java.util.List;
 import java.util.Optional;
 
-public interface Select extends Disableable, Element {
+public interface Select<T extends SelectOption> extends Disableable, Element {
     void select(Locator locator);
-    List<SelectOption> getOptions();
-    Optional<SelectOption> getSelectedOption();
+    List<T> getOptions();
+    Optional<T> getSelectedOption();
 }
