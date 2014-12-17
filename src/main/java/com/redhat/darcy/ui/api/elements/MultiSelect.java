@@ -24,8 +24,8 @@ import com.redhat.darcy.ui.api.Locator;
 import java.util.List;
 import java.util.Optional;
 
-public interface MultiSelect extends Disableable, Element {
+public interface MultiSelect<T extends SelectOption> extends Disableable, Element {
     void select(Locator locator);
-    List<SelectOption> getOptions();
-    List<SelectOption> getCurrentlySelectedOptions();
+    List<T> getOptions();
+    List<T> getCurrentlySelectedOptions();
 }
