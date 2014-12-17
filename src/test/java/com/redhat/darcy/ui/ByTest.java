@@ -19,10 +19,6 @@
 
 package com.redhat.darcy.ui;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import com.redhat.darcy.ui.api.Context;
 import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.View;
@@ -30,10 +26,14 @@ import com.redhat.darcy.ui.api.WrapsElement;
 import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.ui.internal.*;
 import com.redhat.darcy.ui.testing.doubles.AlwaysDisplayedLabel;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
+import static org.mockito.Mockito.*;
 
 @RunWith(JUnit4.class)
 public class ByTest {
@@ -58,6 +58,78 @@ public class ByTest {
         By.id("test").find(Element.class, mockContext);
 
         verify(mockContext).findById(Element.class, "test");
+    }
+
+    @Test
+    public void shouldHaveEquivalentByIdLocators() {
+        assertThat(By.id("test"), not(equalTo(By.name("testing"))));
+        assertThat(By.id("test"), equalTo(By.id("test")));
+        assertThat(By.id("test"), not(equalTo(By.id("anotherTest"))));
+        assertThat(By.id("test").hashCode(), equalTo(By.id("test").hashCode()));
+    }
+
+    @Test
+    public void shouldHaveEquivalentByNameLocators() {
+        assertThat(By.name("test"), not(equalTo(By.id("testing"))));
+        assertThat(By.name("test"), equalTo(By.name("test")));
+        assertThat(By.name("test"), not(equalTo(By.name("anotherTest"))));
+        assertThat(By.name("test").hashCode(), equalTo(By.name("test").hashCode()));
+    }
+
+    @Test
+    public void shouldHaveEquivalentByLinkTestLocators() {
+        assertThat(By.linkText("test"), not(equalTo(By.name("testing"))));
+        assertThat(By.linkText("test"), equalTo(By.linkText("test")));
+        assertThat(By.linkText("test"), not(equalTo(By.linkText("anotherTest"))));
+        assertThat(By.linkText("test").hashCode(), equalTo(By.linkText("test").hashCode()));
+    }
+
+    @Test
+    public void shouldHaveEquivalentByTextContentLocators() {
+        assertThat(By.textContent("test"), not(equalTo(By.name("testing"))));
+        assertThat(By.textContent("test"), equalTo(By.textContent("test")));
+        assertThat(By.textContent("test"), not(equalTo(By.textContent("anotherTest"))));
+        assertThat(By.textContent("test").hashCode(), equalTo(By.textContent("test").hashCode()));
+    }
+
+    @Test
+    public void shouldHaveEquivalentByPartialTextContentLocators() {
+        assertThat(By.partialTextContent("test"), not(equalTo(By.name("testing"))));
+        assertThat(By.partialTextContent("test"), equalTo(By.partialTextContent("test")));
+        assertThat(By.partialTextContent("test"), not(equalTo(By.partialTextContent("anotherTest"))));
+        assertThat(By.partialTextContent("test").hashCode(), equalTo(By.partialTextContent("test").hashCode()));
+    }
+
+    @Test
+    public void shouldHaveEquivalentByXpathLocators() {
+        assertThat(By.xpath("test"), not(equalTo(By.name("testing"))));
+        assertThat(By.xpath("test"), equalTo(By.xpath("test")));
+        assertThat(By.xpath("test"), not(equalTo(By.xpath("anotherTest"))));
+        assertThat(By.xpath("test").hashCode(), equalTo(By.xpath("test").hashCode()));
+    }
+
+    @Test
+    public void shouldHaveByAttributeEquivalence() {
+        assertThat(By.attribute("attributeTest", "valueTest"), not(equalTo(By.id("test"))));
+        assertThat(By.attribute("attributeTest", "valueTest"), equalTo(By.attribute("attributeTest", "valueTest")));
+        assertThat(By.attribute("attributeTest", "valueTest"), not(equalTo(By.attribute("anotherAttributeTest", "anotherValueTest"))));
+        assertThat(By.attribute("attributeTest", "valueTest").hashCode(), equalTo(By.attribute("attributeTest", "valueTest").hashCode()));
+    }
+
+    @Test
+    public void shouldHaveByViewEquivalence() {
+        View viewTest = mock(View.class);
+        View anotherViewTest = mock(View.class);
+
+        assertThat(By.view(viewTest), not(equalTo(By.id("test"))));
+        assertThat(By.view(viewTest), equalTo(By.view(viewTest)));
+        assertThat(By.view(viewTest), not(equalTo(By.view(anotherViewTest))));
+        assertThat(By.view(viewTest).hashCode(), equalTo(By.view(viewTest).hashCode()));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowExceptionOnZeroLocators() {
+        Locator locator = By.chained(new Locator[]{});
     }
 
     @Test
