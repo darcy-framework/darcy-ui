@@ -27,5 +27,5 @@ import java.util.Optional;
 public interface MultiSelect<T extends SelectOption> extends Disableable, Element {
     void select(Locator locator);
     List<T> getOptions();
-    List<T> getCurrentlySelectedOptions();
+    List<T> getSelectedOptions();
 }
