@@ -150,15 +150,17 @@ public abstract class By {
             return Objects.hash(id);
         }
 
-        @Override
-        public boolean equals(Object object) {
-            if (!(object instanceof ById)) {
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
                 return false;
             }
 
-            ById other = (ById) object;
+            ById byId = (ById) o;
 
-            return id.equals(other.id);
+            return id.equals(byId.id);
         }
 
         @Override
