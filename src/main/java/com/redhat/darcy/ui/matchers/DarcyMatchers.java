@@ -23,6 +23,7 @@ import com.redhat.darcy.ui.api.ElementContext;
 import com.redhat.darcy.ui.api.View;
 import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.ui.api.elements.Findable;
+import com.redhat.darcy.ui.api.elements.Text;
 
 import org.hamcrest.Matcher;
 
@@ -41,5 +42,13 @@ public abstract class DarcyMatchers {
 
     public static <T extends View> Matcher<T> loadedInContext(ElementContext context) {
         return new ViewIsLoadedInContext<T>(context);
+    }
+    
+    public static <T extends Text> Matcher<T> elementText(Matcher<? super String> matcher) {
+        return new ElementText<>(matcher);
+    }
+    
+    public static <T extends Text> Matcher<T> visibleText(Matcher<? super String> matcher) {
+        return new VisibleText<>(matcher);
     }
 }
