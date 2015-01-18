@@ -19,6 +19,15 @@
 
 package com.redhat.darcy.ui.api.elements;
 
-public interface Link extends Clickable, Disableable, Element {
+public interface Link extends Clickable, Disableable, Text {
+    /**
+     * @deprecated Use {@link #getText()} instead.
+     */
+    @Deprecated
     String getLinkText();
+
+    @Override
+    default String getText() {
+        return getLinkText();
+    }
 }
