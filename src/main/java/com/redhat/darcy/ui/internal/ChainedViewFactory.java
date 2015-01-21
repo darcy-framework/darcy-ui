@@ -21,7 +21,6 @@ package com.redhat.darcy.ui.internal;
 
 import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.View;
-import com.redhat.darcy.ui.api.elements.Element;
 
 public interface ChainedViewFactory<T extends View> {
     T newElement(Locator parent);

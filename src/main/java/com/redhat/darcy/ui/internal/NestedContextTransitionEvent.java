@@ -20,21 +20,16 @@
 package com.redhat.darcy.ui.internal;
 
 import static com.redhat.darcy.ui.matchers.DarcyMatchers.loadedInContext;
-import static com.redhat.synq.HamcrestCondition.match;
 
 import com.redhat.darcy.ui.api.ElementContext;
-import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.View;
 import com.redhat.synq.ForwardingPollEvent;
 import com.redhat.synq.Synq;
 
 public class NestedContextTransitionEvent<T extends View> extends ForwardingPollEvent<T> {
     
-    public NestedContextTransitionEvent(T destination, ElementContext context,
-            Locator nestedContextLocator) {
-        super(Synq.expect(destination,
-                loadedInContext(((FindsByNested) context)
-                        .withRootLocator(nestedContextLocator))));
+    public NestedContextTransitionEvent(T destination, ElementContext context) {
+        super(Synq.expect(destination, loadedInContext(context)));
     }
     
 }
