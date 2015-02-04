@@ -19,6 +19,5 @@
 
 package com.redhat.darcy.ui.api.elements;
 
-public interface Label extends Element {
-    String getText();
+public interface Label extends Text {
 }

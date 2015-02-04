@@ -19,7 +19,7 @@
 
 package com.redhat.darcy.ui.api.elements;
 
-public interface SelectOption extends Label {
+public interface SelectOption extends Text {
     void select();
     boolean isSelected();
 }
