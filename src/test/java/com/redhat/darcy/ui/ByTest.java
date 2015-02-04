@@ -33,6 +33,8 @@ import org.junit.runners.JUnit4;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.mockito.Mockito.*;
 
 @RunWith(JUnit4.class)
@@ -58,73 +60,6 @@ public class ByTest {
         By.id("test").find(Element.class, mockContext);
 
         verify(mockContext).findById(Element.class, "test");
-    }
-
-    @Test
-    public void shouldHaveEquivalentByIdLocators() {
-        assertThat(By.id("test"), not(equalTo(By.name("testing"))));
-        assertThat(By.id("test"), equalTo(By.id("test")));
-        assertThat(By.id("test"), not(equalTo(By.id("anotherTest"))));
-        assertThat(By.id("test").hashCode(), equalTo(By.id("test").hashCode()));
-    }
-
-    @Test
-    public void shouldHaveEquivalentByNameLocators() {
-        assertThat(By.name("test"), not(equalTo(By.id("testing"))));
-        assertThat(By.name("test"), equalTo(By.name("test")));
-        assertThat(By.name("test"), not(equalTo(By.name("anotherTest"))));
-        assertThat(By.name("test").hashCode(), equalTo(By.name("test").hashCode()));
-    }
-
-    @Test
-    public void shouldHaveEquivalentByLinkTestLocators() {
-        assertThat(By.linkText("test"), not(equalTo(By.name("testing"))));
-        assertThat(By.linkText("test"), equalTo(By.linkText("test")));
-        assertThat(By.linkText("test"), not(equalTo(By.linkText("anotherTest"))));
-        assertThat(By.linkText("test").hashCode(), equalTo(By.linkText("test").hashCode()));
-    }
-
-    @Test
-    public void shouldHaveEquivalentByTextContentLocators() {
-        assertThat(By.textContent("test"), not(equalTo(By.name("testing"))));
-        assertThat(By.textContent("test"), equalTo(By.textContent("test")));
-        assertThat(By.textContent("test"), not(equalTo(By.textContent("anotherTest"))));
-        assertThat(By.textContent("test").hashCode(), equalTo(By.textContent("test").hashCode()));
-    }
-
-    @Test
-    public void shouldHaveEquivalentByPartialTextContentLocators() {
-        assertThat(By.partialTextContent("test"), not(equalTo(By.name("testing"))));
-        assertThat(By.partialTextContent("test"), equalTo(By.partialTextContent("test")));
-        assertThat(By.partialTextContent("test"), not(equalTo(By.partialTextContent("anotherTest"))));
-        assertThat(By.partialTextContent("test").hashCode(), equalTo(By.partialTextContent("test").hashCode()));
-    }
-
-    @Test
-    public void shouldHaveEquivalentByXpathLocators() {
-        assertThat(By.xpath("test"), not(equalTo(By.name("testing"))));
-        assertThat(By.xpath("test"), equalTo(By.xpath("test")));
-        assertThat(By.xpath("test"), not(equalTo(By.xpath("anotherTest"))));
-        assertThat(By.xpath("test").hashCode(), equalTo(By.xpath("test").hashCode()));
-    }
-
-    @Test
-    public void shouldHaveByAttributeEquivalence() {
-        assertThat(By.attribute("attributeTest", "valueTest"), not(equalTo(By.id("test"))));
-        assertThat(By.attribute("attributeTest", "valueTest"), equalTo(By.attribute("attributeTest", "valueTest")));
-        assertThat(By.attribute("attributeTest", "valueTest"), not(equalTo(By.attribute("anotherAttributeTest", "anotherValueTest"))));
-        assertThat(By.attribute("attributeTest", "valueTest").hashCode(), equalTo(By.attribute("attributeTest", "valueTest").hashCode()));
-    }
-
-    @Test
-    public void shouldHaveByViewEquivalence() {
-        View viewTest = mock(View.class);
-        View anotherViewTest = mock(View.class);
-
-        assertThat(By.view(viewTest), not(equalTo(By.id("test"))));
-        assertThat(By.view(viewTest), equalTo(By.view(viewTest)));
-        assertThat(By.view(viewTest), not(equalTo(By.view(anotherViewTest))));
-        assertThat(By.view(viewTest).hashCode(), equalTo(By.view(viewTest).hashCode()));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -499,6 +434,133 @@ public class ByTest {
         By.view(mockView).findAll(Element.class, mockContext);
 
         verify(mockContext).findAllByView(Element.class, mockView);
+    }
+
+    @Test
+    public void shouldHaveEquivalentByIdLocators() {
+        By.ById byId_test_ = By.id("test");
+        assertThat(byId_test_, not(equalTo(By.name("test"))));
+        assertThat(byId_test_, equalTo(By.id("test")));
+        assertThat(byId_test_, not(equalTo(By.id("anotherTest"))));
+        assertThat(byId_test_, equalTo(byId_test_));
+        assertThat(byId_test_.hashCode(), equalTo(By.id("test").hashCode()));
+    }
+
+    @Test
+    public void shouldHaveEquivalentByNameLocators() {
+        By.ByName byName_test_ = By.name("test");
+
+        assertThat(byName_test_, not(equalTo(By.id("test"))));
+        assertThat(byName_test_, equalTo(By.name("test")));
+        assertThat(byName_test_, not(equalTo(By.name("anotherTest"))));
+        assertThat(byName_test_, equalTo(byName_test_));
+        assertThat(byName_test_.hashCode(), equalTo(By.name("test").hashCode()));
+    }
+
+    @Test
+    public void shouldHaveEquivalentByLinkTestLocators() {
+        By.ByLinkText byLinkText_test_ = By.linkText("test");
+
+        assertThat(byLinkText_test_, not(equalTo(By.name("testing"))));
+        assertThat(byLinkText_test_, equalTo(By.linkText("test")));
+        assertThat(byLinkText_test_, not(equalTo(By.linkText("anotherTest"))));
+        assertThat(byLinkText_test_, equalTo(byLinkText_test_));
+        assertThat(byLinkText_test_.hashCode(), equalTo(By.linkText("test").hashCode()));
+    }
+
+    @Test
+    public void shouldHaveEquivalentByTextContentLocators() {
+        By.ByTextContent byTextContent_test_ = By.textContent("test");
+
+        assertThat(byTextContent_test_, not(equalTo(By.name("testing"))));
+        assertThat(byTextContent_test_, equalTo(By.textContent("test")));
+        assertThat(byTextContent_test_, not(equalTo(By.textContent("anotherTest"))));
+        assertThat(byTextContent_test_, equalTo(byTextContent_test_));
+        assertThat(byTextContent_test_.hashCode(), equalTo(By.textContent("test").hashCode()));
+    }
+
+    @Test
+    public void shouldHaveEquivalentByPartialTextContentLocators() {
+        By.ByPartialTextContent byPartialTextContent_test_ = By.partialTextContent("test");
+
+        assertThat(byPartialTextContent_test_, not(equalTo(By.name("testing"))));
+        assertThat(byPartialTextContent_test_, equalTo(By.partialTextContent("test")));
+        assertThat(byPartialTextContent_test_, not(equalTo(By.partialTextContent("anotherTest"))));
+        assertThat(byPartialTextContent_test_, equalTo(byPartialTextContent_test_));
+        assertThat(byPartialTextContent_test_.hashCode(), equalTo(By.partialTextContent
+                ("test").hashCode()));
+    }
+
+    @Test
+    public void shouldHaveEquivalentByXpathLocators() {
+        By.ByXPath byXPath_test_ = By.xpath("test");
+
+        assertThat(byXPath_test_, not(equalTo(By.name("testing"))));
+        assertThat(byXPath_test_, equalTo(By.xpath("test")));
+        assertThat(byXPath_test_, not(equalTo(By.xpath("anotherTest"))));
+        assertThat(byXPath_test_, equalTo(byXPath_test_));
+        assertThat(byXPath_test_.hashCode(), equalTo(By.xpath("test").hashCode()));
+    }
+
+    @Test
+    public void shouldHaveByAttributeEquivalence() {
+        By.ByAttribute byAttribute_attributeTest_valueTest_ =
+                By.attribute("attributeTest", "valueTest");
+
+        assertThat(byAttribute_attributeTest_valueTest_, not(equalTo(By.id("test"))));
+        assertThat(byAttribute_attributeTest_valueTest_,
+                equalTo(By.attribute("attributeTest", "valueTest")));
+        assertThat(byAttribute_attributeTest_valueTest_, not(equalTo(By.attribute("1", "2"))));
+        assertThat(byAttribute_attributeTest_valueTest_,
+                equalTo(byAttribute_attributeTest_valueTest_));
+        assertThat(byAttribute_attributeTest_valueTest_.hashCode(),
+                equalTo(By.attribute("attributeTest", "valueTest").hashCode()));
+    }
+
+    @Test
+    public void shouldHaveByViewEquivalence() {
+        View testView = mock(View.class);
+        View differentTestView = mock(View.class);
+
+        By.ByView byView_testView_ = By.view(testView);
+
+        assertThat(byView_testView_, not(equalTo(By.id("test"))));
+        assertThat(byView_testView_, equalTo(By.view(testView)));
+        assertThat(byView_testView_, not(equalTo(By.view(differentTestView))));
+        assertThat(byView_testView_, equalTo(byView_testView_));
+        assertThat(byView_testView_.hashCode(), equalTo(By.view(testView).hashCode()));
+    }
+
+    @Test
+    public void shouldCorrectlyImplementEqualsForByNested() {
+        Element parent = new AlwaysDisplayedLabel();
+        Element differentParent = new AlwaysDisplayedLabel();
+
+        By.ByNested nestedUnderParentByNameTest = By.nested(parent, By.name("test"));
+
+        assertEquals(nestedUnderParentByNameTest, By.nested(parent, By.name("test")));
+        assertEquals(nestedUnderParentByNameTest, nestedUnderParentByNameTest);
+        assertNotEquals(nestedUnderParentByNameTest, By.nested(parent, By.id("id")));
+        assertNotEquals(nestedUnderParentByNameTest, By.nested(differentParent, By.name("test")));
+        assertNotEquals(nestedUnderParentByNameTest, By.id("something else entirely"));
+        assertEquals(nestedUnderParentByNameTest.hashCode(),
+                By.nested(parent, By.name("test")).hashCode());
+    }
+
+    @Test
+    public void shouldCorrectlyImplementEqualsForByChained() {
+        Locator idOf_parent_ = By.id("parent");
+        Locator nameOf_child_ = By.name("child");
+
+        By.ByChained underId_parent_andName_child_ = By.chained(idOf_parent_, nameOf_child_);
+
+        assertEquals(underId_parent_andName_child_, By.chained(By.id("parent"), By.name("child")));
+        assertEquals(underId_parent_andName_child_, underId_parent_andName_child_);
+        assertNotEquals(underId_parent_andName_child_, By.chained(By.id("parent"), By.id("diff")));
+        assertNotEquals(underId_parent_andName_child_, By.chained(By.name("diff"), By.name("child")));
+        assertNotEquals(underId_parent_andName_child_, By.id("something else entirely"));
+        assertEquals(underId_parent_andName_child_.hashCode(),
+                By.chained(By.id("parent"), By.name("child")).hashCode());
     }
 
     interface FindsByAll extends Context, FindsByAttribute, FindsById, FindsByXPath, FindsByName, FindsByNested,
