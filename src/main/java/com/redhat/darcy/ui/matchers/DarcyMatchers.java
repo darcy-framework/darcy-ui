@@ -23,6 +23,7 @@ import com.redhat.darcy.ui.api.ElementContext;
 import com.redhat.darcy.ui.api.View;
 import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.ui.api.elements.Findable;
+import com.redhat.darcy.ui.api.elements.Requireable;
 import com.redhat.darcy.ui.api.elements.Text;
 
 import org.hamcrest.Matcher;
@@ -36,6 +37,10 @@ public abstract class DarcyMatchers {
         return new FindableIsPresent<>();
     }
 
+    public static <T extends Requireable> Matcher<T> required() {
+        return new RequireableIsRequired<>();
+    }    
+    
     public static <T extends View> Matcher<T> loaded() {
         return new ViewIsLoaded<T>();
     }
@@ -51,4 +56,5 @@ public abstract class DarcyMatchers {
     public static <T extends Text> Matcher<T> visibleText(Matcher<? super String> matcher) {
         return new VisibleText<>(matcher);
     }
+    
 }
