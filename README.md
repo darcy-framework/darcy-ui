@@ -65,5 +65,5 @@ license
   [2]: https://www.gnu.org/copyleft/gpl.html
   [3]: https://github.com/darcy-framework/darcy-webdriver
   [4]: https://github.com/darcy-framework/darcy-web
-  [5]: https://www.gitbook.io/book/alechenninger/automating-applications-with-darcy
+  [5]: http://darcy-framework.gitbooks.io/automating-applications-with-darcy/
   [6]: http://martinfowler.com/bliki/PageObject.html
