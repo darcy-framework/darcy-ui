@@ -33,6 +33,12 @@ public class RequireableIsRequired<T extends Requireable> extends TypeSafeMatche
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("a Requireable Element that is required.");
+        description.appendText(" an element that is required ");
     }
+    
+    @Override
+    public void describeMismatchSafely(T requireable, Description mismatchDescription) {
+        mismatchDescription.appendText(" isRequired was ").appendValue(requireable.isRequired());
+    }
+    
 }

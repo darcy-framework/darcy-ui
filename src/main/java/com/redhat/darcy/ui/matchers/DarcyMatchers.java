@@ -39,7 +39,11 @@ public abstract class DarcyMatchers {
 
     public static <T extends Requireable> Matcher<T> required() {
         return new RequireableIsRequired<>();
-    }    
+    }
+    
+    public static <T extends Requireable> Matcher<T> notRequired() {
+        return new RequireableIsNotRequired<>();
+    }
     
     public static <T extends View> Matcher<T> loaded() {
         return new ViewIsLoaded<T>();
