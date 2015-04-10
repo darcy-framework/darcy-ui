@@ -19,12 +19,20 @@
 
 package com.redhat.darcy.ui.api.elements;
 
+import static java.util.Spliterator.NONNULL;
+import static java.util.Spliterator.ORDERED;
+import static java.util.Spliterator.SORTED;
+
 import java.util.Iterator;
+import java.util.Objects;
+import java.util.Spliterators;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * A role interface for tables which show one of many possible pages at a time.
  */
-public interface PaginatedTable<T extends PaginatedTable<T>> extends Table<T> {
+public interface PaginatedTable<T extends PaginatedTable<T>> extends Table<T>, Comparable<T> {
     /**
      * @param page The specific page to navigate to, in a range from 1 to {@link #getMaxPages()},
      * inclusive.
@@ -62,7 +70,7 @@ public interface PaginatedTable<T extends PaginatedTable<T>> extends Table<T> {
      * @return An iterable which will cause the table to navigate to the first page, and every page
      * thereafter. The iterator returns the table itself, navigated to the next page.
      */
-    default Iterable<T> ascendingPages() {
+    default Iterable<T> pagesAscending() {
         return () -> new Iterator<T>() {
             int cursor = 0;
 
@@ -85,7 +93,7 @@ public interface PaginatedTable<T extends PaginatedTable<T>> extends Table<T> {
      * all tables will be able to navigate to the last page directly, and some may require first
      * paging through all of the pages ascending until the last page can be determined.
      */
-    default Iterable<T> descendingPages() {
+    default Iterable<T> pagesDescending() {
         return () -> new Iterator<T>() {
             int cursor = getMaxPages() + 1;
 
@@ -100,6 +108,18 @@ public interface PaginatedTable<T extends PaginatedTable<T>> extends Table<T> {
                 return (cursor-- == getMaxPages() + 1) ? toPage(getMaxPages()) : previousPage();
             }
         };
+    }
+
+    default <U> Stream<T> getPagesAscending() {
+        return StreamSupport.stream(
+                Spliterators.spliterator(pagesAscending().iterator(), getMaxPages(),
+                        ORDERED | SORTED | NONNULL), false);
+    }
+
+    default <U> Stream<T> getPagesDescending() {
+        return StreamSupport.stream(
+                Spliterators.spliterator(pagesDescending().iterator(), getMaxPages(),
+                        ORDERED | SORTED | NONNULL), false);
     }
 
     /**
@@ -118,5 +138,12 @@ public interface PaginatedTable<T extends PaginatedTable<T>> extends Table<T> {
         // Since getTotalEntries may cause the table to paginate to the last page, perform the
         // inverse to avoid calculating the total entries before determining the row count.
         return (int) Math.ceil((double) getTotalEntries() * (1.0 / (double) getRowCount()));
+    }
+
+    @Override
+    default int compareTo(T o) {
+        Objects.requireNonNull(o);
+
+        return getCurrentPage() - o.getCurrentPage();
     }
 }

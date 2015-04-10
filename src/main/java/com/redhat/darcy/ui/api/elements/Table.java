@@ -153,15 +153,18 @@ public interface Table<T extends Table<T>> extends ViewElement {
         return header.getHeader((T) this);
     }
 
+    default Stream<Row<T>> getRows() {
+        return StreamSupport.stream(
+                Spliterators.spliterator(rows().iterator(), getRowCount(),
+                        DISTINCT | ORDERED | SORTED | NONNULL), false);
+    }
+
     /**
      * @return A filtered {@link java.util.stream.Stream} of the rows in this table where the
      * contents of a particular column match the specified {@link java.util.function.Predicate}.
      */
     default <U> Stream<Row<T>> getRowsWhere(Column<T, U> column, Predicate<? super U> predicate) {
-        return StreamSupport.stream(
-                Spliterators.spliterator(rows().iterator(), getRowCount(),
-                        DISTINCT | ORDERED | SORTED | NONNULL), false)
-                .filter(r -> predicate.test(r.getCell(column)));
+        return getRows().filter(r -> predicate.test(r.getCell(column)));
     }
 
     /**
