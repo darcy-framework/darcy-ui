@@ -79,14 +79,17 @@ public abstract class AbstractView implements View {
      * implement one of {@link com.redhat.darcy.ui.api.View View},
      * {@link com.redhat.darcy.ui.api.elements.Element Element}, or
      * {@link com.redhat.darcy.ui.api.elements.Findable Findable}, or
-     * {@link java.util.List} of any of those types (Lists not yet implemented). Each field that is
-     * determined to be required will be queried based on its type, preferring
-     * {@link com.redhat.darcy.ui.api.View#isLoaded()} over
-     * {@link com.redhat.darcy.ui.api.elements.Element#isDisplayed() Element.isDisplayed()} over
-     * {@link com.redhat.darcy.ui.api.elements.Findable#isPresent() Findable.isPresent()}, and the
-     * combined success of these queries determines that this view is loaded.
+     * {@link java.util.List} of any of those types. Each field that is determined to be required
+     * will be queried based on its type, preferring {@link com.redhat.darcy.ui.api.View#isLoaded()}
+     * over {@link com.redhat.darcy.ui.api.elements.Element#isDisplayed() Element.isDisplayed()}
+     * over {@link com.redhat.darcy.ui.api.elements.Findable#isPresent() Findable.isPresent()}, and
+     * the combined success of these queries determines that this view is loaded.
      *
-     * <p>Lists of those types are queried differently. This is not yet implemented.
+     * <p>Lists of those types are queried such that, by default, at least one element in the list
+     * is loaded, displayed, or present (in that order of precedence). The lists contents may change
+     * each time {@code isLoaded()} is called, reflecting whatever elements are found by the
+     * supplied locator at the time it is called. To require more than one element in a list, see
+     * {@link Require} documentation.
      *
      * <p>If no fields are configured to be required that implement one of those interfaces, a
      * {@link com.redhat.darcy.ui.NoRequiredElementsException} will be thrown.
