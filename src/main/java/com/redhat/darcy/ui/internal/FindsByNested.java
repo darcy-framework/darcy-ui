@@ -19,7 +19,6 @@
 
 package com.redhat.darcy.ui.internal;
 
-import com.redhat.darcy.ui.api.ElementContext;
 import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.elements.Element;
 
@@ -30,20 +29,4 @@ public interface FindsByNested {
     <T> T findByNested(Class<T> type, Element parent, Locator child);
     <T> List<T> findAllByChained(Class<T> type, Locator... locators);
     <T> T findByChained(Class<T> type, Locator... locators);
-
-    /**
-     * Returns this context where all look ups will start from the specified root element,
-     * essentially transforming every locator on this context with a unary operator:
-     * {@code L -> By.nested(root, L)}
-     */
-    @Deprecated
-    ElementContext withRootElement(Element root);
-
-    /**
-     * Returns this context where all look ups will start from the specified root locator,
-     * essentially transforming every locator on this context with a unary operator:
-     * {@code L -> By.chained(root, L)}
-     */
-    @Deprecated
-    ElementContext withRootLocator(Locator root);
 }

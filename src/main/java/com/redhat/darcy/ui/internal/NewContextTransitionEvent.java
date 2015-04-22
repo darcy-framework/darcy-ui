@@ -20,7 +20,6 @@
 package com.redhat.darcy.ui.internal;
 
 import static com.redhat.darcy.ui.matchers.DarcyMatchers.loadedInContext;
-import static com.redhat.synq.HamcrestCondition.match;
 
 import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.ParentContext;
