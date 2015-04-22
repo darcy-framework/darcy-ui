@@ -56,9 +56,4 @@ public class SimpleTransitionEvent<T extends View> extends ForwardingPollEvent<T
         
         return new NewContextTransitionEvent<>(destination, (ParentContext) context, locator);
     }
-
-    @Override
-    public Event<T> inNestedContext(Locator locator) {
-        return new NestedContextTransitionEvent<>(destination, context);
-    }
 }

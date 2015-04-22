@@ -32,5 +32,4 @@ import com.redhat.synq.Event;
 public interface TransitionEvent<T extends View> extends Event<T> {
     Event<T> inNewContext();
     Event<T> inNewContext(Locator locator);
-    Event<T> inNestedContext(Locator locator);
 }
