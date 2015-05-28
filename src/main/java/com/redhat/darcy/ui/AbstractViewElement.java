@@ -57,17 +57,22 @@ import java.util.function.UnaryOperator;
  * @see com.redhat.darcy.ui.AbstractView
  * @see com.redhat.darcy.ui.api.ViewElement
  */
-public abstract class AbstractViewElement extends AbstractView implements ViewElement {
+public abstract class AbstractViewElement<T extends Element> extends AbstractView implements ViewElement {
     /**
      * The parent element of this ViewElement.
      */
-    protected final Element parent;
+    protected final T parent;
 
     /**
      * Creates a nested View underneath some parent Locator.
      */
+    @Deprecated
     public AbstractViewElement(Locator parent) {
-        this(Elements.element(parent));
+        this(Elements.element((Class<T>) Element.class, parent));
+    }
+
+    public AbstractViewElement(Class<T> type, Locator parent) {
+        this(Elements.element(type, parent));
     }
 
     /**
@@ -76,7 +81,7 @@ public abstract class AbstractViewElement extends AbstractView implements ViewEl
      * may correspond to a number of elements, so each unique element found by the same locator is
      * used to construct this ViewElement to ensure each represents a unique element.
      */
-    public AbstractViewElement(Element parent) {
+    public AbstractViewElement(T parent) {
         this.parent = parent;
     }
 
