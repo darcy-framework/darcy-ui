@@ -19,23 +19,41 @@
 
 package com.redhat.darcy.ui;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.sameInstance;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertSame;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.redhat.darcy.ui.api.Context;
 import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.View;
 import com.redhat.darcy.ui.api.WrapsElement;
 import com.redhat.darcy.ui.api.elements.Element;
-import com.redhat.darcy.ui.internal.*;
+import com.redhat.darcy.ui.api.elements.Findable;
+import com.redhat.darcy.ui.internal.FindsByAttribute;
+import com.redhat.darcy.ui.internal.FindsById;
+import com.redhat.darcy.ui.internal.FindsByLinkText;
+import com.redhat.darcy.ui.internal.FindsByName;
+import com.redhat.darcy.ui.internal.FindsByNested;
+import com.redhat.darcy.ui.internal.FindsByPartialTextContent;
+import com.redhat.darcy.ui.internal.FindsByTextContent;
+import com.redhat.darcy.ui.internal.FindsByTitle;
+import com.redhat.darcy.ui.internal.FindsByView;
+import com.redhat.darcy.ui.internal.FindsByXPath;
 import com.redhat.darcy.ui.testing.doubles.AlwaysDisplayedLabel;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.mockito.Mockito.*;
+import java.util.Arrays;
 
 @RunWith(JUnit4.class)
 public class ByTest {
@@ -563,11 +581,51 @@ public class ByTest {
                 By.chained(By.id("parent"), By.name("child")).hashCode());
     }
 
+    @Test
+    public void shouldCorrectlyImplementEqualsForByTitle() {
+        By.ByTitle byTitleFoo = By.title("foo");
+        assertEquals(byTitleFoo, By.title("foo"));
+        assertEquals(byTitleFoo, byTitleFoo);
+        assertNotEquals(byTitleFoo, By.title("bar"));
+        assertEquals(byTitleFoo.hashCode(), By.title("foo").hashCode());
+    }
+
+    @Test(expected = LocatorNotSupportedException.class)
+    public void shouldThrowLocatorNotSupportedExceptionWhenTryingToFindByTitleWhenNotSupported() {
+        Context context = mock(Context.class);
+        By.title("foo").find(Findable.class, context);
+    }
+
+    @Test(expected = LocatorNotSupportedException.class)
+    public void shouldThrowLocatorNotSupportedExceptionWhenTryingToFindAllByTitleWhenNotSupported() {
+        Context context = mock(Context.class);
+        By.title("foo").findAll(Findable.class, context);
+    }
+
+    @Test
+    public void shouldFindByTitleWhenUsingFindByTitle() {
+        FindsByAll mockContext = mock(FindsByAll.class);
+        Element el = mock(Element.class);
+        when(mockContext.findByTitle(Element.class, "foo")).thenReturn(el);
+        assertSame(el, By.title("foo").find(Element.class, mockContext));
+    }
+
+    @Test
+    public void shouldFindAllByTitleWhenUsingFindAllByTitle() {
+        FindsByAll mockContext = mock(FindsByAll.class);
+        Element el1 = mock(Element.class);
+        Element el2 = mock(Element.class);
+        when(mockContext.findAllByTitle(Element.class, "foo")).thenReturn(Arrays.asList(el1, el2));
+
+        assertThat(By.title("foo").findAll(Element.class, mockContext),
+                contains(sameInstance(el1), sameInstance(el2)));
+    }
+
     interface FindsByAll extends Context, FindsByAttribute, FindsById, FindsByXPath, FindsByName, FindsByNested,
-            FindsByLinkText, FindsByPartialTextContent, FindsByTextContent, FindsByView {}
+            FindsByLinkText, FindsByPartialTextContent, FindsByTextContent, FindsByView, FindsByTitle {}
 
     interface FindsByAllExceptAttribute extends Context, FindsById, FindsByXPath, FindsByName, FindsByNested,
-            FindsByLinkText, FindsByPartialTextContent, FindsByTextContent, FindsByView {}
+            FindsByLinkText, FindsByPartialTextContent, FindsByTextContent, FindsByView, FindsByTitle {}
 
     interface ElementWrapper extends Element, WrapsElement {};
 }
