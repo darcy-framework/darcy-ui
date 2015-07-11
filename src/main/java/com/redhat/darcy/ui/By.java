@@ -33,6 +33,7 @@ import com.redhat.darcy.ui.internal.FindsByName;
 import com.redhat.darcy.ui.internal.FindsByNested;
 import com.redhat.darcy.ui.internal.FindsByPartialTextContent;
 import com.redhat.darcy.ui.internal.FindsByTextContent;
+import com.redhat.darcy.ui.internal.FindsByTitle;
 import com.redhat.darcy.ui.internal.FindsByView;
 import com.redhat.darcy.ui.internal.FindsByXPath;
 import com.redhat.darcy.ui.internal.IdOfHandler;
@@ -118,6 +119,10 @@ public abstract class By {
      */
     public static ByIdOf idOf(Locator locator) {
         return new ByIdOf(locator);
+    }
+
+    public static ByTitle title(String title) {
+        return new ByTitle(title);
     }
 
     public static class ById implements Locator {
@@ -849,6 +854,56 @@ public abstract class By {
 
                 return id;
             }
+        }
+    }
+
+    public static class ByTitle implements Locator {
+        private String title;
+
+        public ByTitle(String title) {
+            this.title = Objects.requireNonNull(title, "title");
+        }
+
+        @Override
+        public <T extends Findable> List<T> findAll(Class<T> type, Context context) {
+            try {
+                return ((FindsByTitle) context).findAllByTitle(type, title);
+            } catch (ClassCastException e) {
+                throw new LocatorNotSupportedException(this);
+            }
+        }
+
+        @Override
+        public <T extends Findable> T find(Class<T> type, Context context) {
+            try {
+                return ((FindsByTitle) context).findByTitle(type, title);
+            } catch (ClassCastException e) {
+                throw new LocatorNotSupportedException(this);
+            }
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+            ByTitle byTitle = (ByTitle) o;
+            return Objects.equals(title, byTitle.title);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(title);
+        }
+
+        @Override
+        public String toString() {
+            return "ByTitle{" +
+                    "title='" + title + '\'' +
+                    '}';
         }
     }
 }
