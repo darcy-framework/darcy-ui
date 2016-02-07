@@ -8,7 +8,7 @@
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Framework for writing page objects to automate interaction with graphical user interfaces.</description>
-    <url>https://github.com/darcy-framework/darcy</url>
+    <url>https://github.com/darcy-framework/darcy-ui</url>
 
     <properties>
         <version.synq>0.1.2-SNAPSHOT</version.synq>
