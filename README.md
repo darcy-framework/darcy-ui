@@ -7,11 +7,10 @@ darcy-ui
 
 Key features:
 
-* Automation library agnostic -- any library that can find UI elements and interact with them can be wrapped with **darcy**. [Selenium WebDriver](https://code.google.com/p/selenium/) support is provided by [darcy-webdriver](https://github.com/darcy-framework/darcy-webdriver).
 * Flexible and extendable by virtue of a declarative, **element-based DSL**. Write your page objects in terms of the UI buttons, labels, and widgets that you see. Abstract complicated interactions in reusable, custom element types with high-level APIs.
-* Allows easy configuration of events and conditions to keep your automation code synchronized with the UI (or even data!) it is controlling. Dealing with AJAX, single page web apps, or backend data flows is no longer a pain point. Say goodbye to `Thread.sleep`!
-* Open source and licensed under [version 3 of the GPL.](https://www.gnu.org/copyleft/gpl.html)
-* Dependent on Java 8. [Get your lambda on!](http://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html)
+* Allows easy configuration of events and conditions to keep your automation code synchronized with the UI or data it is controlling, simplifying automating AJAX-heavy web applications and waiting for backend data flows.
+* Integrates well with [Java 8](http://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html).
+* Automation library agnostic -- any library that can find UI elements and interact with them can be wrapped with **darcy**. [Selenium WebDriver](https://code.google.com/p/selenium/) support is provided by [darcy-webdriver](https://github.com/darcy-framework/darcy-webdriver).
 
 **Darcy** is divided into modules. This module, darcy-ui, defines a general purpose API for all types of user interfaces. [darcy-web][4] extends the API for web browser automation.
 
