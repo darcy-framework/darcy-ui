@@ -176,9 +176,9 @@
     </prerequisites>
 
     <scm>
-        <connection>scm:git:https://github.com/darcy-framework/darcy-webdriver.git</connection>
-        <developerConnection>scm:git:git@github.com:darcy-framework/darcy-webdriver.git</developerConnection>
-        <url>https://github.com/darcy-framework/darcy-webdriver</url>
+        <connection>scm:git:https://github.com/darcy-framework/darcy-ui.git</connection>
+        <developerConnection>scm:git:git@github.com:darcy-framework/darcy-ui.git</developerConnection>
+        <url>https://github.com/darcy-framework/darcy-ui</url>
         <tag>HEAD</tag>
     </scm>
 
