@@ -22,6 +22,8 @@ package com.redhat.darcy.ui;
 import com.redhat.darcy.ui.api.HasElementContext;
 import com.redhat.darcy.ui.api.Locator;
 import com.redhat.darcy.ui.api.WrapsElement;
+import com.redhat.darcy.ui.internal.ElementHandler;
+import com.redhat.darcy.ui.internal.ElementListHandler;
 import com.redhat.darcy.ui.api.elements.Button;
 import com.redhat.darcy.ui.api.elements.Checkbox;
 import com.redhat.darcy.ui.api.elements.DateInput;
@@ -29,13 +31,12 @@ import com.redhat.darcy.ui.api.elements.Element;
 import com.redhat.darcy.ui.api.elements.FileSelect;
 import com.redhat.darcy.ui.api.elements.Label;
 import com.redhat.darcy.ui.api.elements.Link;
+import com.redhat.darcy.ui.api.elements.SelectOption;
 import com.redhat.darcy.ui.api.elements.MultiSelect;
 import com.redhat.darcy.ui.api.elements.Radio;
 import com.redhat.darcy.ui.api.elements.Select;
 import com.redhat.darcy.ui.api.elements.Text;
 import com.redhat.darcy.ui.api.elements.TextInput;
-import com.redhat.darcy.ui.internal.ElementHandler;
-import com.redhat.darcy.ui.internal.ElementListHandler;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
@@ -64,8 +65,8 @@ public abstract class Elements {
         }
 
         InvocationHandler invocationHandler = new ElementHandler(type, locator);
-        
-        return (T) Proxy.newProxyInstance(Elements.class.getClassLoader(), 
+
+        return (T) Proxy.newProxyInstance(Elements.class.getClassLoader(),
                 new Class[] { type, HasElementContext.class, WrapsElement.class},
                 invocationHandler);
     }
@@ -80,56 +81,56 @@ public abstract class Elements {
         }
 
         InvocationHandler invocationHandler = new ElementListHandler(type, locator);
-        
-        return (List<T>) Proxy.newProxyInstance(Elements.class.getClassLoader(), 
+
+        return (List<T>) Proxy.newProxyInstance(Elements.class.getClassLoader(),
                 new Class[] { List.class, HasElementContext.class },
                 invocationHandler);
     }
-    
+
     public static Element element(Locator locator) {
         return element(Element.class, locator);
     }
-    
+
     public static List<Element> elements(Locator locator) {
         return elements(Element.class, locator);
     }
-    
+
     public static TextInput textInput(Locator locator) {
         return element(TextInput.class, locator);
     }
-    
+
     public static List<TextInput> textInputs(Locator locator) {
         return elements(TextInput.class, locator);
     }
-    
+
     public static Button button(Locator locator) {
         return element(Button.class, locator);
     }
-    
+
     public static List<Button> buttons(Locator locator) {
         return elements(Button.class, locator);
     }
-    
+
     public static Link link(Locator locator) {
         return element(Link.class, locator);
     }
-    
+
     public static List<Link> links(Locator locator) {
         return elements(Link.class, locator);
     }
-    
+
     public static Label label(Locator locator) {
         return element(Label.class, locator);
     }
-    
+
     public static List<Label> labels(Locator locator) {
         return elements(Label.class, locator);
     }
-    
-    public static Select select(Locator locator) {
+
+    public static Select<SelectOption> select(Locator locator) {
         return element(Select.class, locator);
     }
-    
+
     public static List<Select> selects(Locator locator) {
         return elements(Select.class, locator);
     }
