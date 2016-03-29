@@ -115,14 +115,14 @@ public interface ElementSelection extends Selection {
         return elementsOfType(Link.class, locator);
     }
 
-    default Select select(Locator locator) {
+    default Select<SelectOption> select(Locator locator) {
         return elementOfType(Select.class, locator);
     }
 
     default List<Select> selects(Locator locator) {
         return elementsOfType(Select.class, locator);
     }
-    
+
     default Radio radio(Locator locator) {
         return elementOfType(Radio.class, locator);
     }
@@ -138,7 +138,7 @@ public interface ElementSelection extends Selection {
     default List<Text> texts(Locator locator) {
         return elementsOfType(Text.class, locator);
     }
-    
+
     default FileSelect fileSelect(Locator locator) {
         return elementOfType(FileSelect.class, locator);
     }
@@ -154,7 +154,7 @@ public interface ElementSelection extends Selection {
     default List<Checkbox> checkboxes(Locator locator) {
         return elementsOfType(Checkbox.class, locator);
     }
-    
+
     default DateInput dateInput(Locator locator) {
         return elementOfType(DateInput.class, locator);
     }
