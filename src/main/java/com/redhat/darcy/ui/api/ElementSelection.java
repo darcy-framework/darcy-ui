@@ -19,18 +19,7 @@
 
 package com.redhat.darcy.ui.api;
 
-import com.redhat.darcy.ui.api.elements.Button;
-import com.redhat.darcy.ui.api.elements.Checkbox;
-import com.redhat.darcy.ui.api.elements.DateInput;
-import com.redhat.darcy.ui.api.elements.Element;
-import com.redhat.darcy.ui.api.elements.FileSelect;
-import com.redhat.darcy.ui.api.elements.Label;
-import com.redhat.darcy.ui.api.elements.Link;
-import com.redhat.darcy.ui.api.elements.MultiSelect;
-import com.redhat.darcy.ui.api.elements.Radio;
-import com.redhat.darcy.ui.api.elements.Select;
-import com.redhat.darcy.ui.api.elements.Text;
-import com.redhat.darcy.ui.api.elements.TextInput;
+import com.redhat.darcy.ui.api.elements.*;
 import com.redhat.darcy.ui.internal.ChainedViewFactory;
 import com.redhat.darcy.ui.internal.NestedViewFactory;
 
