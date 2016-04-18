@@ -40,7 +40,7 @@ public class PaginatedTableTest {
 
         int curPage = 0;
 
-        for (FakePaginatedTable table : testTable.ascendingPages()) {
+        for (FakePaginatedTable table : testTable.pagesAscending()) {
             curPage++;
 
             assertThat(table.getCurrentPage(), equalTo(curPage));
@@ -58,7 +58,7 @@ public class PaginatedTableTest {
 
         testTable.toPage(5);
 
-        testTable.ascendingPages().iterator().next();
+        testTable.pagesAscending().iterator().next();
 
         assertThat(testTable.getCurrentPage(), equalTo(1));
     }
@@ -72,7 +72,7 @@ public class PaginatedTableTest {
         int curPage = 11;
         testTable.toPage(10);
 
-        for (FakePaginatedTable table : testTable.descendingPages()) {
+        for (FakePaginatedTable table : testTable.pagesDescending()) {
             curPage--;
 
             assertThat(table.getCurrentPage(), equalTo(curPage));
@@ -88,7 +88,7 @@ public class PaginatedTableTest {
                 .totalEntries(95)
                 .build();
 
-        testTable.descendingPages().iterator().next();
+        testTable.pagesDescending().iterator().next();
 
         assertThat(testTable.getCurrentPage(), equalTo(10));
     }
